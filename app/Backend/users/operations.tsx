@@ -13,7 +13,7 @@ export default async function operations (client : SupabaseClient)
         const isSpecial = (password : string) => {
             let specialCount = 0;
             for (let i = 0; i <= password.length - 1; i++) {
-            let char : string = password.at(i);
+            let char : string = password.at(i)!;
             let satisfies = 
             /[A-Z]/.test(char) === false &&
             /[a-z]/.test(char) === false &&
@@ -157,16 +157,16 @@ export default async function operations (client : SupabaseClient)
         
         if (hm.has('email') && !hm.has('password')) {
             const { data, error } = await client.auth.updateUser({
-                email: hm.get('email')
+                email: hm.get('email') as string
             })
         } else if (!hm.has('email') && hm.has('password')) {
             const { data, error } = await client.auth.updateUser({
-                password: hm.get('password') 
+                password: hm.get('password') as string
             })
         } else if (hm.has('email') && hm.has('password')) {
             const { data, error } = await client.auth.updateUser({
-                email: hm.get('email'),
-                password: hm.get('password') 
+                email: hm.get('email') as string,
+                password: hm.get('password') as string 
             })
         }
 
