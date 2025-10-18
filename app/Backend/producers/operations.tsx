@@ -1,10 +1,11 @@
 import { CreateUpdateDirector } from "@/app/Types/directors/directortypes";
 import { ParseDataResult } from "@/app/Types/entitytypes";
+import { CreateUpdateProducer } from "@/app/Types/producers/producertypes";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 export default function operations(client : SupabaseClient) {
 
-    const parseData = (obj: CreateUpdateDirector) : ParseDataResult => {
+    const parseData = (obj: CreateUpdateProducer) : ParseDataResult => {
 
         // Data Validation
 
@@ -73,24 +74,24 @@ export default function operations(client : SupabaseClient) {
         
     }
 
-    const getDirectors = async () : Promise<any | null> => {
-        const directors = client.from('director').select();
-        return directors;
+    const getProducers = async () : Promise<any | null> => {
+        const producers = client.from('producer').select();
+        return producers;
     }
     
-    const createDirector = async (obj: CreateUpdateDirector) => {
+    const createProducer = async (obj: CreateUpdateProducer) => {
 
         let result = parseData(obj);
         if (result['result'] !== 'success') return result;
 
         const { error } = await client
-        .from('director')
+        .from('producer')
         .insert({obj});
         
         return { error }
     }
 
-    const updateDirector = async (directorId : number, obj: CreateUpdateDirector, hm : Map<string, Object>) => {
+    const updateProducer = async (producerId : number, obj: CreateUpdateProducer, hm : Map<string, Object>) => {
         let result = parseData(obj);
         if (result['result'] !== 'success') return result;
 
@@ -102,19 +103,19 @@ export default function operations(client : SupabaseClient) {
         const { error } = await client
         .from('director')
         .update({updatedData})
-        .eq('id', directorId)
+        .eq('id', producerId)
 
         return { error };
     }
 
-    const deleteDirector = async (directorId : number) => {
+    const deleteProducer = async (producerId : number) => {
         const response = await client
-        .from('director')
+        .from('producer')
         .delete()
-        .eq('id', directorId)
+        .eq('id', producerId)
 
         return { response }
     }
 
-    return { getDirectors, createDirector, updateDirector, deleteDirector }
+    return { getProducers, createProducer, updateProducer, deleteProducer }
 }

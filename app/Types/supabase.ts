@@ -184,7 +184,7 @@ export type Database = {
         Row: {
           birthday: string
           description: string
-          film_pk: number | null
+          film_fk: number | null
           first_name: string
           id: number
           img: string | null
@@ -194,7 +194,7 @@ export type Database = {
         Insert: {
           birthday: string
           description: string
-          film_pk?: number | null
+          film_fk?: number | null
           first_name: string
           id?: number
           img?: string | null
@@ -204,7 +204,7 @@ export type Database = {
         Update: {
           birthday?: string
           description?: string
-          film_pk?: number | null
+          film_fk?: number | null
           first_name?: string
           id?: number
           img?: string | null
@@ -214,7 +214,7 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "producer_film_pk_fkey"
-            columns: ["film_pk"]
+            columns: ["film_fk"]
             isOneToOne: false
             referencedRelation: "film"
             referencedColumns: ["id"]
@@ -228,6 +228,7 @@ export type Database = {
           date_updated: string | null
           film_fk: number | null
           id: number
+          rating: number
           users_fk: string | null
         }
         Insert: {
@@ -236,6 +237,7 @@ export type Database = {
           date_updated?: string | null
           film_fk?: number | null
           id?: number
+          rating: number
           users_fk?: string | null
         }
         Update: {
@@ -244,6 +246,7 @@ export type Database = {
           date_updated?: string | null
           film_fk?: number | null
           id?: number
+          rating?: number
           users_fk?: string | null
         }
         Relationships: [
