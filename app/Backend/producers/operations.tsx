@@ -86,7 +86,10 @@ export default function operations(client : SupabaseClient) {
 
         const { error } = await client
         .from('producer')
-        .insert({obj});
+        .insert({ 
+            description: obj.description, birthday: obj.birthday, 
+            first_name: obj.first_name, last_name: obj.last_name, sex: obj.sex
+        });
         
         return { error }
     }

@@ -69,7 +69,11 @@ export default function operations(client : SupabaseClient) {
 
         const { error } = await client
         .from('producer')
-        .insert({obj});
+        .insert({content_rating : obj.content_rating, date_released: obj.date_released, 
+            description: obj.description, director_fk: obj.director_fk,
+            duration: obj.duration, frame_rate: obj.frame_rate,
+            genres: obj.genres, name: obj.name
+         });
         
         return { error }
     }

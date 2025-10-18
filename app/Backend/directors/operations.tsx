@@ -69,8 +69,6 @@ export default function operations(client : SupabaseClient) {
 
         hashmap['result'] = 'success';
         return hashmap;
-    
-        
     }
 
     const getDirectors = async () : Promise<any | null> => {
@@ -85,7 +83,10 @@ export default function operations(client : SupabaseClient) {
 
         const { error } = await client
         .from('director')
-        .insert({obj});
+        .insert({ 
+            birthday: obj.birthday, description: obj.description,
+            first_name: obj.first_name, last_name: obj.last_name, sex: obj.sex  
+        });
         
         return { error }
     }
