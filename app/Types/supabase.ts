@@ -224,24 +224,6 @@ export type Database = {
           },
         ]
       }
-      logs: {
-        Row: {
-          content: string
-          id: number
-          user_fk: number | null
-        }
-        Insert: {
-          content: string
-          id?: number
-          user_fk?: number | null
-        }
-        Update: {
-          content?: string
-          id?: number
-          user_fk?: number | null
-        }
-        Relationships: []
-      }
       producer: {
         Row: {
           birthday: string
