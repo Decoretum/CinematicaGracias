@@ -104,7 +104,6 @@ export type Database = {
       }
       film: {
         Row: {
-          actor_fk: number | null
           average_user_rating: number
           content_rating: string | null
           date_released: string
@@ -118,7 +117,6 @@ export type Database = {
           name: string
         }
         Insert: {
-          actor_fk?: number | null
           average_user_rating?: number
           content_rating?: string | null
           date_released: string
@@ -132,7 +130,6 @@ export type Database = {
           name: string
         }
         Update: {
-          actor_fk?: number | null
           average_user_rating?: number
           content_rating?: string | null
           date_released?: string
@@ -147,17 +144,82 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "film_actor_fk_fkey"
+            foreignKeyName: "film_director_fk_fkey"
+            columns: ["director_fk"]
+            isOneToOne: false
+            referencedRelation: "director"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      filmactor: {
+        Row: {
+          actor_fk: number | null
+          film_fk: number | null
+          id: number
+          total_salary: number | null
+        }
+        Insert: {
+          actor_fk?: number | null
+          film_fk?: number | null
+          id?: number
+          total_salary?: number | null
+        }
+        Update: {
+          actor_fk?: number | null
+          film_fk?: number | null
+          id?: number
+          total_salary?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "filmactor_actor_fk_fkey"
             columns: ["actor_fk"]
             isOneToOne: false
             referencedRelation: "actor"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "film_director_fk_fkey"
-            columns: ["director_fk"]
+            foreignKeyName: "filmactor_film_fk_fkey"
+            columns: ["film_fk"]
             isOneToOne: false
-            referencedRelation: "director"
+            referencedRelation: "film"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      filmproducer: {
+        Row: {
+          film_fk: number | null
+          id: number
+          producer_fk: number | null
+          producer_role: string | null
+        }
+        Insert: {
+          film_fk?: number | null
+          id?: number
+          producer_fk?: number | null
+          producer_role?: string | null
+        }
+        Update: {
+          film_fk?: number | null
+          id?: number
+          producer_fk?: number | null
+          producer_role?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "filmproducer_film_fk_fkey"
+            columns: ["film_fk"]
+            isOneToOne: false
+            referencedRelation: "film"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "filmproducer_producer_fk_fkey"
+            columns: ["producer_fk"]
+            isOneToOne: false
+            referencedRelation: "producer"
             referencedColumns: ["id"]
           },
         ]
@@ -184,7 +246,6 @@ export type Database = {
         Row: {
           birthday: string
           description: string
-          film_fk: number | null
           first_name: string
           id: number
           img: string | null
@@ -194,7 +255,6 @@ export type Database = {
         Insert: {
           birthday: string
           description: string
-          film_fk?: number | null
           first_name: string
           id?: number
           img?: string | null
@@ -204,22 +264,13 @@ export type Database = {
         Update: {
           birthday?: string
           description?: string
-          film_fk?: number | null
           first_name?: string
           id?: number
           img?: string | null
           last_name?: string
           sex?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "producer_film_pk_fkey"
-            columns: ["film_fk"]
-            isOneToOne: false
-            referencedRelation: "film"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       review: {
         Row: {

@@ -1,6 +1,6 @@
+import { FilmGenres } from "@/app/Helpers/FilmGenres";
 import { ParseDataResult } from "@/app/Types/entitytypes";
-import { CreateUpdateFilm } from "@/app/Types/films/filmtypes";
-import { CreateUpdateProducer } from "@/app/Types/producers/producertypes";
+import { CreateUpdateFilm, FilmGenre } from "@/app/Types/films/filmtypes";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 export default function operations(client : SupabaseClient) {
@@ -9,32 +9,51 @@ export default function operations(client : SupabaseClient) {
 
         // Data Validation
 
+        // Name
+
         let hashmap : ParseDataResult = {
             result: "",
             metadata: {}
         };
-
-        const isSpecial = (password : string) => {
-            let specialCount = 0;
-            for (let i = 0; i <= password.length - 1; i++) {
-                let char : string = password.at(i)!;
-                let satisfies = 
-                /[A-Z]/.test(char) === false &&
-                /[a-z]/.test(char) === false &&
-                /\d/.test(char) === false;
-                if (satisfies === true) specialCount += 1; 
-            }
-            if (specialCount >= 1) return true;
-            return false; 
-        }
-    
-        const nameValidator = (name : string, int : number) => {
+        
+        const validName = (name : string) => {
             let formattedName = name.replace(/\s+/g, '');
-            return name.replace(/\s+/g, '').length >= int && /\d/.test(formattedName) === false && isSpecial(formattedName) === false;
+            return name.replace(/\s+/g, '').length >= 3 && /\d/.test(formattedName) === false;
         }
+
+        if (!validName(obj.name)) {
+            hashmap['result'] = 'Film name must have at least 3 charactes';
+            return hashmap;
+        } 
+
+        // Genres
+        // Import Enums
+
+        if (obj.genres.length === 0) {
+            hashmap['result'] = 'Film must have at least 1 genre';
+            return hashmap;
+        }
+
+        for (let i = 0; i <= obj.genres.length - 1; i++) {
+            let genre : FilmGenre = obj.genres[i].toUpperCase() as FilmGenre;
+            if (!FilmGenres.includes(genre)) {
+                hashmap['result'] = 'One of the genre values isn\'t part of the standard accepted genres';
+                return hashmap;
+            }
+        }
+
+        // Date Released
+        // Assuming that date_released is formatted as YYYY-MM-DD
+
+        let dateReleased = new Date(obj.date_released);
+        let currDate = new Date();
+        if (dateReleased > currDate) {
+            hashmap['result'] = 'Film\'s released date cannot be ahead than the current date';
+            return hashmap;
+        }
+
     
         hashmap['result'] = 'success';
-        hashmap['metadata'] = {};
         return hashmap;
     }
 
@@ -43,7 +62,7 @@ export default function operations(client : SupabaseClient) {
         return films;
     }
     
-    const createProducer = async (obj: CreateUpdateFilm) => {
+    const createFilm = async (obj: CreateUpdateFilm) => {
 
         let result = parseData(obj);
         if (result['result'] !== 'success') return result;
@@ -55,7 +74,7 @@ export default function operations(client : SupabaseClient) {
         return { error }
     }
 
-    const updateProducer = async (producerId : number, obj: CreateUpdateFilm, hm : Map<string, Object>) => {
+    const updateFilm = async (filmId : number, obj: CreateUpdateFilm, hm : Map<string, Object>) => {
         let result = parseData(obj);
         if (result['result'] !== 'success') return result;
 
@@ -65,21 +84,21 @@ export default function operations(client : SupabaseClient) {
         }
 
         const { error } = await client
-        .from('director')
+        .from('film')
         .update({updatedData})
-        .eq('id', producerId)
+        .eq('id', filmId)
 
         return { error };
     }
 
-    const deleteProducer = async (producerId : number) => {
+    const deleteFilm = async (filmId : number) => {
         const response = await client
-        .from('producer')
+        .from('film')
         .delete()
-        .eq('id', producerId)
+        .eq('id', filmId)
 
         return { response }
     }
 
-    return { getFilms, createProducer, updateProducer, deleteProducer }
+    return { getFilms, createFilm, updateFilm, deleteFilm }
 }
