@@ -1,10 +1,10 @@
 import createclient from '../createclient'
-import { SignUpUser } from '../../Types/users/usertypes'
+import { SignUpEditUser } from '../../Types/users/usertypes'
 import operations from './operations';
 import { ParseDataResult } from '@/app/Types/entitytypes';
 
 
-export default async function Signup (obj : SignUpUser)
+export default async function Signup (obj : SignUpEditUser)
 {
     const client = createclient();
     const { parseUserData } = await operations(client);

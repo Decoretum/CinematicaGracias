@@ -13,7 +13,7 @@ export default function operations(client : SupabaseClient) {
         const isSpecial = (password : string) => {
             let specialCount = 0;
             for (let i = 0; i <= password.length - 1; i++) {
-                let char : string = password.at(i);
+                let char : string = password.at(i)!;
                 let satisfies = 
                 /[A-Z]/.test(char) === false &&
                 /[a-z]/.test(char) === false &&

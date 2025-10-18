@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Users } from "../Types/entitytypes";
 
 type userData = {
-    currentUser : Users
+    currentUser : Users | null | undefined
 }
 
 export default function Header(props : userData) {
