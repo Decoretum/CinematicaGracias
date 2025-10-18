@@ -10,9 +10,9 @@ export default function SelectBasic() {
     }
 
 
-
+    
     return (
-        <Select placeholder='Menu' onChange= {(e, val) => navigate(val)}>
+        <Select placeholder='Menu' onChange= {(e, val) => navigate(val as string)}>
             <Option value="">Home</Option>
             <Option value="films">Films</Option>
             <Option value="directors">Directors</Option>
