@@ -42,6 +42,7 @@ export type Database = {
       actor: {
         Row: {
           birthday: string
+          description: string
           first_name: string
           id: number
           img: string | null
@@ -51,6 +52,7 @@ export type Database = {
         }
         Insert: {
           birthday: string
+          description: string
           first_name: string
           id?: number
           img?: string | null
@@ -60,6 +62,7 @@ export type Database = {
         }
         Update: {
           birthday?: string
+          description?: string
           first_name?: string
           id?: number
           img?: string | null
@@ -72,6 +75,7 @@ export type Database = {
       director: {
         Row: {
           birthday: string
+          description: string
           first_name: string
           id: number
           img: string | null
@@ -80,6 +84,7 @@ export type Database = {
         }
         Insert: {
           birthday: string
+          description: string
           first_name: string
           id?: number
           img?: string | null
@@ -88,6 +93,7 @@ export type Database = {
         }
         Update: {
           birthday?: string
+          description?: string
           first_name?: string
           id?: number
           img?: string | null
@@ -102,6 +108,7 @@ export type Database = {
           average_user_rating: number
           content_rating: string | null
           date_released: string
+          description: string
           director_fk: number | null
           duration: number
           frame_rate: number | null
@@ -115,6 +122,7 @@ export type Database = {
           average_user_rating?: number
           content_rating?: string | null
           date_released: string
+          description: string
           director_fk?: number | null
           duration: number
           frame_rate?: number | null
@@ -128,6 +136,7 @@ export type Database = {
           average_user_rating?: number
           content_rating?: string | null
           date_released?: string
+          description?: string
           director_fk?: number | null
           duration?: number
           frame_rate?: number | null
@@ -174,6 +183,7 @@ export type Database = {
       producer: {
         Row: {
           birthday: string
+          description: string
           film_pk: number | null
           first_name: string
           id: number
@@ -183,6 +193,7 @@ export type Database = {
         }
         Insert: {
           birthday: string
+          description: string
           film_pk?: number | null
           first_name: string
           id?: number
@@ -192,6 +203,7 @@ export type Database = {
         }
         Update: {
           birthday?: string
+          description?: string
           film_pk?: number | null
           first_name?: string
           id?: number
