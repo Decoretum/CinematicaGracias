@@ -8,7 +8,6 @@ import Header from "../Components/Header";
 import { Film, Users } from '../Types/entitytypes'
 import { SupabaseClient, User } from '@supabase/supabase-js';
 import CircularProgress from '@mui/material/CircularProgress';
-import signup from "../Backend/users/signup";
 
 
 export default function Films () {

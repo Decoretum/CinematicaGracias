@@ -19,8 +19,7 @@ import Stack from "@mui/material/Stack";
 
 export default function SignUp () {
     const [check, setCheck] = useState(false);
-    const [date, setDate] = useState(new Date());
-    const [dateString, setDateString] = useState('');
+    const [date, setDate] = useState<Date | null>(new Date());
     const [sex, setSex] = useState('m');
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
@@ -36,7 +35,7 @@ export default function SignUp () {
     }
 
     async function createUser() {
-        let finalDate =date.toLocaleDateString('en-CA');
+        let finalDate = date!.toLocaleDateString('en-CA');
             const obj = {
             first_name : firstName,
             last_name : lastName,
@@ -44,7 +43,7 @@ export default function SignUp () {
             username : userName,
             password : password,
             sex : sex,
-            birthday : finalDate,
+            birthday : finalDate as string,
             is_admin : check ? true : false
         }
 
@@ -119,7 +118,6 @@ export default function SignUp () {
                         <DatePicker 
                             selected={ date } 
                             onChange= {(date) => {
-                                setDateString(date?.getFullYear() + "-" + date?.getMonth() + "-" + date?.getDate())
                                 setDate(date);
                             }}
                             customInput={

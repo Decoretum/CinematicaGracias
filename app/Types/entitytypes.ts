@@ -9,6 +9,6 @@ export type Review = Database['public']['Tables']['review']['Row'];
 export type Log = Database['public']['Tables']['logs']['Row'];
 export type ParseDataResult = {
     result: string,
-    metadata: object
+    metadata: any
 
 }
