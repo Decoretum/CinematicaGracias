@@ -2,7 +2,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import { ParseDataResult } from '../../Types/entitytypes'
 import { SignUpEditUser } from '@/app/Types/users/usertypes';
 
-export default async function operations (client : SupabaseClient)
+export default function operations (client : SupabaseClient)
 {
     const parseUserData = async (obj: SignUpEditUser) : Promise<ParseDataResult> => {
 

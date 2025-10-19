@@ -1,7 +1,8 @@
 'use client'
-import { Box, Button, FormControl, RadioGroup } from "@mui/joy";
+import { Box, FormControl, RadioGroup } from "@mui/joy";
+import { Button } from '@mui/material'
 import Typography from "@mui/material/Typography";
-import Header from "../Components/Header";
+import Header from "../../Components/Header";
 import Input from '@mui/joy/Input';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Tooltip from '@mui/material/Tooltip';
@@ -9,13 +10,14 @@ import Switch from '@mui/joy/Switch';
 import Radio from '@mui/joy/Radio';
 import DatePicker from "react-datepicker";
 import { useState } from "react";
-import signup from '../Backend/users/signup'
+import signup from '../../Backend/users/signup'
 import Alert from '@mui/material/Alert';
 import { useRouter } from 'next/navigation'
 
 
 import "react-datepicker/dist/react-datepicker.css";
 import Stack from "@mui/material/Stack";
+import { CircularProgress } from "@mui/material";
 
 export default function SignUp () {
     const [check, setCheck] = useState(false);
@@ -28,6 +30,7 @@ export default function SignUp () {
     const [email, setEmail] = useState('');
     const [alert, setAlert] = useState(true);
     const [message, setMessage] = useState('');
+    const [loading, setLoading] = useState(false);
     const router = useRouter();
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -47,19 +50,19 @@ export default function SignUp () {
             is_admin : check ? true : false
         }
 
+        setLoading(true);
         let hashmap = await signup(obj);
         console.log(hashmap);
         if (hashmap.result !== 'success') {
             setMessage(hashmap.result);
             setAlert(false);
+            setLoading(false);
+            return;
         }
         
         else {
-            let activeSession = hashmap.metadata.data.session.access_token != null || hashmap.metadata.data.session.access_token != undefined;
-            if (activeSession) {
-                router.push('/signup/success');
-                return;
-            }
+            router.push('/signup/success');
+            return;
         }
     }
 
@@ -71,7 +74,7 @@ export default function SignUp () {
                 <Box className='flex flex-row'>
                     <Box className='mr-[2vw]'>
                         <Tooltip title='Back to Film Pages'>
-                            <Button variant='soft'>
+                            <Button variant='contained'>
                                 <ArrowBackIcon />
                             </Button>
                         </Tooltip>
@@ -129,7 +132,7 @@ export default function SignUp () {
 
                 <Box className='flex flex-row mt-[6vh] gap-20'>
                     <Box>
-                        <Typography color='white'> Sex </Typography>
+                        <Typography color='white'>Sex at Birth</Typography>
                         <FormControl>
                             <RadioGroup onChange={handleChange} defaultValue="m" name="radio-buttons-group">
                                 <Radio slotProps={{ label: { sx: { color: 'white' } } }} value="m" className='color-white' label="Male" variant="outlined" />
@@ -147,7 +150,14 @@ export default function SignUp () {
                 </Box>
 
                 <Box className='mt-[2vh]'>
-                    <Button variant='soft' onClick={createUser}>Submit</Button>
+                    <Button 
+                    variant='contained'
+                    disabled = {loading}
+                    startIcon={loading ? <CircularProgress size={20} /> : null}
+                    onClick={createUser}
+                    >
+                        {loading ? null : 'Create Account'}
+                    </Button>
                 </Box>                    
             </Box>
             <Stack sx={{ width: '100%', marginTop: '1vh' }}>

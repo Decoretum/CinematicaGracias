@@ -1,11 +1,11 @@
 'use client'
 import { Box, Button, Typography } from "@mui/joy";
-import userOperation from "../Backend/users/operations";
-import filmOperation from "../Backend/films/operations";
+import userOperation from "../../Backend/users/operations";
+import filmOperation from "../../Backend/films/operations";
 import { useEffect, useState } from "react";
-import createclient from "../Backend/createclient";
-import Header from "../Components/Header";
-import { Film, Users } from '../Types/entitytypes'
+import { client } from "../../Backend/createclient";
+import Header from "../../Components/Header";
+import { Film, Users } from '../../Types/entitytypes'
 import { SupabaseClient, User } from '@supabase/supabase-js';
 import CircularProgress from '@mui/material/CircularProgress';
 
@@ -16,7 +16,7 @@ export default function Films () {
     const [loading, setLoading] = useState(true);
 
     async function getUser(client : SupabaseClient) {
-        let { getCurrentUser } = await userOperation(client);
+        let { getCurrentUser } = userOperation(client);
         let { user, nonAuthUser } = await getCurrentUser();
         let authUser : User | null = user;
         let nonAUser : Users = nonAuthUser === null ? null : nonAuthUser[0];
@@ -33,7 +33,6 @@ export default function Films () {
 
     useEffect(() => {
         const mainFunction = async () => {
-            let client = createclient();
             await getUser(client);
             await getFilms(client);
             setLoading(false);

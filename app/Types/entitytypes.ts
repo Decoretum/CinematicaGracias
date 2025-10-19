@@ -8,8 +8,14 @@ export type Director = Database['public']['Tables']['director']['Row'];
 export type Review = Database['public']['Tables']['review']['Row'];
 export type FilmActor = Database['public']['Tables']['filmactor']['Row'];
 export type FilmProducer = Database['public']['Tables']['filmproducer']['Row'];
+export type EntityResponse = {
+    count: number,
+    data: any,
+    error: any,
+    status: number,
+    statusText: string
+}
 export type ParseDataResult = {
     result: string,
     metadata: any
-
 }

@@ -1,12 +1,12 @@
 'use client'
 import { Box, Button, Typography } from "@mui/joy";
-import userOperation from "../Backend/users/operations";
-import filmOperation from "../Backend/films/operations";
+import userOperation from "../../Backend/users/operations";
+import filmOperation from "../../Backend/films/operations";
 import { useEffect, useState } from "react";
-import createclient from "../Backend/createclient";
-import Header from '../Components/Header'
+import { client }from "../../Backend/createclient";
+import Header from '../../Components/Header'
 import { SupabaseClient, User } from "@supabase/supabase-js";
-import { Users } from "../Types/entitytypes";
+import { Users } from "../../Types/entitytypes";
 
 
 export default function Directors () {
@@ -33,7 +33,6 @@ export default function Directors () {
 
     useEffect(() => {
         const mainFunction = async () => {
-            let client = createclient();
             getUser(client);
             getDirectors(client);
         };

@@ -15,7 +15,11 @@ export default function Header(props : userData) {
             </Box>
             <Box className='relative mt-[2vh] mr-[2vw]'>
                 {
-                props.currentUser === null && props.currentUser !== undefined ? (
+                props.currentUser !== null ? (
+                    <>
+                    </>
+                ) : 
+                (
                     <Box>
                         <Link href='/signup'>
                             <Button variant='soft' color='primary'>
@@ -23,11 +27,6 @@ export default function Header(props : userData) {
                             </Button>
                         </Link>
                     </Box>
-                ) : 
-                (
-                <>
-
-                </>
                 )
                 }
             </Box>

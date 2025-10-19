@@ -1,6 +1,5 @@
 import { CreateUpdateActor } from "@/app/Types/actors/actortypes";
 import { ParseDataResult } from "@/app/Types/entitytypes";
-import { CreateUpdateProducer } from "@/app/Types/producers/producertypes";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 export default function operations(client : SupabaseClient) {
@@ -79,7 +78,7 @@ export default function operations(client : SupabaseClient) {
         return actors;
     }
     
-    const createActor = async (obj: CreateUpdateActor) => {
+    const createActor = async (obj: CreateUpdateActor) : Promise<ParseDataResult> => {
 
         let result = parseData(obj);
         if (result['result'] !== 'success') return result;
@@ -88,7 +87,10 @@ export default function operations(client : SupabaseClient) {
         .from('actor')
         .insert({obj});
         
-        return { error }
+        let response : ParseDataResult = {result: '', metadata: {}};
+        response['result'] = 'success';
+        response['metadata'] = { error }
+        return response
     }
 
     const updateActor = async (actorId : number, obj: CreateUpdateActor, hm : Map<string, Object>) => {

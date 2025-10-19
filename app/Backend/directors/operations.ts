@@ -1,5 +1,5 @@
 import { CreateUpdateDirector } from "@/app/Types/directors/directortypes";
-import { ParseDataResult } from "@/app/Types/entitytypes";
+import { Director, EntityResponse, ParseDataResult } from "@/app/Types/entitytypes";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 export default function operations(client : SupabaseClient) {
@@ -62,8 +62,15 @@ export default function operations(client : SupabaseClient) {
         if (current.getMonth() < birthday.getMonth() 
         || (birthday.getMonth() === current.getMonth() && birthday.getDate() > current.getDate())) age--;
         
-        if (age < 7) {
-            hashmap['result'] = 'User must be at least 7 years of age';
+        if (age < 20) {
+            hashmap['result'] = 'User must be at least 20 years of age';
+            return hashmap;
+        }
+
+        // Description
+        // Must have at least 100 characters
+        if (obj.description.length < 100) {
+            hashmap['result'] = 'Description must have at least 100 characters';
             return hashmap;
         }
 
@@ -75,8 +82,13 @@ export default function operations(client : SupabaseClient) {
         const directors = client.from('director').select();
         return directors;
     }
+
+    const getDirector = async (id : number) : Promise<Director | null> => {
+        const director = await client.from('director').select().eq('id', id);
+        return director.data![0];
+    }
     
-    const createDirector = async (obj: CreateUpdateDirector) => {
+    const createDirector = async (obj: CreateUpdateDirector) : Promise<ParseDataResult> => {
 
         let result = parseData(obj);
         if (result['result'] !== 'success') return result;
@@ -88,10 +100,13 @@ export default function operations(client : SupabaseClient) {
             first_name: obj.first_name, last_name: obj.last_name, sex: obj.sex  
         });
         
-        return { error }
+        let response : ParseDataResult = {result: '', metadata: {}};
+        response['result'] = 'success';
+        response['metadata'] = { error }
+        return response
     }
 
-    const updateDirector = async (directorId : number, obj: CreateUpdateDirector, hm : Map<string, Object>) => {
+    const updateDirector = async (directorId : number, obj: CreateUpdateDirector, hm : Map<string, Array<object>>) : Promise<ParseDataResult> => {
         let result = parseData(obj);
         if (result['result'] !== 'success') return result;
 
@@ -102,20 +117,27 @@ export default function operations(client : SupabaseClient) {
 
         const { error } = await client
         .from('director')
-        .update({updatedData})
+        .update(updatedData)
         .eq('id', directorId)
 
-        return { error };
+        let response : ParseDataResult = {result: '', metadata: {}};
+        response['result'] = 'success';
+        response['metadata'] = { error }
+        return response
     }
 
-    const deleteDirector = async (directorId : number) => {
-        const response = await client
+    const deleteDirector = async (directorId : number): Promise<ParseDataResult> => {
+        const deletion = await client
         .from('director')
         .delete()
         .eq('id', directorId)
 
-        return { response }
+        let response : ParseDataResult = {result: '', metadata: {}};
+        response['result'] = 'success';
+        response['metadata'] = { deletion }
+        return response
+
     }
 
-    return { getDirectors, createDirector, updateDirector, deleteDirector }
+    return { getDirectors, getDirector, createDirector, updateDirector, deleteDirector }
 }
