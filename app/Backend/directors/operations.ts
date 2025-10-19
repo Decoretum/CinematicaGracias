@@ -1,10 +1,10 @@
-import { CreateUpdateDirector } from "@/app/Types/directors/directortypes";
+import { DirectorCreateUpdate } from "@/app/Types/directors/directortypes";
 import { Director, EntityResponse, ParseDataResult } from "@/app/Types/entitytypes";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 export default function operations(client : SupabaseClient) {
 
-    const parseData = (obj: CreateUpdateDirector) : ParseDataResult => {
+    const parseData = (obj: DirectorCreateUpdate) : ParseDataResult => {
 
         // Data Validation
 
@@ -88,7 +88,7 @@ export default function operations(client : SupabaseClient) {
         return director.data![0];
     }
     
-    const createDirector = async (obj: CreateUpdateDirector) : Promise<ParseDataResult> => {
+    const createDirector = async (obj: DirectorCreateUpdate) : Promise<ParseDataResult> => {
 
         let result = parseData(obj);
         if (result['result'] !== 'success') return result;
@@ -106,7 +106,7 @@ export default function operations(client : SupabaseClient) {
         return response
     }
 
-    const updateDirector = async (directorId : number, obj: CreateUpdateDirector, hm : Map<string, Array<object>>) : Promise<ParseDataResult> => {
+    const updateDirector = async (directorId : number, obj: DirectorCreateUpdate, hm : Map<string, Array<object>>) : Promise<ParseDataResult> => {
         let result = parseData(obj);
         if (result['result'] !== 'success') return result;
 

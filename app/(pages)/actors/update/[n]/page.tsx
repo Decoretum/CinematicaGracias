@@ -17,7 +17,7 @@ import { client } from "@/app/Backend/createclient";
 import CircularProgress from "@mui/material/CircularProgress";
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import { CreateActor, UpdateActor } from "@/app/Types/actors/actortypes";
+import { ActorUpdate } from "@/app/Types/actors/actortypes";
 import DataComparator from "@/app/Helpers/DataComparator";
 
 export default function UpdateActor ({ params } : { params: Promise<{ n: number }> }) {
@@ -32,7 +32,7 @@ export default function UpdateActor ({ params } : { params: Promise<{ n: number 
     const [socmed, setSocMed] = useState<{media: string, link: string}[]>([{media: '', link: ''}]);
     const [pageLoading, setPageLoading] = useState(true);
     const [id, setId] = useState<number>(0);
-    const [initialState, setInitialState] = useState<UpdateActor>({'birthday': '', 'description': '', 'first_name': '', 'last_name': '', 'sex': '', 'socmed': [{media: '', link: ''}]});
+    const [initialState, setInitialState] = useState<ActorUpdate>({'birthday': '', 'description': '', 'first_name': '', 'last_name': '', 'sex': '', 'socmed': [{media: '', link: ''}]});
     const router = useRouter();
     const { updateActor, getActor } = operations(client);
 

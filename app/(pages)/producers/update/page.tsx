@@ -11,14 +11,14 @@ import DatePicker from "react-datepicker";
 import { ChangeEvent, useEffect, useState } from "react";
 import Snackbar from '@mui/material/Snackbar';
 import { useRouter } from 'next/navigation'
-import operations from '../../../Backend/directors/operations'
+import operations from '../../../Backend/producers/operations'
 import "react-datepicker/dist/react-datepicker.css";
 import { client } from "@/app/Backend/createclient";
 import CircularProgress from "@mui/material/CircularProgress";
-import { CreateUpdateDirector } from "@/app/Types/directors/directortypes";
+import { ProducerCreate } from "@/app/Types/producers/producertypes";
 import DataComparator from "@/app/Helpers/DataComparator";
 
-export default function UpdateDirector ({ params } : { params: Promise<{ n: number }> }) {
+export default function UpdateProducer ({ params } : { params: Promise<{ n: number }> }) {
     const [description, setDescription] = useState('');
     const [date, setDate] = useState<Date | null>(new Date());
     const [sex, setSex] = useState('m');
@@ -28,32 +28,32 @@ export default function UpdateDirector ({ params } : { params: Promise<{ n: numb
     const [message, setMessage] = useState('');
     const [loading, setLoading] = useState(false);
     const [pageLoading, setPageLoading] = useState(true);
-    const [initialState, setInitialState] = useState<CreateUpdateDirector>({'birthday': '', 'description': '', 'first_name': '', 'last_name': '', 'sex': ''});
+    const [initialState, setInitialState] = useState<ProducerCreate>({'birthday': '', 'description': '', 'first_name': '', 'last_name': '', 'sex': ''});
     const [id, setId] = useState<number>(0);
     const router = useRouter();
-    const { updateDirector, getDirector } = operations(client);
+    const { updateProducer, getProducer } = operations(client);
     
 
     useEffect(() => {
         const main = async () => {
             const { n } = await params;
-            let director = await getDirector(n);
-            setFirstName(director!.first_name);
-            setLastName(director!.last_name);
-            setSex(director!.sex);
-            setDescription(director!.description);
-            setDate(new Date(director!.birthday));   
+            let producer = await getProducer(n);
+            setFirstName(producer!.first_name);
+            setLastName(producer!.last_name);
+            setSex(producer!.sex);
+            setDescription(producer!.description);
+            setDate(new Date(producer!.birthday));   
             setId(n);
             
             setInitialState({
-                first_name: director!.first_name,
-                last_name: director!.last_name,
-                sex: director!.sex,
-                birthday: director!.birthday,
-                description: director!.description
+                first_name: producer!.first_name,
+                last_name: producer!.last_name,
+                sex: producer!.sex,
+                birthday: producer!.birthday,
+                description: producer!.description
             })
     
-            console.log(director);
+            console.log(producer);
             setPageLoading(false);
         }
         main();
@@ -87,7 +87,7 @@ export default function UpdateDirector ({ params } : { params: Promise<{ n: numb
 
         let compare = DataComparator(hm);
 
-        let hashmap = await updateDirector(id, obj, compare);
+        let hashmap = await updateProducer(id, obj, compare);
         console.log(hashmap);
         if (hashmap.result !== 'success') {
             setMessage(hashmap.result);
@@ -96,7 +96,7 @@ export default function UpdateDirector ({ params } : { params: Promise<{ n: numb
         }
         
         else {
-            router.push('/directors');
+            router.push('/producers');
             setLoading(false);
             return;   
         }

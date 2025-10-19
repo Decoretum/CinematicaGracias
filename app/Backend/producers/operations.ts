@@ -1,11 +1,10 @@
-import { CreateUpdateDirector } from "@/app/Types/directors/directortypes";
-import { ParseDataResult } from "@/app/Types/entitytypes";
-import { CreateUpdateProducer } from "@/app/Types/producers/producertypes";
+import { ParseDataResult, Producer } from "@/app/Types/entitytypes";
+import { ProducerCreate } from "@/app/Types/producers/producertypes";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 export default function operations(client : SupabaseClient) {
 
-    const parseData = (obj: CreateUpdateProducer) : ParseDataResult => {
+    const parseData = (obj: ProducerCreate) : ParseDataResult => {
 
         // Data Validation
 
@@ -78,8 +77,14 @@ export default function operations(client : SupabaseClient) {
         const producers = client.from('producer').select();
         return producers;
     }
+
+    const getProducer = async (id : number) : Promise<Producer | null> => {
+        const producer = await client.from('director').select().eq('id', id);
+        return producer.data![0];
+    }
+
     
-    const createProducer = async (obj: CreateUpdateProducer) => {
+    const createProducer = async (obj: ProducerCreate) : Promise<ParseDataResult> => {
 
         let result = parseData(obj);
         if (result['result'] !== 'success') return result;
@@ -91,10 +96,13 @@ export default function operations(client : SupabaseClient) {
             first_name: obj.first_name, last_name: obj.last_name, sex: obj.sex
         });
         
-        return { error }
+        let response : ParseDataResult = {result: '', metadata: {}};
+        response['result'] = 'success';
+        response['metadata'] = { error }
+        return response
     }
 
-    const updateProducer = async (producerId : number, obj: CreateUpdateProducer, hm : Map<string, Object>) => {
+    const updateProducer = async (producerId : number, obj: ProducerCreate, hm : Map<string, Object>) : Promise<ParseDataResult> => {
         let result = parseData(obj);
         if (result['result'] !== 'success') return result;
 
@@ -104,11 +112,14 @@ export default function operations(client : SupabaseClient) {
         }
 
         const { error } = await client
-        .from('director')
+        .from('producer')
         .update({updatedData})
         .eq('id', producerId)
 
-        return { error };
+        let response : ParseDataResult = {result: '', metadata: {}};
+        response['result'] = 'success';
+        response['metadata'] = { error }
+        return response
     }
 
     const deleteProducer = async (producerId : number) => {
@@ -120,5 +131,5 @@ export default function operations(client : SupabaseClient) {
         return { response }
     }
 
-    return { getProducers, createProducer, updateProducer, deleteProducer }
+    return { getProducers, getProducer, createProducer, updateProducer, deleteProducer }
 }

@@ -11,12 +11,12 @@ import DatePicker from "react-datepicker";
 import { ChangeEvent, useState } from "react";
 import Snackbar from '@mui/material/Snackbar';
 import { useRouter } from 'next/navigation'
-import operations from '../../../Backend/directors/operations'
+import operations from '../../../Backend/producers/operations'
 import "react-datepicker/dist/react-datepicker.css";
 import { client } from "@/app/Backend/createclient";
 import CircularProgress from "@mui/material/CircularProgress";
 
-export default function CreateDirector () {
+export default function CreateProducer () {
     const [description, setDescription] = useState('');
     const [date, setDate] = useState<Date | null>(new Date());
     const [sex, setSex] = useState('m');
@@ -41,9 +41,9 @@ export default function CreateDirector () {
             description: description
         }
 
-        const { createDirector } = operations(client);
+        const { createProducer } = operations(client);
         setLoading(true);
-        let hashmap = await createDirector(obj);
+        let hashmap = await createProducer(obj);
         console.log(hashmap);
         if (hashmap.result !== 'success') {
             setMessage(hashmap.result);
@@ -52,7 +52,7 @@ export default function CreateDirector () {
         }
         
         else {
-            router.push('/directors');
+            router.push('/producers');
             return;   
         }
     }
@@ -64,14 +64,14 @@ export default function CreateDirector () {
                 
                 <Box className='flex flex-row'>
                     <Box className='mr-[2vw]'>
-                        <Tooltip title='Back to Director Page'>
+                        <Tooltip title='Back to Producer Page'>
                             <Button variant='contained'>
                                 <ArrowBackIcon />
                             </Button>
                         </Tooltip>
                     </Box>
 
-                    <Typography color='white' variant='h5'> Add a Director </Typography>
+                    <Typography color='white' variant='h5'> Add a Producer </Typography>
                 </Box>
 
                 <Box className='flex flex-row mt-[5vh]'>
@@ -117,7 +117,7 @@ export default function CreateDirector () {
                         <Textarea
                         value={description}
                         onChange={(event: ChangeEvent<HTMLTextAreaElement>) => setDescription(event.target.value)}
-                        placeholder="Write a description for the Director"
+                        placeholder="Write a description for the Producer"
                         className='mt-[2vh] w-[33vw]'
                         minRows={7}
                         maxRows={15}
@@ -148,7 +148,6 @@ export default function CreateDirector () {
             autoHideDuration={6000}
             onClose={() => setAlert(false)}
             message={message}
-            // action={action}
             />
         </>
     )

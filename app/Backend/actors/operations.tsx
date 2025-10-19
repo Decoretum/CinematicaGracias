@@ -1,11 +1,11 @@
 import ValidLink from "@/app/Helpers/ValidLink";
-import { CreateActor, SocialMediaArray } from "@/app/Types/actors/actortypes";
+import { ActorCreate, SocialMediaArray } from "@/app/Types/actors/actortypes";
 import { Actor, ParseDataResult } from "@/app/Types/entitytypes";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 export default function operations(client : SupabaseClient) {
 
-    const parseData = (obj: CreateActor) : ParseDataResult => {
+    const parseData = (obj: ActorCreate) : ParseDataResult => {
 
         // Data Validation
 
@@ -106,7 +106,7 @@ export default function operations(client : SupabaseClient) {
     }
 
     
-    const createActor = async (obj: CreateActor) : Promise<ParseDataResult> => {
+    const createActor = async (obj: ActorCreate) : Promise<ParseDataResult> => {
 
         let result = parseData(obj);
         if (result['result'] !== 'success') return result;
@@ -123,7 +123,7 @@ export default function operations(client : SupabaseClient) {
         return response
     }
 
-    const updateActor = async (actorId : number, obj: CreateActor, hm : Map<string, Object>) => {
+    const updateActor = async (actorId : number, obj: ActorCreate, hm : Map<string, Object>) => {
         let result = parseData(obj);
         if (result['result'] !== 'success') return result;
 
