@@ -51,7 +51,7 @@ export default function operations(client : SupabaseClient) {
     
     
         // Birthday
-        // Age of user must be >= 7
+        // Age of user must be >= 20
         // Based on Month and Day values, age value will be reduced by 1
     
         let birthday = new Date(obj.birthday);
@@ -62,8 +62,8 @@ export default function operations(client : SupabaseClient) {
         if (current.getMonth() < birthday.getMonth() 
         || (birthday.getMonth() === current.getMonth() && birthday.getDate() > current.getDate())) age--;
         
-        if (age < 7) {
-            hashmap['result'] = 'User must be at least 7 years of age';
+        if (age < 20) {
+            hashmap['result'] = 'User must be at least 20 years of age';
             return hashmap;
         }
 
@@ -79,7 +79,7 @@ export default function operations(client : SupabaseClient) {
     }
 
     const getProducer = async (id : number) : Promise<Producer | null> => {
-        const producer = await client.from('director').select().eq('id', id);
+        const producer = await client.from('producer').select().eq('id', id);
         return producer.data![0];
     }
 
@@ -113,7 +113,7 @@ export default function operations(client : SupabaseClient) {
 
         const { error } = await client
         .from('producer')
-        .update({updatedData})
+        .update(updatedData)
         .eq('id', producerId)
 
         let response : ParseDataResult = {result: '', metadata: {}};

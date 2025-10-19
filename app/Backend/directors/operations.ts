@@ -51,7 +51,7 @@ export default function operations(client : SupabaseClient) {
     
     
         // Birthday
-        // Age of user must be >= 7
+        // Age of user must be >= 20
         // Based on Month and Day values, age value will be reduced by 1
     
         let birthday = new Date(obj.birthday);

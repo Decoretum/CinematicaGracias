@@ -2,7 +2,7 @@
 import { Box, FormControl, RadioGroup, Textarea } from "@mui/joy";
 import { Button } from '@mui/material'
 import Typography from "@mui/material/Typography";
-import Header from '../../../Components/Header'
+import Header from '../../../../Components/Header'
 import Input from '@mui/joy/Input';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Tooltip from '@mui/material/Tooltip';
@@ -11,7 +11,7 @@ import DatePicker from "react-datepicker";
 import { ChangeEvent, useEffect, useState } from "react";
 import Snackbar from '@mui/material/Snackbar';
 import { useRouter } from 'next/navigation'
-import operations from '../../../Backend/producers/operations'
+import operations from '../../../../Backend/producers/operations'
 import "react-datepicker/dist/react-datepicker.css";
 import { client } from "@/app/Backend/createclient";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -108,7 +108,7 @@ export default function UpdateProducer ({ params } : { params: Promise<{ n: numb
                 <Header currentUser={ undefined } />
                 <Box className='flex h-screen items-center justify-center'>
                     <Box className='flex flex-col justify-center items-center mx-auto h-[15vh] md:w-[50vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
-                        Loading Director Data
+                        Loading Producer Data
                         <CircularProgress className='mt-4' color='secondary' /> 
                     </Box>
                 </Box>

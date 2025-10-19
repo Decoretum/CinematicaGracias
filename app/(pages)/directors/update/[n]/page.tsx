@@ -15,7 +15,7 @@ import operations from '../../../../Backend/directors/operations'
 import "react-datepicker/dist/react-datepicker.css";
 import { client } from "@/app/Backend/createclient";
 import CircularProgress from "@mui/material/CircularProgress";
-import { CreateUpdateDirector } from "@/app/Types/directors/directortypes";
+import { DirectorCreateUpdate } from "@/app/Types/directors/directortypes";
 import DataComparator from "@/app/Helpers/DataComparator";
 
 export default function UpdateDirector ({ params } : { params: Promise<{ n: number }> }) {
@@ -28,7 +28,7 @@ export default function UpdateDirector ({ params } : { params: Promise<{ n: numb
     const [message, setMessage] = useState('');
     const [loading, setLoading] = useState(false);
     const [pageLoading, setPageLoading] = useState(true);
-    const [initialState, setInitialState] = useState<CreateUpdateDirector>({'birthday': '', 'description': '', 'first_name': '', 'last_name': '', 'sex': ''});
+    const [initialState, setInitialState] = useState<DirectorCreateUpdate>({'birthday': '', 'description': '', 'first_name': '', 'last_name': '', 'sex': ''});
     const [id, setId] = useState<number>(0);
     const router = useRouter();
     const { updateDirector, getDirector } = operations(client);
