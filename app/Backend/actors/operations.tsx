@@ -1,10 +1,11 @@
-import { CreateUpdateActor } from "@/app/Types/actors/actortypes";
-import { ParseDataResult } from "@/app/Types/entitytypes";
+import ValidLink from "@/app/Helpers/ValidLink";
+import { CreateActor, SocialMediaArray } from "@/app/Types/actors/actortypes";
+import { Actor, ParseDataResult } from "@/app/Types/entitytypes";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 export default function operations(client : SupabaseClient) {
 
-    const parseData = (obj: CreateUpdateActor) : ParseDataResult => {
+    const parseData = (obj: CreateActor) : ParseDataResult => {
 
         // Data Validation
 
@@ -67,6 +68,27 @@ export default function operations(client : SupabaseClient) {
             return hashmap;
         }
 
+
+        // Social Media array
+        if (obj.socmed !== null) {
+            // let mediaArray : SocialMediaArray = obj.socmed as unknown as SocialMediaArray;
+            for (let i = 0; i <= obj.socmed.length - 1; i++) {
+                let arr = obj.socmed[i].split('||');
+                let media = arr[0];
+                let link = arr[1];
+                if (media.length <= 2) {
+                    hashmap['result'] = `The media name "${media}" is too short. Media name must be at least 3 characters`;
+                    return hashmap;
+                }
+
+                let isValid = ValidLink(link);
+                if (!isValid) {
+                    hashmap['result'] = `The link for media "${media}" is invalid`;
+                    return hashmap;
+                }
+            }    
+        }
+
         hashmap['result'] = 'success';
         return hashmap;
     
@@ -77,15 +99,23 @@ export default function operations(client : SupabaseClient) {
         const actors = client.from('actor').select();
         return actors;
     }
+
+    const getActor = async (id : number) : Promise<Actor | null> => {
+        const actor = await client.from('actor').select().eq('id', id);
+        return actor.data![0];
+    }
+
     
-    const createActor = async (obj: CreateUpdateActor) : Promise<ParseDataResult> => {
+    const createActor = async (obj: CreateActor) : Promise<ParseDataResult> => {
 
         let result = parseData(obj);
         if (result['result'] !== 'success') return result;
 
+
+
         const { error } = await client
         .from('actor')
-        .insert({obj});
+        .insert(obj);
         
         let response : ParseDataResult = {result: '', metadata: {}};
         response['result'] = 'success';
@@ -93,7 +123,7 @@ export default function operations(client : SupabaseClient) {
         return response
     }
 
-    const updateActor = async (actorId : number, obj: CreateUpdateActor, hm : Map<string, Object>) => {
+    const updateActor = async (actorId : number, obj: CreateActor, hm : Map<string, Object>) => {
         let result = parseData(obj);
         if (result['result'] !== 'success') return result;
 
@@ -104,10 +134,13 @@ export default function operations(client : SupabaseClient) {
 
         const { error } = await client
         .from('actor')
-        .update({updatedData})
+        .update(updatedData)
         .eq('id', actorId)
 
-        return { error };
+        let response : ParseDataResult = {result: '', metadata: {}};
+        response['result'] = 'success';
+        response['metadata'] = { error }
+        return response
     }
 
     const deleteActor = async (actorId : number) => {
@@ -119,5 +152,5 @@ export default function operations(client : SupabaseClient) {
         return { response }
     }
 
-    return { getActors, createActor, updateActor, deleteActor }
+    return { getActors, getActor, createActor, updateActor, deleteActor }
 }

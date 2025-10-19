@@ -57,12 +57,12 @@ export default function Films () {
                     ) :
                     (films?.length === 0 && currentUser === null && loading === false) ? (
                         <Box className='flex flex-col items-center justify-center md:ml-[5vw] md:w-[30vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
-                        <Typography sx = {{ 'color' : 'white' }}> There are no movies stored in the site as of the moment </Typography>
+                        <Typography sx = {{ 'color' : 'white' }}> There are no films stored in the site as of the moment </Typography>
                     </Box>
                     ) :
                     (films.length === 0 && currentUser?.is_admin === true && loading === false) ? (
                     <Box className='flex flex-col items-center justify-center md:ml-[5vw] md:w-[30vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
-                        <Typography sx = {{ 'color' : 'white' }}> There are no movies stored in the site. Add a Film through the button below </Typography>
+                        <Typography sx = {{ 'color' : 'white' }}> There are no films stored in the site. Add a Film through the button below </Typography>
                         <Box className='mt-[3vh]'>
                             <Button color='neutral' variant='soft'> Add Film </Button>
                         </Box>
@@ -70,7 +70,7 @@ export default function Films () {
                     ) : 
                     (films.length === 0 && currentUser?.is_admin === false && loading === false) ? (
                     <Box className='flex flex-col items-center justify-center md:ml-[5vw] md:w-[30vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
-                        <Typography sx = {{ 'color' : 'white' }}> There are no movies stored in the site as of the moment </Typography>
+                        <Typography sx = {{ 'color' : 'white' }}> There are no films stored in the site as of the moment </Typography>
                     </Box>
                     )
                     : (
