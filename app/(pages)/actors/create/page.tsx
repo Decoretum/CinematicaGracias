@@ -70,7 +70,7 @@ export default function CreateActor () {
             description: description,
             socmed: arr
         }
-
+      
         const { createActor } = operations(client);
         setLoading(true);
         let hashmap = await createActor(obj);
@@ -152,7 +152,7 @@ export default function CreateActor () {
                             <Box className='flex flex-row mt-[2vh]'>
                                 <Input className='w-[10vw]' variant='soft' value={socmed[index].media} onChange={(event) => changeArray(index, 'media', event.target.value)} />
                                 <Input className='ml-[3vw]' variant='soft' value={socmed[index].link} onChange={(event) => changeArray(index, 'link', event.target.value)} />
-                                <Button onClick={() => removeRow(index)} color='warning' className='ml-[2vw]' sx={{width: '2vw'}} variant='text'><DeleteIcon /></Button>
+                                {socmed.length > 1 && <Button onClick={() => removeRow(index)} color='warning' className='ml-[2vw]' sx={{width: '2vw'}} variant='text'><DeleteIcon /></Button>}
                                 { index === socmed.length - 1 && <Button onClick={addRow} color='info'  sx={{width: '2vw'}} variant='text'><AddIcon /></Button> }
                                 
                             </Box>

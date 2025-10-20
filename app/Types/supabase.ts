@@ -157,19 +157,16 @@ export type Database = {
           actor_fk: number | null
           film_fk: number | null
           id: number
-          total_salary: number | null
         }
         Insert: {
           actor_fk?: number | null
           film_fk?: number | null
           id?: number
-          total_salary?: number | null
         }
         Update: {
           actor_fk?: number | null
           film_fk?: number | null
           id?: number
-          total_salary?: number | null
         }
         Relationships: [
           {
@@ -193,19 +190,16 @@ export type Database = {
           film_fk: number | null
           id: number
           producer_fk: number | null
-          producer_role: string | null
         }
         Insert: {
           film_fk?: number | null
           id?: number
           producer_fk?: number | null
-          producer_role?: string | null
         }
         Update: {
           film_fk?: number | null
           id?: number
           producer_fk?: number | null
-          producer_role?: string | null
         }
         Relationships: [
           {

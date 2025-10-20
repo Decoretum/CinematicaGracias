@@ -1,6 +1,6 @@
 import { FilmGenres } from "@/app/Helpers/FilmGenres";
 import { ParseDataResult } from "@/app/Types/entitytypes";
-import { CreateUpdateFilm, FilmGenre } from "@/app/Types/films/filmtypes";
+import { CreateUpdateFilm, FilmGenre, Genre } from "@/app/Types/films/filmtypes";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 export default function operations(client : SupabaseClient) {
@@ -34,14 +34,6 @@ export default function operations(client : SupabaseClient) {
             return hashmap;
         }
 
-        for (let i = 0; i <= obj.genres.length - 1; i++) {
-            let genre : FilmGenre = obj.genres[i].toUpperCase() as FilmGenre;
-            if (!FilmGenres.includes(genre)) {
-                hashmap['result'] = 'One of the genre values isn\'t part of the standard accepted genres';
-                return hashmap;
-            }
-        }
-
         // Date Released
         // Assuming that date_released is formatted as YYYY-MM-DD
 
@@ -51,6 +43,48 @@ export default function operations(client : SupabaseClient) {
             hashmap['result'] = 'Film\'s released date cannot be ahead than the current date';
             return hashmap;
         }
+
+        // Actors, Directors, and Producers
+        // They must all have at least 1
+
+        let missingActor = obj.actors.length === 0;
+        if (missingActor) {
+            hashmap['result'] = 'The film must have at least 1 actor';
+            return hashmap;
+        }
+
+        let missingProducer = obj.producers.length === 0;
+        if (missingProducer) {
+            hashmap['result'] = 'The film must have at least 1 producer';
+            return hashmap;
+        }
+
+        let missingDirector = obj.actors.length === 0;
+        if (missingDirector) {
+            hashmap['result'] = 'The film must have at least 1 director';
+            return hashmap;
+        }
+
+        // Description
+        // Must have at least 100 characters
+
+        if (obj.description.length < 100) {
+            hashmap['result'] = 'Description must have at least 100 characters';
+            return hashmap;
+        }
+
+        // Duration & Framerate
+
+        if (obj.duration < 0 || obj.duration === null) {
+            hashmap['result'] = 'Film duration is invalid';
+            return hashmap;
+        }
+
+        if (obj.frame_rate !== null && obj.frame_rate < 0) {
+            hashmap['result'] = 'Film frame_rate is invalid';
+            return hashmap;
+        }
+
 
     
         hashmap['result'] = 'success';
@@ -62,21 +96,46 @@ export default function operations(client : SupabaseClient) {
         return films;
     }
     
-    const createFilm = async (obj: CreateUpdateFilm) => {
+    const createFilm = async (obj: CreateUpdateFilm) : Promise<ParseDataResult> => {
 
         let result = parseData(obj);
+        let response : ParseDataResult = {result: '', metadata: {}};
         if (result['result'] !== 'success') return result;
 
-        const { error } = await client
-        .from('producer')
+        const { data, error } = await client
+        .from('film')
         .insert({content_rating : obj.content_rating, date_released: obj.date_released, 
             description: obj.description, director_fk: obj.director_fk,
             duration: obj.duration, frame_rate: obj.frame_rate,
             genres: obj.genres, name: obj.name
-         });
+         })
+         .select()
+         .single();
+
+        const associateProducer = async () => {
+            for (let i = 0; i <= obj.producers.length - 1; i++) {
+                await client
+                .from('filmproducer')
+                .insert({ film_fk: data.id, producer_fk: obj.producers[i] });
+            }
+        }
+
+        const associateActor = async () => {
+            for (let i = 0; i <= obj.actors.length - 1; i++) {
+                await client
+                .from('filmactor')
+                .insert({ film_fk: data.id, actor_fk: obj.actors[i] });
+            }
+        }
+
+        await associateProducer();
+        await associateActor();
+
         
-        return { error }
-    }
+        
+        response['result'] = 'success';
+        return response
+     }
 
     const updateFilm = async (filmId : number, obj: CreateUpdateFilm, hm : Map<string, Object>) => {
         let result = parseData(obj);

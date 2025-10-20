@@ -49,7 +49,13 @@ export default function operations(client : SupabaseClient) {
             return hashmap;
         }
     
-    
+        // Description
+        // Must have at least 100 characters
+        if (obj.description.length < 100) {
+            hashmap['result'] = 'Description must have at least 100 characters';
+            return hashmap;
+        }
+        
         // Birthday
         // Age of user must be >= 20
         // Based on Month and Day values, age value will be reduced by 1

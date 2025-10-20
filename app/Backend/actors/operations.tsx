@@ -68,9 +68,16 @@ export default function operations(client : SupabaseClient) {
             return hashmap;
         }
 
-
+        // Description
+        // Must have at least 100 characters
+        if (obj.description.length < 100) {
+            hashmap['result'] = 'Description must have at least 100 characters';
+            return hashmap;
+        }
+        
         // Social Media array
-        if (obj.socmed !== null) {
+        let isEmptyArray = obj.socmed![0] === '||';
+        if (obj.socmed !== null && !isEmptyArray) {
             // let mediaArray : SocialMediaArray = obj.socmed as unknown as SocialMediaArray;
             for (let i = 0; i <= obj.socmed.length - 1; i++) {
                 let arr = obj.socmed[i].split('||');
