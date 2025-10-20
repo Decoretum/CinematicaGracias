@@ -1,10 +1,12 @@
-import { FilmGenres } from "@/app/Helpers/FilmGenres";
 import { ParseDataResult } from "@/app/Types/entitytypes";
-import { CreateUpdateFilm, FilmGenre, Genre } from "@/app/Types/films/filmtypes";
+import { CreateUpdateFilm } from "@/app/Types/films/filmtypes";
 import { SupabaseClient } from "@supabase/supabase-js";
+import filmActorOperation from '../filmactors/operation';
+import filmProducerOperation from '../filmproducers/operation';
 
 export default function operations(client : SupabaseClient) {
-
+    let { createFilmActor } = filmActorOperation(client);
+    let { createFilmProducer } = filmProducerOperation(client);
     const parseData = (obj: CreateUpdateFilm) : ParseDataResult => {
 
         // Data Validation
@@ -85,8 +87,6 @@ export default function operations(client : SupabaseClient) {
             return hashmap;
         }
 
-
-    
         hashmap['result'] = 'success';
         return hashmap;
     }
@@ -102,7 +102,7 @@ export default function operations(client : SupabaseClient) {
         let response : ParseDataResult = {result: '', metadata: {}};
         if (result['result'] !== 'success') return result;
 
-        const { data, error } = await client
+        const { data } = await client
         .from('film')
         .insert({content_rating : obj.content_rating, date_released: obj.date_released, 
             description: obj.description, director_fk: obj.director_fk,
@@ -112,26 +112,13 @@ export default function operations(client : SupabaseClient) {
          .select()
          .single();
 
-        const associateProducer = async () => {
-            for (let i = 0; i <= obj.producers.length - 1; i++) {
-                await client
-                .from('filmproducer')
-                .insert({ film_fk: data.id, producer_fk: obj.producers[i] });
-            }
+        for (let i = 0; i <= obj.producers.length - 1; i++) {
+            await createFilmProducer(obj.producers[i], data.id);
         }
 
-        const associateActor = async () => {
-            for (let i = 0; i <= obj.actors.length - 1; i++) {
-                await client
-                .from('filmactor')
-                .insert({ film_fk: data.id, actor_fk: obj.actors[i] });
-            }
-        }
-
-        await associateProducer();
-        await associateActor();
-
-        
+        for (let i = 0; i <= obj.actors.length - 1; i++) {
+            await createFilmActor(obj.producers[i], data.id);
+        }        
         
         response['result'] = 'success';
         return response

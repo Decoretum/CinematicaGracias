@@ -8,11 +8,11 @@ export default function operations(client : SupabaseClient) {
         return filmProducers;
     }
     
-    const createFilmProducer = async (obj: CreateUpdateFilmProducer) => {
+    const createFilmProducer = async (producer_fk: number, film_fk: number) => {
 
         const { error } = await client
         .from('filmproducer')
-        .insert({ producer_fk: obj.producer_fk, film_fk: obj.film_fk, producer_role: obj.producer_role })        
+        .insert({ producer_fk: producer_fk, film_fk: film_fk })        
         return { error }
     }
 

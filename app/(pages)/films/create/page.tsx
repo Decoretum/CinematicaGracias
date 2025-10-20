@@ -16,11 +16,9 @@ import actorOperations from '../../../Backend/actors/operations'
 import producerOperations from '../../../Backend/producers/operations'
 import { client } from "@/app/Backend/createclient";
 import CircularProgress from "@mui/material/CircularProgress";
-import DeleteIcon from '@mui/icons-material/Delete';
-import AddIcon from '@mui/icons-material/Add';
-import "react-datepicker/dist/react-datepicker.css";
 import { IngestData, Genre } from "@/app/Types/films/filmtypes";
 import { FilmGenres} from '../../../Helpers/FilmGenres'
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function CreateFilm () {
     const [description, setDescription] = useState('');
@@ -179,7 +177,7 @@ export default function CreateFilm () {
         }
         
         else {
-            router.push('/directors');
+            router.push('/films');
             return;   
         }
     }

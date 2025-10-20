@@ -145,7 +145,7 @@ export default function UpdateActor ({ params } : { params: Promise<{ n: number 
         }
         
         else {
-            router.push('/directors');
+            router.push('/actors');
             return;   
         }
     }
@@ -180,7 +180,7 @@ export default function UpdateActor ({ params } : { params: Promise<{ n: number 
                         </Tooltip>
                     </Box>
 
-                    <Typography color='white' variant='h5'> Add an Actor </Typography>
+                    <Typography color='white' variant='h5'> Update Actor </Typography>
                 </Box>
 
                 <Box className='flex flex-row mt-[5vh]'>

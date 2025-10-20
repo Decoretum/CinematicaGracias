@@ -13,7 +13,7 @@ export default function Success () {
             <Header currentUser={ undefined } />
             <Box className='flex h-screen items-center justify-center'>
                 <Box className='flex flex-col justify-center items-center mx-auto h-[15vh] md:w-[50vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
-                    You've successfully created your account! You are now automatically logged in to the site.
+                    You've successfully created your account! You are now logged in to the site.
                     <Link href='/films'>
                         <Button variant='soft'>
                             Back to Films

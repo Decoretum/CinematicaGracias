@@ -82,7 +82,7 @@ export default function CreateActor () {
         }
         
         else {
-            router.push('/directors');
+            router.push('/actors');
             return;   
         }
     }
@@ -160,7 +160,7 @@ export default function CreateActor () {
 
                     </Box>
 
-                    <Box className='ml-[2vw]'>
+                    <Box className='ml-[-1vw]'>
                         <Typography color='white'> Description / Biography </Typography>
                         <Textarea
                         value={description}

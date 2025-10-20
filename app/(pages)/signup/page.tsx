@@ -1,6 +1,6 @@
 'use client'
 import { Box, FormControl, RadioGroup } from "@mui/joy";
-import { Button } from '@mui/material'
+import { Button, Snackbar } from '@mui/material'
 import Typography from "@mui/material/Typography";
 import Header from "../../Components/Header";
 import Input from '@mui/joy/Input';
@@ -28,7 +28,7 @@ export default function SignUp () {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
-    const [alert, setAlert] = useState(true);
+    const [alert, setAlert] = useState(false);
     const [message, setMessage] = useState('');
     const [loading, setLoading] = useState(false);
     const router = useRouter();
@@ -55,7 +55,7 @@ export default function SignUp () {
         console.log(hashmap);
         if (hashmap.result !== 'success') {
             setMessage(hashmap.result);
-            setAlert(false);
+            setAlert(true);
             setLoading(false);
             return;
         }
@@ -68,7 +68,7 @@ export default function SignUp () {
 
     return(
         <>
-            <Header currentUser={ undefined } />
+            <Header currentUser={ null } />
             <Box className='flex flex-col justify-center items-center mx-auto md:w-[50vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
                 
                 <Box className='flex flex-row'>
@@ -160,9 +160,14 @@ export default function SignUp () {
                     </Button>
                 </Box>                    
             </Box>
-            <Stack sx={{ width: '100%', marginTop: '1vh' }}>
-                <Alert hidden={alert} onClick={() => setAlert(true)} severity="error" onClose={() => {setAlert(true)}}>{message}</Alert>
-            </Stack>
+            
+            <Snackbar
+            open={alert}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+            autoHideDuration={6000}
+            onClose={() => setAlert(false)}
+            message={message}
+            />
             
         </>
     )

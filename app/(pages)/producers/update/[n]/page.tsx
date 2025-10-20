@@ -197,7 +197,7 @@ export default function UpdateProducer ({ params } : { params: Promise<{ n: numb
                     startIcon={loading ? <CircularProgress size={20} /> : null}
                     onClick={update}
                     >
-                        {loading ? null : 'Create'}
+                        {loading ? null : 'Update'}
                     </Button>
                 </Box>                    
             </Box>

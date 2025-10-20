@@ -156,7 +156,10 @@ export default function operations(client : SupabaseClient) {
         .delete()
         .eq('id', actorId)
 
-        return { response }
+        let res : ParseDataResult = {result: '', metadata: {}};
+        res['result'] = 'success';
+        res['metadata'] = { response }
+        return res
     }
 
     return { getActors, getActor, createActor, updateActor, deleteActor }

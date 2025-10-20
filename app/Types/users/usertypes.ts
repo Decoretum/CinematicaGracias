@@ -1,3 +1,4 @@
+import { AuthError } from '@supabase/supabase-js';
 import { Users } from '../entitytypes'
 
 export type SignUpEditUser = Omit<Users, 'id' | 'birthday'> & {
@@ -8,4 +9,9 @@ export type SignUpEditUser = Omit<Users, 'id' | 'birthday'> & {
 export type SignOutUser = {
     sessionId: string,
     userId: string
+}
+export type LoginUser = {
+    data: {
+        error : AuthError
+    }
 }

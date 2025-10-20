@@ -1,26 +1,24 @@
 'use client'
-import { Box, RadioGroup, Textarea } from "@mui/joy";
-import { Button, Checkbox, FormControlLabel, FormGroup, FormLabel, Modal, FormControl, Select, MenuItem } from '@mui/material'
-import Typography from "@mui/material/Typography";
-import Header from '../../../Components/Header'
-import Input from '@mui/joy/Input';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import Tooltip from '@mui/material/Tooltip';
-import DatePicker from "react-datepicker";
-import { ChangeEvent, useEffect, useState } from "react";
-import Snackbar from '@mui/material/Snackbar';
-import { useRouter } from 'next/navigation'
-import operations from '../../../Backend/films/operations'
-import directorOperations from '../../../Backend/directors/operations'
-import actorOperations from '../../../Backend/actors/operations'
-import producerOperations from '../../../Backend/producers/operations'
 import { client } from "@/app/Backend/createclient";
+import { Genre, IngestData } from "@/app/Types/films/filmtypes";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { Box, Textarea } from "@mui/joy";
+import Input from '@mui/joy/Input';
+import { Button, Checkbox, FormControl, FormControlLabel, FormGroup, Modal } from '@mui/material';
 import CircularProgress from "@mui/material/CircularProgress";
-import DeleteIcon from '@mui/icons-material/Delete';
-import AddIcon from '@mui/icons-material/Add';
+import Snackbar from '@mui/material/Snackbar';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from "@mui/material/Typography";
+import { useRouter } from 'next/navigation';
+import { ChangeEvent, useEffect, useState } from "react";
+import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { IngestData, Genre } from "@/app/Types/films/filmtypes";
-import { FilmGenres} from '../../../Helpers/FilmGenres'
+import actorOperations from '../../../Backend/actors/operations';
+import directorOperations from '../../../Backend/directors/operations';
+import operations from '../../../Backend/films/operations';
+import producerOperations from '../../../Backend/producers/operations';
+import Header from '../../../Components/Header';
+import { FilmGenres } from '../../../Helpers/FilmGenres';
 
 export default function CreateFilm () {
     const [description, setDescription] = useState('');
@@ -60,7 +58,6 @@ export default function CreateFilm () {
             newArr.push({id: curr.id, name: curr.name, checked: checked});
         }
         setFilmGenres(newArr);
-        console.log(filmGenres);
     }
 
     function handleChange(id: number, type: string) {
@@ -96,10 +93,8 @@ export default function CreateFilm () {
                 }
                 newArr.push({id: curr.id, name: curr.name, checked: checked});
             }
-            console.log(newArr);
             setActors(newArr);
         }
-        
     }
 
     useEffect(() => {
@@ -179,7 +174,7 @@ export default function CreateFilm () {
         }
         
         else {
-            router.push('/directors');
+            router.push('/films');
             return;   
         }
     }
