@@ -165,7 +165,6 @@ export default function UpdateActor ({ params } : { params: Promise<{ n: number 
         )
     }
 
-
     return (
         <>
             <Header currentUser={ undefined } />
