@@ -7,14 +7,16 @@ import { client }from "../../Backend/createclient";
 import Header from '../../Components/Header'
 import { SupabaseClient, User } from "@supabase/supabase-js";
 import { Producer, Users } from "../../Types/entitytypes";
-import DisplayCard from "@/app/Components/DisplayCard";
+import DisplayCard from "@/app/Components/HumanDisplayCard/DisplayCard";
 import DeleteIcon from '@mui/icons-material/Delete';
+import { CircularProgress } from "@mui/material";
 
 
 export default function Producers () {
     const [currentUser, setCurrentUser] = useState<Users | null>(null);
     const [producers, setProducers] = useState<Producer[]>([]);
     let { getProducers, deleteProducer } = producerOperation(client);
+    const [loading, setLoading] = useState(true);
 
     async function getUser(client : SupabaseClient) {
         let { getCurrentUser } = await userOperation(client);
@@ -54,7 +56,7 @@ export default function Producers () {
         };
 
         mainFunction();
-        console.log('end of function')
+        setLoading(false);
     }, [])
 
     return (
@@ -65,6 +67,12 @@ export default function Producers () {
         
                 <Box className='ml-auto mr-auto mt-42'>
                     {
+                    loading ? (
+                        <Box className='flex flex-col items-center justify-center md:ml-[5vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
+                            <Typography sx = {{ 'color' : 'white' }}> Loading Data </Typography>
+                            <CircularProgress className='mt-4' color='secondary' />
+                        </Box>
+                    ) :        
                     (producers.length === 0 && currentUser === null) ? (
                         <Box className='flex flex-col items-center justify-center md:ml-[5vw] md:w-[30vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
                         <Typography sx = {{'color' : 'white'}}> There are no producers stored in the site as of the moment </Typography>
@@ -88,9 +96,9 @@ export default function Producers () {
                         <Box className='mb-[4vh]  backdrop-blur-sm'>
                             <Typography variant='plain' sx={{ color: 'whitesmoke' }} level='h1'> Producers </Typography>
                         </Box>
-                        <Box className='flex flex-row gap-10 max-w-[100vw]  justify-center items-center mx-auto md:w-[50vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
+                        <Box className='flex flex-row gap-10 max-w-[100vw] overflow-x-auto pl-40 justify-center items-center mx-auto md:w-[50vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
                         {producers.map((producer, idx) => (
-                            <Box className='flex flex-col items-center justify-center max-w-[20vw] max-h-[20vh]'>
+                            <Box className='flex flex-col items-center justify-center max-w-[70vw] max-h-[90vh] h-[50vh]'>
                                 <Box>
                                     <DisplayCard first_name={producer.first_name} last_name={producer.last_name} birthday={producer.birthday} />
                                 </Box>

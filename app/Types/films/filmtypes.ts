@@ -17,3 +17,11 @@ export type Genre = {
     name: string,
     checked: number
 }
+export type FilmDisplay = {
+    name: string,
+    average_user_rating: number | null,
+    content_rating: string | null,
+    date_released: string,
+    duration: number
+
+}

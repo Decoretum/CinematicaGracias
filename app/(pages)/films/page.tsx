@@ -8,6 +8,7 @@ import Header from "../../Components/Header";
 import { Film, Users } from '../../Types/entitytypes'
 import { SupabaseClient, User } from '@supabase/supabase-js';
 import CircularProgress from '@mui/material/CircularProgress';
+import FilmDisplayCard from "@/app/Components/Film/FilmDisplayCard";
 
 
 export default function Films () {
@@ -74,8 +75,19 @@ export default function Films () {
                     </Box>
                     )
                     : (
-                    <>
-
+                        <>
+                        <Box className='mb-[4vh]  backdrop-blur-sm'>
+                            <Typography variant='plain' sx={{ color: 'whitesmoke' }} level='h1'> Directors </Typography>
+                        </Box>
+                        <Box className='flex flex-row gap-10 overflow-x-auto max-w-[70vw] max-h-[90vh] h-[50vh] justify-center items-center mx-auto md:w-[50vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
+                        {films.map((film, idx) => (
+                            <Box className='flex flex-col items-center justify-center'>
+                                <Box>
+                                    <FilmDisplayCard name={film.name} average_user_rating={film.average_user_rating} content_rating={film.content_rating} date_released={film.date_released} duration={film.duration}  />
+                                </Box>
+                            </Box>
+                        ))}
+                        </Box>
                     </>
                     )
                     }
