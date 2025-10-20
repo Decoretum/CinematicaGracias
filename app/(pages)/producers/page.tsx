@@ -93,12 +93,12 @@ export default function Producers () {
                     )
                     : (
                     <>
-                        <Box className='mb-[4vh]  backdrop-blur-sm'>
+                        <Box className='mb-[4vh] w-[30vw]  backdrop-blur-sm'>
                             <Typography variant='plain' sx={{ color: 'whitesmoke' }} level='h1'> Producers </Typography>
                         </Box>
-                        <Box className='flex flex-row gap-10 max-w-[100vw] overflow-x-auto pl-40 justify-center items-center mx-auto md:w-[50vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
+                        <Box className='max-w-[60vw] max-h-[90vw] overflow-x-auto flex flex-row gap-10 pl-10 bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
                         {producers.map((producer, idx) => (
-                            <Box className='flex flex-col items-center justify-center max-w-[70vw] max-h-[90vh] h-[50vh]'>
+                            <Box className='lex flex-col items-center justify-center'>
                                 <Box>
                                     <DisplayCard first_name={producer.first_name} last_name={producer.last_name} birthday={producer.birthday} />
                                 </Box>

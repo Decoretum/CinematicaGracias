@@ -9,6 +9,8 @@ import { SupabaseClient, User } from "@supabase/supabase-js";
 import { Director, Users } from "../../Types/entitytypes";
 import DisplayCard from "@/app/Components/HumanDisplayCard/DisplayCard";
 import DeleteIcon from '@mui/icons-material/Delete';
+import InfoIcon from '@mui/icons-material/Info';
+import EditIcon from '@mui/icons-material/Edit';
 import { CircularProgress } from "@mui/material";
 
 
@@ -96,15 +98,21 @@ export default function Directors () {
                         <Box className='mb-[4vh]  backdrop-blur-sm'>
                             <Typography variant='plain' sx={{ color: 'whitesmoke' }} level='h1'> Directors </Typography>
                         </Box>
-                        <Box className='flex flex-row gap-10 pl-40 overflow-x-auto max-w-[70vw] max-h-[90vh] h-[50vh] justify-center items-center mx-auto md:w-[50vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
+                        <Box className='flex flex-row gap-10 pl-86 overflow-x-auto max-w-[80vw] justify-center items-center mx-auto bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
                         {directors.map((director, idx) => (
                             <Box className='flex flex-col items-center justify-center'>
                                 <Box>
                                     <DisplayCard first_name={director.first_name} last_name={director.last_name} birthday={director.birthday} />
                                 </Box>
-                                <Box className='mt-[1vh]'>
+                                <Box className='flex flex-row gap-8 mt-[1vh] flex flex-row'>
                                     <Button variant='soft' onClick={() => handleDelete(director.id)} >
                                         <DeleteIcon />
+                                    </Button>
+                                    <Button variant='soft' color='success'>
+                                        <InfoIcon />
+                                    </Button>
+                                    <Button variant='soft' color='success'>
+                                        <EditIcon />
                                     </Button>
                                 </Box>
                             </Box>
