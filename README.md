@@ -2,7 +2,7 @@
 Cinematica Gracias is a [Next.js](https://nextjs.org) and Supabase project developed as an experimental concept for storing and archiving wonderful and impactful films for the future.  This was developed to store and archive data on films around the world aided with relevant data such as the directors, producers, actors, and the reviews of the users who log authenticate to this application. Compared to Netflix or IMDB, this application wasn't intended to serve as an official reference for professional critiques in judging the quality and worth of a film. In this application, people can rate and review films. 
 
 ## Creating an Account
-In this application, users can have two roles. One is an **admin**, while another one is a **collaborator**. A collaborator can view film, actor, director, and producer data within the application. They can also review and rate films. However, they cannot edit the data of these since they aren't authorized to do so.  On the other hand, Admin users have the capability to modify application data for Films, Directors, Actors, and more. However, they cannot rate or review films. 
+In this application, users can have two roles. One is an **admin**, while another one is a **collaborator**. A collaborator can view film, actor, director, and producer data within the application. They can also review and rate films. However, they cannot edit the data of these since they aren't authorized to do so.  On the other hand, Admin users have the capability to modify application data for Films, Directors, Actors, and more. However, they cannot rate or review films. An anonymous user has to signup to be a collaborator in order to post reviews for films.
 
 <img width="1280" height="688" alt="image" src="https://github.com/user-attachments/assets/8563cd16-66cf-42dc-bf9c-3086ac177f63" />
 <br><br>
@@ -23,7 +23,7 @@ You will then be redirected to the Films page which displays the films stored/ar
 
 ### Entity-Relationship Diagram
 <br>
-<img width="1691" height="871" alt="GoRocky drawio" src="https://github.com/user-attachments/assets/e324d8b3-7205-474c-bca3-3f808d900950" />
+<img width="1691" height="871" alt="GoRocky drawio (1)" src="https://github.com/user-attachments/assets/6d6f8fe3-24a5-44d6-a97b-b4c12c6f57ae" />
 <br><br>
 
 The **Users** table is separate from the **Auth User** Table. The Auth User table is Supabase's built-in table with its own built-in schemas and rules. The Auth User table is used for authentication and authorization across the application's lifecycle. On the other hand, the Users table is the custom User table developed for storing personal data. The Users table will interact with other entities in order to view and modify application data. Both **collaborators** and **admins** utilize the Auth User and Users tables. <br><br>
@@ -70,16 +70,25 @@ Enter the root directory of the application, `/cinematicagracias`, and build the
 
 ### Feature Mapping
 
-Requirement: The admin must be able to edit and modify application data
+#### Requirement: The admin must be able to Create, Record, Update, and Delete application data<br>
 Features Implemented
-- CRUD operations for Producer entity
-- CRUD operations for Director entity
-- CRUD operations for Actor entity
-- CRUD operations for Film entity
+- CRUD functionalities for Producer entity
+- CRUD functionalities for Director entity
+- CRUD functionalities for Actor entity
+- CRUD functionalities for Film entity
+<br><br>
 
-Requirement: The user must be able to write a review for a film and rate it
-Features Currently being Implemented
-- CRUD for Review entity
+#### Requirement: The admin, collaborator, or an anonymous user can view films and their reviews from collaborators<br>
+Feature Implemented
+- View pages for Films can be accessed 
+<br><br>
+
+#### Requirements:
+- The collaborator must be able to write a review for a film and rate it
+- The Admin must be able to delete reviews
+<br>
+Feature Implemented
+- CRUD functionalities for Review entity
 
 
 
