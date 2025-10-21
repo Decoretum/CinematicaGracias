@@ -86,7 +86,6 @@ export default function UpdateProducer ({ params } : { params: Promise<{ n: numb
         hm.set('sex', [sex, initialState.sex]);
 
         let compare = DataComparator(hm);
-
         let hashmap = await updateProducer(id, obj, compare);
         console.log(hashmap);
         if (hashmap.result !== 'success') {

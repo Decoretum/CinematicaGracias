@@ -11,9 +11,11 @@ export default function DataComparator(hm : Map<string, Array<object>>) : Map<st
         }
         else {
             if (value[0] !== value[1]) {
+                console.log("HUH")
                 map.set(key, value[0]);
             }
         }
     }
+    console.log(map);
     return map;
 }

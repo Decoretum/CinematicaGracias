@@ -112,7 +112,22 @@ export default function operations(client : SupabaseClient) {
         let result = parseData(obj);
         if (result['result'] !== 'success') return result;
 
+        let response : ParseDataResult = {result: '', metadata: {}};
+        response['result'] = 'success';
+
+        if (hm.size === 0) {
+            response['metadata'] = null;
+            return response;
+        }
+
+
         let updatedData : any = {};
+
+        if (hm.size === 0) {
+            response['metadata'] = null;
+            return response;
+        }
+
         for (const [key, value] of hm) {
             updatedData[key] = value;
         }
@@ -122,8 +137,6 @@ export default function operations(client : SupabaseClient) {
         .update(updatedData)
         .eq('id', producerId)
 
-        let response : ParseDataResult = {result: '', metadata: {}};
-        response['result'] = 'success';
         response['metadata'] = { error }
         return response
     }

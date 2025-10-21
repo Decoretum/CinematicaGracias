@@ -3,9 +3,9 @@ import { SupabaseClient } from "@supabase/supabase-js";
 
 export default function operations(client : SupabaseClient) {
 
-    const getFilmProducers = async () : Promise<any | null> => {
-        const filmProducers = client.from('filmproducer').select();
-        return filmProducers;
+    const getFilmProducer = async (filmId: number, producerId: number) : Promise<any | null> => {
+        const filmProducer = client.from('filmproducer').select().eq('film_fk', filmId).eq('producer_fk', producerId);
+        return filmProducer;
     }
     
     const createFilmProducer = async (producer_fk: number, film_fk: number) => {
@@ -40,5 +40,5 @@ export default function operations(client : SupabaseClient) {
         return { response }
     }
 
-    return { getFilmProducers, createFilmProducer, updateFilmProducer, deleteFilmProducer }
+    return { getFilmProducer, createFilmProducer, updateFilmProducer, deleteFilmProducer }
 }

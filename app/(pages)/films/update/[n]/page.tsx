@@ -1,6 +1,6 @@
 'use client'
 import { client } from "@/app/Backend/createclient";
-import { Genre, IngestData } from "@/app/Types/films/filmtypes";
+import { FilmCreate, Genre, IngestData } from "@/app/Types/films/filmtypes";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Box, Textarea } from "@mui/joy";
 import Input from '@mui/joy/Input';
@@ -13,23 +13,28 @@ import { useRouter } from 'next/navigation';
 import { ChangeEvent, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import actorOperations from '../../../Backend/actors/operations';
-import directorOperations from '../../../Backend/directors/operations';
-import operations from '../../../Backend/films/operations';
-import producerOperations from '../../../Backend/producers/operations';
-import Header from '../../../Components/Header';
-import { FilmGenres } from '../../../Helpers/FilmGenres';
+import actorOperations from '../../../../Backend/actors/operations';
+import directorOperations from '../../../../Backend/directors/operations';
+import filmOperations from '../../../../Backend/films/operations';
+import producerOperations from '../../../../Backend/producers/operations';
+import filmProducerOperations from '../../../../Backend/filmproducers/operation';
+import filmActorOperations from '../../../../Backend/filmactors/operation';
+import Header from '../../../../Components/Header';
+import { FilmGenres } from '../../../../Helpers/FilmGenres';
+import DataComparator from "@/app/Helpers/DataComparator";
+import { Actor, Director, Film, Producer } from "@/app/Types/entitytypes";
 
-export default function CreateFilm () {
+export default function UpdateFilm ({ params } : { params: Promise<{n : number}>}) {
+    const [film, setFilm] = useState<Film>();
     const [description, setDescription] = useState('');
     const [date, setDate] = useState<Date | null>(new Date());
     const [filmGenres, setFilmGenres] = useState<Array<Genre>>([]);
-    const [genres, setGenres] = useState([]);
     const [genreShow, setGenreShow] = useState(false);
-    const [contentRating, setContentRating] = useState('');
+    const [contentRating, setContentRating] = useState<string | ''>('');
     const [directorfk, setDirectorfk] = useState(0);
     const [duration, setDuration] = useState(0);
-    const [framerate, setFramerate] = useState(0);
+    const [framerate, setFramerate] = useState<number | 0 >(0);
+    const [id, setId] = useState<number>(0);
     const [name, setName] = useState('');
     const [alert, setAlert] = useState(false);
     const [message, setMessage] = useState('');
@@ -41,9 +46,13 @@ export default function CreateFilm () {
     const [directors, setDirectors] = useState<IngestData[]>([]);
     const [producers, setProducers] = useState<IngestData[]>([]);
     const [actors, setActors] = useState<IngestData[]>([]);
+    const [initialState, setInitialState] = useState<FilmCreate>({'content_rating': null, 'genres': [], 'actors': [], 'producers': [], 'description': '', 'name': '', 'director_fk': 0, 'duration': 0, 'frame_rate': 0, 'date_released': '' });
     const { getDirectors } = directorOperations(client);
     const { getActors } = actorOperations(client);
     const { getProducers } = producerOperations(client);
+    const { getFilm } = filmOperations(client);
+    const { getFilmActor } = filmActorOperations(client);
+    const { getFilmProducer } = filmProducerOperations(client);
     const router = useRouter();
 
     function handleGenreChange(id: number) {
@@ -68,6 +77,7 @@ export default function CreateFilm () {
                 let checked = 0;
                 if (curr.id === id) {
                     checked = 1;
+                    setDirectorfk(id);
                 }
                 newArr.push({id: curr.id, name: curr.name, checked: checked});
             }
@@ -99,31 +109,98 @@ export default function CreateFilm () {
 
     useEffect(() => {
         const main = async () => {
-            let directors = await getDirectors();
-            let actors = await getActors();
-            let producers = await getProducers();
+            const { n } = await params;
+            let film = await getFilm(n);
+            let directorQuery = await getDirectors();
+            let actorQuery = await getActors();
+            let producerQuery = await getProducers();
+            let dFk = 0;
+
+            console.log(film)
 
             let dArr = [];
             let pArr = [];
             let aArr = [];
             let gArr : Array<any> = [];
 
-            for (let i = 0; i <= directors.data.length - 1; i++) {
-                dArr.push({id: directors.data[i].id, name: directors.data[i].first_name + " " + directors.data[i].last_name, checked: 0});
-            }
-
-            for (let i = 0; i <= producers.data.length - 1; i++) {
-                pArr.push({id: producers.data[i].id, name: producers.data[i].first_name + " " + producers.data[i].last_name, checked: 0});
-            }
-
-            for (let i = 0; i <= actors.data.length - 1; i++) {
-                aArr.push({id: actors.data[i].id, name: actors.data[i].first_name + " " + actors.data[i].last_name, checked: 0});
-            }
-
             for (let i = 0; i <= FilmGenres.length - 1; i++) {
-                gArr.push({id:i, name: FilmGenres[i], checked: 0});
+                // let genre = FilmGenres[i].charAt(0).toUpperCase() + FilmGenres[i].slice(1).toLowerCase();
+                let genre = FilmGenres[i];
+                let checked = 0;
+
+                if (film!.genres.includes(genre)) checked = 1;
+                else checked = 0;
+                gArr.push({id:i, name: FilmGenres[i], checked: checked});
+            }
+            
+            for (let i = 0; i <= directorQuery.data.length - 1; i++) {
+                let director : Director = directorQuery.data[i];
+                let checked = 0;
+
+                if (director.id === film!.director_fk) {
+                    console.log('DIRECTOR FK: ', director.id);  
+                    setDirectorfk(director.id);
+                    dFk = director.id;
+                    checked = 1;
+                }
+                else checked = 0;
+                dArr.push({id: director .id, name: director.first_name + " " + director .last_name, checked: checked});
             }
 
+            for (let i = 0; i <= producerQuery.data.length - 1; i++) {
+                let prod : Producer = producerQuery.data[i];
+                let queried = await getFilmProducer(film!.id, prod.id);
+                let checked = 0;
+
+                if (queried.data.length !== 0) checked = 1;
+                else checked = 0;
+                pArr.push({id: prod.id, name: prod.first_name + " " + prod.last_name, checked: checked});
+
+            }
+
+            for (let i = 0; i <= actorQuery.data.length - 1; i++) {
+                let actor : Actor = actorQuery!.data[i];
+                let queried = await getFilmActor(film!.id, actor.id);
+                let checked = 0;
+
+                if (queried.data.length !== 0) checked = 1;
+                else checked = 0;
+                aArr.push({id: actor.id, name: actor.first_name + " " + actor.last_name, checked: checked});
+            }
+
+            // ID Extraction
+            let extractId = (a : {checked : number, id: number, name: string}) => {
+                if (a.checked === 1) return true;
+                else return false;
+            }
+            let actorsId = aArr.filter(extractId).map(a => a.id)
+            let producersId = pArr.filter(extractId).map(p => p.id);
+            let genresString = gArr.filter(extractId).map(g => g.name.toUpperCase());
+
+            // Setting the values
+            setId(film.id);
+            setName(film.name);
+            setDate(new Date(film.date_released));
+            setDescription(film.description);
+            setDuration(film.duration!);
+            setFramerate(film.frame_rate! === null ? 0 : film!.frame_rate);
+            setContentRating(film.content_rating === null ? '' : film!.content_rating);
+
+            // Setting Initial State
+            setInitialState({
+                'content_rating': film.content_rating, 
+                'genres': genresString, 
+                'actors': actorsId, 
+                'producers': producersId,
+                'description': film.description, 
+                'name': film.name, 
+                'director_fk': dFk, 
+                'duration': film.duration, 
+                'frame_rate': film.frame_rate, 
+                'date_released': film.date_released
+            });
+
+            // Setting the arrays
             setDirectors(dArr);
             setActors(aArr);
             setProducers(pArr);
@@ -134,22 +211,39 @@ export default function CreateFilm () {
         main();
     }, [])
 
-    async function create() {
+    async function update() {
         let finalDate = date!.toLocaleDateString('en-CA');
-        let finalActors = [];
-        let finalProducers = [];
-        let finalDirector = directors[0].id;
+        let finalDirector = directorfk;
         let finalGenres = [];
-        for (let i = 0; i <= actors.length - 1; i++) {
-            if(actors[i].checked === 1) finalActors.push(actors[i].id);
-        }
-        for (let i = 0; i <= producers.length - 1; i++) {
-            if(producers[i].checked === 1) finalProducers.push(producers[i].id);
-        }
         for (let i = 0; i <= filmGenres.length - 1; i++) {
-            if (filmGenres[i].checked === 1) finalGenres.push(filmGenres[i].name.toLowerCase());
+            if (filmGenres[i].checked === 1) finalGenres.push(filmGenres[i].name.toUpperCase());
         }
+
+        // ID Extraction
+        let extractId = (a : {checked : number, id: number}) => {
+            if (a.checked === 1) return true;
+            else return false;
+        }
+        let actorsId = actors.filter(extractId).map(a => a.id)
+        let producersId = producers.filter(extractId).map(p => p.id);
         
+        setLoading(true);
+
+        // Data validator
+        // First element in array is new, second is original
+
+        let hm = new Map();
+        hm.set('description', [description, initialState.description]);
+        hm.set('content_rating', [contentRating, initialState.content_rating]);
+        hm.set('name', [name, initialState.name]);
+        hm.set('date_released', [finalDate, initialState.date_released]);
+        hm.set('duration', [duration, initialState.duration]);
+        hm.set('frame_rate', [framerate, initialState.frame_rate]);
+        hm.set('genres', [finalGenres, initialState.genres]);
+        hm.set('director_fk', [directorfk, initialState.director_fk]);
+        hm.set('actors', [actorsId, initialState.actors]);
+        hm.set('producers', [producersId, initialState.producers]);
+
         const obj = {
             description: description,
             content_rating: contentRating,
@@ -159,13 +253,16 @@ export default function CreateFilm () {
             frame_rate: framerate,
             genres: finalGenres,
             director_fk: finalDirector,
-            actors: finalActors,
-            producers: finalProducers
+            actors: actorsId,
+            producers: producersId,
+            old_actors: hm.get('actors')[1] as Array<number>,
+            old_producers: hm.get('producers')[1] as Array<number>
         }
 
-        const { createFilm } = operations(client);
-        setLoading(true);
-        let hashmap = await createFilm(obj);
+        let compare = DataComparator(hm);
+        const { updateFilm } = filmOperations(client);
+        let hashmap = await updateFilm(id, obj,  compare);
+        
         console.log(hashmap);
         if (hashmap.result !== 'success') {
             setMessage(hashmap.result);
@@ -208,18 +305,18 @@ export default function CreateFilm () {
                         </Tooltip>
                     </Box>
 
-                    <Typography color='white' variant='h5'> Add a Film</Typography>
+                    <Typography color='white' variant='h5'> Update Film</Typography>
                 </Box>
 
                 <Box className='flex flex-row mt-[5vh]'>
                     <Box className='flex flex-col'>
                         <Typography color='white'> Name </Typography>
-                        <Input placeholder='Movie Name' onChange={(event) => setName(event.target.value)} />
+                        <Input placeholder='Movie Name' value={name} onChange={(event) => setName(event.target.value)} />
                     </Box>
 
                     <Box className='flex flex-col ml-[4vw]'>
                         <Typography color='white'> Content Rating </Typography>
-                        <Input placeholder='Maturity Rating' onChange={(event) => setContentRating(event.target.value)} />
+                        <Input placeholder='Maturity Rating' type='text' value={contentRating} onChange={(event) => setContentRating(event.target.value)} />
                     </Box>
                 </Box>
 
@@ -227,7 +324,7 @@ export default function CreateFilm () {
 
                     <Box className='flex flex-col'>
                         <Typography color='white'> Duration </Typography>
-                        <Input type='number' placeholder='In Minutes' onChange={(event) => setDuration(Number(event.target.value))} />
+                        <Input type='number' placeholder='In Minutes' value={duration} onChange={(event) => setDuration(Number(event.target.value))} />
                     </Box>
 
                     <Box className='flex flex-col ml-[4vw] mt-[0.5vh]'>
@@ -247,7 +344,7 @@ export default function CreateFilm () {
                 <Box className='flex flex-row mt-[4vh] gap-18'>
                     <Box className='flex flex-col mr-[11vw]'>
                         <Typography color='white'> Framerate </Typography>
-                        <Input placeholder='Frames per Second' type='number' onChange={(event) => setFramerate(Number(event.target.value))} />
+                        <Input placeholder='Frames per Second' type='number' value={framerate} onChange={(event) => setFramerate(Number(event.target.value))} />
                     </Box>
                     
                     <Box className='flex flex-col ml-[-5vw]'>
@@ -293,7 +390,7 @@ export default function CreateFilm () {
                         <Box>
 
                             <Box>
-                                <Typography color='white'> Director </Typography>
+                                <Typography color='white'> Directors </Typography>
                             </Box>
 
                             <Box className='mt-[2vh]'>
@@ -332,7 +429,7 @@ export default function CreateFilm () {
 
                         <Box>
                             <Box>
-                                <Typography color='white'> Producer </Typography>
+                                <Typography color='white'> Producers </Typography>
                             </Box>
                             <Box className='mt-[2vh]'>
                                 <Button onClick={() => setProducerShow(true)} variant='contained'> Choose </Button>
@@ -369,7 +466,7 @@ export default function CreateFilm () {
 
                         <Box>
                             <Box>
-                                <Typography color='white'> Actor </Typography>
+                                <Typography color='white'> Actors </Typography>
                             </Box>
                             <Box className='mt-[2vh]'>
                                 <Button onClick={() => setActorShow(true)} variant='contained'> Choose </Button>
@@ -428,9 +525,9 @@ export default function CreateFilm () {
                     variant='contained' 
                     disabled = {loading}
                     startIcon={loading ? <CircularProgress size={20} /> : null}
-                    onClick={create}
+                    onClick={update}
                     >
-                        {loading ? null : 'Create'}
+                        {loading ? null : 'Update'}
                     </Button>
                 </Box>                    
             </Box>

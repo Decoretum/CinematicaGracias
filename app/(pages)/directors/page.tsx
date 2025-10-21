@@ -12,6 +12,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import InfoIcon from '@mui/icons-material/Info';
 import EditIcon from '@mui/icons-material/Edit';
 import { CircularProgress } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 
 export default function Directors () {
@@ -19,6 +20,7 @@ export default function Directors () {
     const [directors, setDirectors] = useState<Director[]>([]);
     let { getDirectors, deleteDirector } = directorOperation(client);
     const [loading, setLoading] = useState(true);
+    const router = useRouter();
 
     async function getUser(client : SupabaseClient) {
         let { getCurrentUser } = await userOperation(client);
@@ -98,21 +100,21 @@ export default function Directors () {
                         <Box className='mb-[4vh]  backdrop-blur-sm'>
                             <Typography variant='plain' sx={{ color: 'whitesmoke' }} level='h1'> Directors </Typography>
                         </Box>
-                        <Box className='flex flex-row gap-10 pl-86 overflow-x-auto max-w-[80vw] justify-center items-center mx-auto bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
+                        <Box className='flex flex-row gap-10 pl-86 overflow-x-auto max-w-[80vw] max-h-[50vh] justify-center items-center mx-auto bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
                         {directors.map((director, idx) => (
-                            <Box className='flex flex-col items-center justify-center'>
-                                <Box>
+                            <Box className='flex flex-col gap-2 items-center justify-center'>
+                                <Box className='w-[13vw] max-w-[13vw] overflow-y-auto rounded-lg'>
                                     <DisplayCard first_name={director.first_name} last_name={director.last_name} birthday={director.birthday} />
                                 </Box>
-                                <Box className='flex flex-row gap-8 mt-[1vh] flex flex-row'>
-                                    <Button variant='soft' onClick={() => handleDelete(director.id)} >
-                                        <DeleteIcon />
+                                <Box className='flex flex-row gap-5 mt-[1vh] flex flex-row'>
+                                    <Button variant='soft' size='sm' onClick={() => handleDelete(director.id)} >
+                                        <DeleteIcon fontSize="small" />
                                     </Button>
-                                    <Button variant='soft' color='success'>
-                                        <InfoIcon />
+                                    <Button variant='soft' size='sm' color='success'>
+                                        <InfoIcon fontSize="small"  />
                                     </Button>
-                                    <Button variant='soft' color='success'>
-                                        <EditIcon />
+                                    <Button variant='soft' onClick={() => router.push(`directors/update/${director.id}/`)} size='sm' color='success'>
+                                        <EditIcon fontSize="small" />
                                     </Button>
                                 </Box>
                             </Box>

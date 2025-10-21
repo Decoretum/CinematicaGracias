@@ -154,6 +154,11 @@ export default function operations (client : SupabaseClient)
 
         let hashmap : ParseDataResult = await parseUserData(obj);
         if (hashmap['result'] !== 'success') return hashmap;
+
+        if (hm.size === 0) {
+            hashmap['metadata'] = null;
+            return hashmap;
+        }
         
         if (hm.has('email') && !hm.has('password')) {
             const { data, error } = await client.auth.updateUser({

@@ -24,10 +24,8 @@ export default function CreateFilm () {
     const [description, setDescription] = useState('');
     const [date, setDate] = useState<Date | null>(new Date());
     const [filmGenres, setFilmGenres] = useState<Array<Genre>>([]);
-    const [genres, setGenres] = useState([]);
     const [genreShow, setGenreShow] = useState(false);
     const [contentRating, setContentRating] = useState('');
-    const [directorfk, setDirectorfk] = useState(0);
     const [duration, setDuration] = useState(0);
     const [framerate, setFramerate] = useState(0);
     const [name, setName] = useState('');

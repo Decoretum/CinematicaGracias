@@ -9,7 +9,9 @@ import { SupabaseClient, User } from "@supabase/supabase-js";
 import { Producer, Users } from "../../Types/entitytypes";
 import DisplayCard from "@/app/Components/HumanDisplayCard/DisplayCard";
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import { CircularProgress } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 
 export default function Producers () {
@@ -17,6 +19,8 @@ export default function Producers () {
     const [producers, setProducers] = useState<Producer[]>([]);
     let { getProducers, deleteProducer } = producerOperation(client);
     const [loading, setLoading] = useState(true);
+    const router = useRouter();
+    
 
     async function getUser(client : SupabaseClient) {
         let { getCurrentUser } = await userOperation(client);
@@ -96,15 +100,18 @@ export default function Producers () {
                         <Box className='mb-[4vh] w-[30vw]  backdrop-blur-sm'>
                             <Typography variant='plain' sx={{ color: 'whitesmoke' }} level='h1'> Producers </Typography>
                         </Box>
-                        <Box className='max-w-[60vw] max-h-[90vw] overflow-x-auto flex flex-row gap-10 pl-10 bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
+                        <Box className='max-w-[60vw] max-h-[50vh] overflow-x-auto flex flex-row gap-10 pl-10 bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
                         {producers.map((producer, idx) => (
-                            <Box className='lex flex-col items-center justify-center'>
+                            <Box className='lex flex-col gap-2 items-center justify-center'>
                                 <Box>
                                     <DisplayCard first_name={producer.first_name} last_name={producer.last_name} birthday={producer.birthday} />
                                 </Box>
-                                <Box className='mt-[1vh]'>
+                                <Box className='mt-[1vh] flex flex-row gap-5'>
                                     <Button variant='soft' onClick={() => handleDelete(producer.id)} >
                                         <DeleteIcon />
+                                    </Button>
+                                    <Button variant='soft' onClick={() => router.push(`producers/update/${producer.id}/`)} size='sm' color='success'>
+                                        <EditIcon fontSize="small" />
                                     </Button>
                                 </Box>
                             </Box>

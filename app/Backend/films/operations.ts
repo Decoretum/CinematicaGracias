@@ -1,5 +1,5 @@
-import { ParseDataResult } from "@/app/Types/entitytypes";
-import { CreateUpdateFilm } from "@/app/Types/films/filmtypes";
+import { Film, ParseDataResult } from "@/app/Types/entitytypes";
+import { FilmCreate, FilmUpdate } from "@/app/Types/films/filmtypes";
 import { SupabaseClient } from "@supabase/supabase-js";
 import filmActorOperation from '../filmactors/operation';
 import filmProducerOperation from '../filmproducers/operation';
@@ -7,7 +7,7 @@ import filmProducerOperation from '../filmproducers/operation';
 export default function operations(client : SupabaseClient) {
     let { createFilmActor } = filmActorOperation(client);
     let { createFilmProducer } = filmProducerOperation(client);
-    const parseData = (obj: CreateUpdateFilm) : ParseDataResult => {
+    const parseData = (obj: FilmCreate | FilmUpdate) : ParseDataResult => {
 
         // Data Validation
 
@@ -95,8 +95,13 @@ export default function operations(client : SupabaseClient) {
         const films = client.from('film').select();
         return films;
     }
-    
-    const createFilm = async (obj: CreateUpdateFilm) : Promise<ParseDataResult> => {
+
+    const getFilm = async (id: number) : Promise<Film> => {
+        const film = await client.from('film').select().eq('id', id);
+        return film.data![0];
+    }
+
+    const createFilm = async (obj: FilmCreate) : Promise<ParseDataResult> => {
 
         let result = parseData(obj);
         let response : ParseDataResult = {result: '', metadata: {}};
@@ -124,21 +129,77 @@ export default function operations(client : SupabaseClient) {
         return response
      }
 
-    const updateFilm = async (filmId : number, obj: CreateUpdateFilm, hm : Map<string, Object>) => {
+    const updateFilm = async (filmId : number, obj: FilmUpdate, hm : Map<string, Array<object | number | Array<number>>>) : Promise<ParseDataResult> => {
         let result = parseData(obj);
         if (result['result'] !== 'success') return result;
 
-        let updatedData : any = {};
-        for (const [key, value] of hm) {
-            updatedData[key] = value;
+        let response : ParseDataResult = {result: '', metadata: {}};
+        response['result'] = 'success';
+
+        // Update Associative Entities
+        console.log(hm);
+        // No changes
+        if (hm.size === 0) {
+            response['metadata'] = null;
+            return response;
         }
 
-        const { error } = await client
+        let initialActors = obj['old_actors'] as Array<number>;
+
+        if (hm.has('actors')) {
+            let newActors = hm.get('actors') as Array<number>;
+            let deleteActors = initialActors.filter((id) => !newActors.includes(id));
+    
+            let addActors = newActors.filter((id) => 
+                !initialActors.includes(id)).map((id) => ({
+                    film_fk: filmId,
+                    actor_fk: id
+            }));
+            
+            if (deleteActors.length !== 0) {
+                for (let i = 0; i <= deleteActors.length - 1; i++) {
+                    await client.from('filmactor').delete().eq('film_fk', filmId).eq('actor_fk', deleteActors[i]);
+                }
+            }
+            await client.from('filmactor').insert(addActors);
+        }
+
+        if (hm.has('producers')) {
+        // FilmProducer
+
+        let initialProducers = obj['old_producers'] as Array<number>;
+        let newProducers = hm.get('producers') as Array<number>;        
+        let deleteProducers = initialProducers.filter((id) => !newProducers.includes(id));
+
+        let addProducers = newProducers.filter((id) => 
+            !initialProducers.includes(id)).map((id) => ({
+                film_fk: filmId,
+                producer_fk: id
+             }));
+        
+        if (deleteProducers.length !== 0) {
+            for (let i = 0; i <= deleteProducers.length - 1; i++) {
+                let d1 = await client.from('filmproducer').delete().eq('film_fk', filmId).eq('producer_fk', deleteProducers[i]);
+                console.log(d1.error);
+            }
+        }
+
+        await client.from('filmproducer').insert(addProducers);
+        }
+
+        let updatedData : any = {};
+        for (const [key, value] of hm) {
+            if (key !== 'producers' && key !== 'actors')
+             updatedData[key] = value;
+        }
+
+        let { error } = await client
         .from('film')
-        .update({updatedData})
+        .update(updatedData)
         .eq('id', filmId)
 
-        return { error };
+        response['metadata'] = { error }
+        return response
     }
 
     const deleteFilm = async (filmId : number) => {
@@ -150,5 +211,5 @@ export default function operations(client : SupabaseClient) {
         return { response }
     }
 
-    return { getFilms, createFilm, updateFilm, deleteFilm }
+    return { getFilms, getFilm, createFilm, updateFilm, deleteFilm }
 }

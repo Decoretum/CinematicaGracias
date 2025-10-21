@@ -9,12 +9,20 @@ import { Film, Users } from '../../Types/entitytypes'
 import { SupabaseClient, User } from '@supabase/supabase-js';
 import CircularProgress from '@mui/material/CircularProgress';
 import FilmDisplayCard from "@/app/Components/Film/FilmDisplayCard";
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import InfoIcon from '@mui/icons-material/Info';
+import { useRouter } from "next/navigation";
+
 
 
 export default function Films () {
     const [currentUser, setCurrentUser] = useState<Users | null>(null);
     const [films, setFilms] = useState<Array<Film>>([]);
     const [loading, setLoading] = useState(true);
+    const [deleting, setDeleting] = useState(false);
+    const [deletingId, setDeletingId] = useState(0);
+    const router = useRouter();
 
     async function getUser(client : SupabaseClient) {
         let { getCurrentUser } = userOperation(client);
@@ -30,6 +38,20 @@ export default function Films () {
         let { getFilms } = filmOperation(client);
         let filmData : Array<Film> = await getFilms().then((data) => {return data.data});
         setFilms(filmData);
+    }
+
+    async function handleDelete(id: number) {
+        let { deleteFilm } = filmOperation(client);
+        
+        setDeleting(true);
+        setDeletingId(id);
+        let response = await deleteFilm(id);
+        if (response.response.status === 204) {
+            let newArr = films.filter((f) => f.id !== id);
+            setFilms(newArr);
+            setDeleting(false);
+            setDeletingId(0);
+        }
     }
 
     useEffect(() => {
@@ -77,14 +99,32 @@ export default function Films () {
                     : (
                         <>
                         <Box className='mb-[4vh]  backdrop-blur-sm'>
-                            <Typography variant='plain' sx={{ color: 'whitesmoke' }} level='h1'> Directors </Typography>
+                            <Typography variant='plain' sx={{ color: 'whitesmoke' }} level='h1'> Films </Typography>
                         </Box>
-                        <Box className='flex flex-row gap-10 overflow-x-auto max-w-[70vw] max-h-[90vh] h-[50vh] justify-center items-center mx-auto md:w-[50vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
+                        <Box className='flex flex-row gap-10 overflow-x-auto max-w-[70vw] max-h-[50vh] pl-100 justify-center items-center mx-auto bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
                         {films.map((film, idx) => (
-                            <Box className='flex flex-col items-center justify-center'>
+                            <Box className='flex flex-col gap-2 items-center justify-center'>
                                 <Box>
                                     <FilmDisplayCard name={film.name} average_user_rating={film.average_user_rating} content_rating={film.content_rating} date_released={film.date_released} duration={film.duration}  />
                                 </Box>
+                                <Box className='flex flex-row gap-5'>
+                                    <Box>
+                                    <Button variant='soft' onClick={() => router.push(`/films/view/${film.id}/`)} >
+                                            <InfoIcon />
+                                        </Button>
+                                    </Box>
+                                    <Box>
+                                        <Button variant='soft' onClick={() => handleDelete(film.id)} >
+                                            { deleting === true && deletingId === film.id ? <CircularProgress size='30px' />  : <DeleteIcon />}
+                                        </Button>
+                                    </Box>
+                                    <Box>
+                                    <Button variant='soft' onClick={() => router.push(`/films/update/${film.id}/`)} size='sm' color='success'>
+                                        <EditIcon fontSize="small" />
+                                    </Button>
+                                    </Box>
+                                </Box>
+                                
                             </Box>
                         ))}
                         </Box>
