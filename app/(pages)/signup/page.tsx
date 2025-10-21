@@ -52,7 +52,6 @@ export default function SignUp () {
 
         setLoading(true);
         let hashmap = await signup(obj);
-        console.log(hashmap);
         if (hashmap.result !== 'success') {
             setMessage(hashmap.result);
             setAlert(true);

@@ -44,7 +44,6 @@ export default function CreateDirector () {
         const { createDirector } = operations(client);
         setLoading(true);
         let hashmap = await createDirector(obj);
-        console.log(hashmap);
         if (hashmap.result !== 'success') {
             setMessage(hashmap.result);
             setAlert(true);

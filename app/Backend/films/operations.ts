@@ -137,8 +137,8 @@ export default function operations(client : SupabaseClient) {
         response['result'] = 'success';
 
         // Update Associative Entities
-        console.log(hm);
         // No changes
+
         if (hm.size === 0) {
             response['metadata'] = null;
             return response;
@@ -180,7 +180,6 @@ export default function operations(client : SupabaseClient) {
         if (deleteProducers.length !== 0) {
             for (let i = 0; i <= deleteProducers.length - 1; i++) {
                 let d1 = await client.from('filmproducer').delete().eq('film_fk', filmId).eq('producer_fk', deleteProducers[i]);
-                console.log(d1.error);
             }
         }
 

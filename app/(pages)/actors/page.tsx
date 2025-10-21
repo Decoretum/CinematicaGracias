@@ -30,15 +30,12 @@ export default function Actors () {
         let authUser : User | null = user;
         let nonAUser : Users | null = nonAuthUser === null ? null : nonAuthUser[0];
         setCurrentUser(nonAUser);
-        console.log(nonAUser);
-        console.log(authUser);
     }
 
     async function handleGet(client : SupabaseClient) {
         
         let actorData = await getActors();
         setActors(actorData.data);
-        console.log(actorData);
     }
 
     async function handleDelete(id: number) {

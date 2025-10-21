@@ -30,20 +30,16 @@ export default function Directors () {
         let authUser : User | null = user;
         let nonAUser : Users | null = nonAuthUser === null ? null : nonAuthUser[0];
         setCurrentUser(nonAUser);
-        console.log(nonAUser);
-        console.log(authUser);
     }
 
     async function handleGet(client : SupabaseClient) {
         
         let filmData = await getDirectors();
         setDirectors(filmData.data);
-        console.log(filmData);
     }
 
     async function handleDelete(id: number) {
         let res = await deleteDirector(id);
-        console.log(res);
         if (res.result === 'success') {
             let newArr = [];
             for (let i = 0; i <= directors.length - 1; i ++) {

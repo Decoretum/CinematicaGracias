@@ -53,7 +53,6 @@ export default function UpdateDirector ({ params } : { params: Promise<{ n: numb
                 description: director!.description
             })
     
-            console.log(director);
             setPageLoading(false);
         }
         main();
@@ -73,7 +72,6 @@ export default function UpdateDirector ({ params } : { params: Promise<{ n: numb
             birthday : finalDate as string,
             description: description
         }
-        console.log(obj)
 
         // Data Comparator Result
         // First element in array is new, second is original
@@ -88,7 +86,6 @@ export default function UpdateDirector ({ params } : { params: Promise<{ n: numb
         let compare = DataComparator(hm);
 
         let hashmap = await updateDirector(id, obj, compare);
-        console.log(hashmap);
         if (hashmap.result !== 'success') {
             setMessage(hashmap.result);
             setAlert(true);

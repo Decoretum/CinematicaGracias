@@ -115,9 +115,6 @@ export default function UpdateFilm ({ params } : { params: Promise<{n : number}>
             let actorQuery = await getActors();
             let producerQuery = await getProducers();
             let dFk = 0;
-
-            console.log(film)
-
             let dArr = [];
             let pArr = [];
             let aArr = [];
@@ -138,7 +135,6 @@ export default function UpdateFilm ({ params } : { params: Promise<{n : number}>
                 let checked = 0;
 
                 if (director.id === film!.director_fk) {
-                    console.log('DIRECTOR FK: ', director.id);  
                     setDirectorfk(director.id);
                     dFk = director.id;
                     checked = 1;
@@ -147,8 +143,8 @@ export default function UpdateFilm ({ params } : { params: Promise<{n : number}>
                 dArr.push({id: director .id, name: director.first_name + " " + director .last_name, checked: checked});
             }
 
-            for (let i = 0; i <= producerQuery.data.length - 1; i++) {
-                let prod : Producer = producerQuery.data[i];
+            for (let i = 0; i <= producerQuery.length - 1; i++) {
+                let prod : Producer = producerQuery[i];
                 let queried = await getFilmProducer(film!.id, prod.id);
                 let checked = 0;
 
@@ -263,7 +259,6 @@ export default function UpdateFilm ({ params } : { params: Promise<{n : number}>
         const { updateFilm } = filmOperations(client);
         let hashmap = await updateFilm(id, obj,  compare);
         
-        console.log(hashmap);
         if (hashmap.result !== 'success') {
             setMessage(hashmap.result);
             setAlert(true);

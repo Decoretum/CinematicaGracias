@@ -30,15 +30,12 @@ export default function Producers () {
         let authUser : User | null = user;
         let nonAUser : Users | null = nonAuthUser === null ? null : nonAuthUser[0];
         setCurrentUser(nonAUser);
-        console.log(nonAUser);
-        console.log(authUser);
     }
 
     async function handleGet(client : SupabaseClient) {
         
         let prodData = await getProducers();
-        setProducers(prodData.data);
-        console.log(prodData);
+        setProducers(prodData);
     }
 
     async function handleDelete(id: number) {

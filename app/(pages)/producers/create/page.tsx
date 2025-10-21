@@ -44,7 +44,6 @@ export default function CreateProducer () {
         const { createProducer } = operations(client);
         setLoading(true);
         let hashmap = await createProducer(obj);
-        console.log(hashmap);
         if (hashmap.result !== 'success') {
             setMessage(hashmap.result);
             setAlert(true);

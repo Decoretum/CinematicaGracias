@@ -30,8 +30,6 @@ export default function Films () {
         let authUser : User | null = user;
         let nonAUser : Users = nonAuthUser === null ? null : nonAuthUser[0];
         setCurrentUser(nonAUser);
-        console.log(nonAUser);
-        console.log(authUser);
     }
 
     async function getFilms(client : SupabaseClient) {

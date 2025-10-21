@@ -50,7 +50,6 @@ export default function CreateActor () {
         let unMutated = [...socmed];
         unMutated[index][field] = value;
         setSocMed(unMutated);
-        console.log(socmed);
     }
 
     async function create() {
@@ -74,7 +73,6 @@ export default function CreateActor () {
         const { createActor } = operations(client);
         setLoading(true);
         let hashmap = await createActor(obj);
-        console.log(hashmap);
         if (hashmap.result !== 'success') {
             setMessage(hashmap.result);
             setAlert(true);

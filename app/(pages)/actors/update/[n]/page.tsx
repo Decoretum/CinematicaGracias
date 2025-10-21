@@ -52,13 +52,12 @@ export default function UpdateActor ({ params } : { params: Promise<{ n: number 
             if (actor!.socmed !== null) {
                 arr.pop();
                 for (let i = 0; i <= actor!.socmed.length - 1; i++) {
-                    console.log(actor!.socmed[i]);
                     let miniArr = actor?.socmed[i].split('||');
                     arr!.push({media: miniArr![0], link: miniArr![1]});
                 }
                 arr.push({media: '', link: ''});
             } 
-            // console.log(arr)
+
             setSocMed(arr);
             
             setInitialState({
@@ -71,8 +70,6 @@ export default function UpdateActor ({ params } : { params: Promise<{ n: number 
             })
             
     
-            console.log(actor);
-            console.log(socmed)
             setPageLoading(false);
         }
         main();
@@ -99,7 +96,6 @@ export default function UpdateActor ({ params } : { params: Promise<{ n: number 
         let unMutated = [...socmed];
         unMutated[index][field] = value;
         setSocMed(unMutated);
-        console.log(socmed);
     }
 
     async function update() {
@@ -137,7 +133,6 @@ export default function UpdateActor ({ params } : { params: Promise<{ n: number 
         let hashmap = await updateActor(id, obj, compare);
 
         setLoading(true);
-        console.log(hashmap);
         if (hashmap.result !== 'success') {
             setMessage(hashmap.result);
             setAlert(true);

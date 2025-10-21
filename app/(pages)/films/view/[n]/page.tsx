@@ -39,7 +39,6 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
         let { nonAuthUser } = await getCurrentUser();
         let nonAUser : Users = nonAuthUser === null ? null : nonAuthUser[0];
         setCurrentUser(nonAUser);
-        console.log(nonAUser);
     }
 
     function extractText(entity: Array<Actor> | Array<Producer>) : Array<string> {

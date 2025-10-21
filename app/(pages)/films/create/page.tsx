@@ -56,7 +56,6 @@ export default function CreateFilm () {
             newArr.push({id: curr.id, name: curr.name, checked: checked});
         }
         setFilmGenres(newArr);
-        console.log(filmGenres);
     }
 
     function handleChange(id: number, type: string) {
@@ -92,7 +91,6 @@ export default function CreateFilm () {
                 }
                 newArr.push({id: curr.id, name: curr.name, checked: checked});
             }
-            console.log(newArr);
             setActors(newArr);
         }
         
@@ -113,8 +111,8 @@ export default function CreateFilm () {
                 dArr.push({id: directors.data[i].id, name: directors.data[i].first_name + " " + directors.data[i].last_name, checked: 0});
             }
 
-            for (let i = 0; i <= producers.data.length - 1; i++) {
-                pArr.push({id: producers.data[i].id, name: producers.data[i].first_name + " " + producers.data[i].last_name, checked: 0});
+            for (let i = 0; i <= producers.length - 1; i++) {
+                pArr.push({id: producers[i].id, name: producers[i].first_name + " " + producers[i].last_name, checked: 0});
             }
 
             for (let i = 0; i <= actors.data.length - 1; i++) {
@@ -167,7 +165,6 @@ export default function CreateFilm () {
         const { createFilm } = operations(client);
         setLoading(true);
         let hashmap = await createFilm(obj);
-        console.log(hashmap);
         if (hashmap.result !== 'success') {
             setMessage(hashmap.result);
             setAlert(true);
