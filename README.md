@@ -4,7 +4,8 @@ Cinematica Gracias is a [Next.js](https://nextjs.org) and Supabase project devel
 ## Creating an Account
 In this application, users can have two roles. One is an **admin**, while another one is a **collaborator**. A collaborator can view film, actor, director, and producer data within the application. They can also review and rate films. However, they cannot edit the data of these since they aren't authorized to do so.  On the other hand, Admin users have the capability to modify application data for Films, Directors, Actors, and more. However, they cannot rate or review films. 
 
-<img width="1273" height="681" alt="Screen Shot 2025-10-20 at 12 18 53 PM" src="https://github.com/user-attachments/assets/ceeb7974-63b8-4477-b619-7326419ea368" /> <br><br>
+<img width="1280" height="688" alt="image" src="https://github.com/user-attachments/assets/8563cd16-66cf-42dc-bf9c-3086ac177f63" />
+<br><br>
 
 You must provide the required data, and data validation is present to ensure the appropriateness of your user data. You have to press the toggle to determine if you are an admin or non-admin user. After you signup, you will be redirected to a success page indicating that you're also logged-in after signing up.
 <br><br>
@@ -69,7 +70,16 @@ Enter the root directory of the application, `/cinematicagracias`, and build the
 
 ### Feature Mapping
 
-To be continued...
+Requirement: The admin must be able to edit and modify application data
+Features Implemented
+- CRUD operations for Producer entity
+- CRUD operations for Director entity
+- CRUD operations for Actor entity
+- CRUD operations for Film entity
+
+Requirement: The user must be able to write a review for a film and rate it
+Features Currently being Implemented
+- CRUD for Review entity
 
 
 
