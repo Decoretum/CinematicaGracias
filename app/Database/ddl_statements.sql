@@ -6,6 +6,7 @@ CREATE TABLE Users (
   sex CHAR(1) NOT NULL,
   birthday DATE NOT NULL, 
   username VARCHAR(255) NOT NULL,
+  password VARCHAR(255) NOT NULL,
   is_admin BOOLEAN NOT NULL
 );
 
@@ -138,54 +139,3 @@ INSERT INTO FilmActor (film_fk, actor_fk) VALUES
 (3, 1),
 (4, 4),
 (5, 5);
-
--- DELETE statements to reset the Data
-DELETE FROM filmactor;
-DELETE FROM filmproducer;
-DELETE FROM review;
-DELETE FROM Film;
-DELETE FROM Actor;
-DELETE FROM Producer;
-DELETE FROM director;
-
-
-
-
-
--- Log of all my DDL Queries during development
-
--- Alering Logs Table
--- ALTER TABLE Logs 
--- ADD COLUMN content VARCHAR(255) NOT NULL;
-
--- -- Altering Human entities and Film to add description
--- ALTER TABLE Actor
--- ADD COLUMN description TEXT NOT NULL;
-
--- ALTER TABLE Director
--- ADD COLUMN description TEXT NOT NULL;
-
--- ALTER TABLE producer
--- ADD COLUMN description TEXT NOT NULL;
-
--- ALTER TABLE Film
--- ADD COLUMN description TEXT NOT NULL;
-
--- -- Altering to rename column
--- ALTER TABLE Producer
--- RENAME COLUMN film_pk TO film_fk;
-
--- -- Altering to add rating field in Review
--- ALTER TABLE Review
--- ADD COLUMN rating SMALLINT NOT NULL;
-
--- -- Altering Film, Actor, and Producer to change their relationship
--- ALTER TABLE Film
--- DROP COLUMN actor_fk;
-
--- ALTER TABLE Producer
--- DROP COLUMN film_fk;
-
--- -- Deleting Log Table
--- DROP TABLE IF EXISTS Logs;
-
