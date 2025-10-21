@@ -51,8 +51,8 @@ export default function SignUp () {
                 
                 <Box className='flex flex-row'>
                     <Box className='mr-[2vw]'>
-                        <Tooltip title='Back to Home'>
-                            <Button variant='contained' onClick={() => router.push('/')}>
+                        <Tooltip title='Back to Signup'>
+                            <Button variant='contained' onClick={() => router.push('/signup')}>
                                 <ArrowBackIcon />
                             </Button>
                         </Tooltip>

@@ -64,7 +64,7 @@ export default function CreateDirector () {
                 <Box className='flex flex-row'>
                     <Box className='mr-[2vw]'>
                         <Tooltip title='Back to Director Page'>
-                            <Button variant='contained'>
+                            <Button variant='contained' onClick={() => router.push('/directors')}>
                                 <ArrowBackIcon />
                             </Button>
                         </Tooltip>

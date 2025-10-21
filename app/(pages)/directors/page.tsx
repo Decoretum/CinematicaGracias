@@ -9,7 +9,7 @@ import { SupabaseClient, User } from "@supabase/supabase-js";
 import { Director, Users } from "../../Types/entitytypes";
 import DisplayCard from "@/app/Components/HumanDisplayCard/DisplayCard";
 import DeleteIcon from '@mui/icons-material/Delete';
-import InfoIcon from '@mui/icons-material/Info';
+import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import { CircularProgress } from "@mui/material";
 import { useRouter } from "next/navigation";
@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 
 export default function Directors () {
     const [currentUser, setCurrentUser] = useState<Users | null>(null);
-    const [directors, setDirectors] = useState<Director[]>([]);
+    const [directors, setDirectors] = useState<Director[] | null>(null);
     let { getDirectors, deleteDirector } = directorOperation(client);
     const [loading, setLoading] = useState(true);
     const [deleting, setDeleting] = useState(false);
@@ -26,8 +26,7 @@ export default function Directors () {
 
     async function getUser(client : SupabaseClient) {
         let { getCurrentUser } = await userOperation(client);
-        let { user, nonAuthUser } = await getCurrentUser();
-        let authUser : User | null = user;
+        let { nonAuthUser } = await getCurrentUser();
         let nonAUser : Users | null = nonAuthUser === null ? null : nonAuthUser[0];
         setCurrentUser(nonAUser);
     }
@@ -42,9 +41,9 @@ export default function Directors () {
         let res = await deleteDirector(id);
         if (res.result === 'success') {
             let newArr = [];
-            for (let i = 0; i <= directors.length - 1; i ++) {
-                if (directors[i].id !== id) {
-                    newArr.push(directors[i]);
+            for (let i = 0; i <= directors!.length - 1; i ++) {
+                if (directors![i].id !== id) {
+                    newArr.push(directors![i]);
                     setDeleting(false);
                     setDeletingId(0);        
                 }
@@ -71,17 +70,12 @@ export default function Directors () {
         
                 <Box className='ml-auto mr-auto mt-42'>
                     {
-                    !directors ? (
+                    !directors || loading ? (
                         <Box className='flex flex-col items-center justify-center md:ml-[5vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
                             <Typography sx = {{ 'color' : 'white' }}> Loading Data </Typography>
                             <CircularProgress className='mt-4' color='secondary' />
                         </Box>
                     ) :        
-                    (directors?.length === 0) ? (
-                        <Box className='flex flex-col items-center justify-center md:ml-[5vw] md:w-[30vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
-                        <Typography sx = {{'color' : 'white'}}> There are no directors stored in the site as of the moment </Typography>
-                    </Box>
-                    ) :
                     (directors.length === 0 && currentUser?.is_admin === true) ? (
                     <Box className='flex flex-col items-center justify-center md:ml-[5vw] md:w-[30vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
                         <Typography sx = {{'color' : 'white'}}> There are no directors stored in the site. Add a director through the button below </Typography>
@@ -97,8 +91,9 @@ export default function Directors () {
                     )
                     : (
                     <>
-                        <Box className='mb-[4vh]  backdrop-blur-sm'>
+                        <Box className='mb-[4vh] flex flex-row gap-5 backdrop-blur-sm'>
                             <Typography variant='plain' sx={{ color: 'whitesmoke' }} level='h1'> Directors </Typography>
+                            { currentUser?.is_admin && <Button variant='soft' onClick={() => router.push('directors/create')}><AddIcon /></Button> }
                         </Box>
                         <Box className='flex flex-row gap-10 pl-86 overflow-x-auto max-w-[80vw] max-h-[50vh] justify-center items-center mx-auto bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
                         {directors.map((director, idx) => (
@@ -116,7 +111,7 @@ export default function Directors () {
                                     </Box>
 
                                     <Box>
-                                    <Button variant='soft' onClick={() => router.push(`/films/update/${director.id}/`)} size='sm' color='success'>
+                                    <Button variant='soft' onClick={() => router.push(`/directors/update/${director.id}/`)} size='sm' color='success'>
                                         <EditIcon fontSize="small" />
                                     </Button>
                                     </Box>

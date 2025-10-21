@@ -10,13 +10,15 @@ import { Producer, Users } from "../../Types/entitytypes";
 import DisplayCard from "@/app/Components/HumanDisplayCard/DisplayCard";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
+
 import { CircularProgress } from "@mui/material";
 import { useRouter } from "next/navigation";
 
 
 export default function Producers () {
     const [currentUser, setCurrentUser] = useState<Users | null>(null);
-    const [producers, setProducers] = useState<Producer[]>([]);
+    const [producers, setProducers] = useState<Producer[] | null>(null);
     const [deleting, setDeleting] = useState(false);
     const[deletingId, setDeletingId] = useState(0);
     let { getProducers, deleteProducer } = producerOperation(client);
@@ -45,9 +47,9 @@ export default function Producers () {
 
         if (res.result === 'success') {
             let newArr = [];
-            for (let i = 0; i <= producers.length - 1; i ++) {
-                if (producers[i].id !== id) {
-                    newArr.push(producers[i]);
+            for (let i = 0; i <= producers!.length - 1; i ++) {
+                if (producers![i].id !== id) {
+                    newArr.push(producers![i]);
                     setDeleting(false);
                     setDeletingId(0);
                 }
@@ -79,11 +81,6 @@ export default function Producers () {
                             <CircularProgress className='mt-4' color='secondary' />
                         </Box>
                     ) :        
-                    (producers.length === 0) ? (
-                        <Box className='flex flex-col items-center justify-center md:ml-[5vw] md:w-[30vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
-                        <Typography sx = {{'color' : 'white'}}> There are no producers stored in the site as of the moment </Typography>
-                    </Box>
-                    ) :
                     (producers.length === 0 && currentUser?.is_admin === true) ? (
                     <Box className='flex flex-col items-center justify-center md:ml-[5vw] md:w-[30vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
                         <Typography sx = {{'color' : 'white'}}> There are no producers stored in the site. Add a producer through the button below </Typography>
@@ -99,8 +96,10 @@ export default function Producers () {
                     )
                     : (
                     <>
-                        <Box className='mb-[4vh] w-[30vw]  backdrop-blur-sm'>
+                        <Box className='mb-[4vh] w-[30vw] flex flex-row gap-5 backdrop-blur-sm'>
                             <Typography variant='plain' sx={{ color: 'whitesmoke' }} level='h1'> Producers </Typography>
+                            { currentUser?.is_admin && <Button variant='soft' onClick={() => router.push('producers/create')}><AddIcon /></Button> }
+
                         </Box>
                         <Box className='max-w-[60vw] max-h-[50vh] overflow-x-auto flex flex-row gap-10 pl-10 bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
                         {producers.map((producer, idx) => (

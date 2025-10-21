@@ -352,10 +352,10 @@ export default function UpdateFilm ({ params } : { params: Promise<{n : number}>
                             >
                                 <Box className='w-[40vw] overflow-y-auto max-h-[80vh] p-6 absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-[#1e1e1e] text-white rounded-lg shadow-xl'>
                                     <Typography variant="h6" component="h2">
-                                        List of Directors
+                                        Genres
                                     </Typography>
                                     <Typography sx={{ mt: 2 }}>
-                                        You can only choose 1 director
+                                        You can choose multiple genres
                                     </Typography>
                                     <Box>
                                     <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">

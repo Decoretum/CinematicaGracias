@@ -10,6 +10,7 @@ import { Actor, Users } from "../../Types/entitytypes";
 import DisplayCard from "@/app/Components/HumanDisplayCard/DisplayCard";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
 import { CircularProgress } from "@mui/material";
 import { useRouter } from "next/navigation";
 
@@ -17,7 +18,7 @@ import { useRouter } from "next/navigation";
 
 export default function Actors () {
     const [currentUser, setCurrentUser] = useState<Users | null>(null);
-    const [actors, setActors] = useState<Actor[]>([]);
+    const [actors, setActors] = useState<Actor[] | null>(null);
     let { getActors, deleteActor } = actorOperation(client);
     const [loading, setLoading] = useState(true);
     const [deleting, setDeleting] = useState(false);
@@ -44,9 +45,9 @@ export default function Actors () {
         setDeletingId(id);
         if (res.result === 'success') {
             let newArr = [];
-            for (let i = 0; i <= actors.length - 1; i ++) {
-                if (actors[i].id !== id) {
-                    newArr.push(actors[i]);
+            for (let i = 0; i <= actors!.length - 1; i ++) {
+                if (actors![i].id !== id) {
+                    newArr.push(actors![i]);
                 }
             }
             setActors(newArr);
@@ -77,16 +78,11 @@ export default function Actors () {
                             <CircularProgress className='mt-4' color='secondary' />
                         </Box>
                     ) :        
-                    (actors.length === 0) ? (
-                        <Box className='flex flex-col items-center justify-center md:ml-[5vw] md:w-[30vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
-                        <Typography sx = {{'color' : 'white'}}> There are no actors stored in the site as of the moment </Typography>
-                    </Box>
-                    ) :
                     (actors.length === 0 && currentUser?.is_admin === true) ? (
                     <Box className='flex flex-col items-center justify-center md:ml-[5vw] md:w-[30vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
                         <Typography sx = {{'color' : 'white'}}> There are no actors stored in the site. Add an actor through the button below </Typography>
                         <Box className='mt-[3vh]'>
-                            <Button color='neutral' variant='soft'> Add Actor </Button>
+                            <Button color='neutral' variant='soft'>Add</Button>
                         </Box>
                     </Box>
                     ) : 
@@ -97,8 +93,9 @@ export default function Actors () {
                     )
                     : (
                     <>
-                        <Box className='mb-[4vh]  backdrop-blur-sm'>
+                        <Box className='mb-[4vh] max-w-[70vw]  backdrop-blur-sm flex flex-row gap-5'>
                             <Typography variant='plain' sx={{ color: 'whitesmoke' }} level='h1'> Actors </Typography>
+                            { currentUser?.is_admin && <Button variant='soft'><AddIcon /></Button> }
                         </Box>
                         <Box className='flex flex-row gap-10 max-w-[70vw] overflow-x-auto pl-100 max-h-[50vh] justify-center items-center mx-auto md:w-[50vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
                         {actors.map((actor, idx) => (
@@ -116,7 +113,7 @@ export default function Actors () {
                                         </Box>
 
                                         <Box>
-                                        <Button variant='soft' onClick={() => router.push(`/films/update/${actor.id}/`)} size='sm' color='success'>
+                                        <Button variant='soft' onClick={() => router.push(`/actors/update/${actor.id}/`)} size='sm' color='success'>
                                             <EditIcon fontSize="small" />
                                         </Button>
                                         </Box>

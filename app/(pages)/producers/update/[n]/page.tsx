@@ -120,14 +120,14 @@ export default function UpdateProducer ({ params } : { params: Promise<{ n: numb
                 
                 <Box className='flex flex-row'>
                     <Box className='mr-[2vw]'>
-                        <Tooltip title='Back to Director Pages'>
+                        <Tooltip title='Back to Producer Pages'>
                             <Button variant='contained'>
                                 <ArrowBackIcon />
                             </Button>
                         </Tooltip>
                     </Box>
 
-                    <Typography color='white' variant='h5'> Edit Director </Typography>
+                    <Typography color='white' variant='h5'> Edit Producer </Typography>
                 </Box>
 
                 <Box className='flex flex-row mt-[5vh]'>
@@ -173,7 +173,7 @@ export default function UpdateProducer ({ params } : { params: Promise<{ n: numb
                         <Textarea
                         value={description}
                         onChange={(event: ChangeEvent<HTMLTextAreaElement>) => setDescription(event.target.value)}
-                        placeholder="Write a description for the Director"
+                        placeholder="Write a description for the Producer"
                         className='mt-[2vh] w-[33vw]'
                         minRows={7}
                         maxRows={15}

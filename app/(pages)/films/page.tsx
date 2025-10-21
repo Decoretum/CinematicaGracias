@@ -10,6 +10,7 @@ import { SupabaseClient, User } from '@supabase/supabase-js';
 import CircularProgress from '@mui/material/CircularProgress';
 import FilmDisplayCard from "@/app/Components/Film/FilmDisplayCard";
 import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import InfoIcon from '@mui/icons-material/Info';
 import { useRouter } from "next/navigation";
@@ -18,7 +19,7 @@ import { useRouter } from "next/navigation";
 
 export default function Films () {
     const [currentUser, setCurrentUser] = useState<Users | null>(null);
-    const [films, setFilms] = useState<Array<Film>>([]);
+    const [films, setFilms] = useState<Array<Film> | null>(null);
     const [loading, setLoading] = useState(true);
     const [deleting, setDeleting] = useState(false);
     const [deletingId, setDeletingId] = useState(0);
@@ -44,7 +45,7 @@ export default function Films () {
         setDeletingId(id);
         let response = await deleteFilm(id);
         if (response.response.status === 204) {
-            let newArr = films.filter((f) => f.id !== id);
+            let newArr = films!.filter((f) => f.id !== id);
             setFilms(newArr);
             setDeleting(false);
             setDeletingId(0);
@@ -75,11 +76,6 @@ export default function Films () {
                             <CircularProgress className='mt-4' color='secondary' />
                         </Box>
                     ) :
-                    (films.length === 0) ? (
-                        <Box className='flex flex-col items-center justify-center md:ml-[5vw] md:w-[30vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
-                        <Typography sx = {{ 'color' : 'white' }}> There are no films stored in the site as of the moment </Typography>
-                    </Box>
-                    ) :
                     (films.length === 0 && currentUser?.is_admin === true) ? (
                     <Box className='flex flex-col items-center justify-center md:ml-[5vw] md:w-[30vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
                         <Typography sx = {{ 'color' : 'white' }}> There are no films stored in the site. Add a Film through the button below </Typography>
@@ -92,11 +88,12 @@ export default function Films () {
                     <Box className='flex flex-col items-center justify-center md:ml-[5vw] md:w-[30vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
                         <Typography sx = {{ 'color' : 'white' }}> There are no films stored in the site as of the moment </Typography>
                     </Box>
-                    )
-                    : (
+                    ) :
+                     (
                         <>
-                        <Box className='mb-[4vh]  backdrop-blur-sm'>
+                        <Box className='mb-[4vh] flex flex-row gap-5 backdrop-blur-sm'>
                             <Typography variant='plain' sx={{ color: 'whitesmoke' }} level='h1'> Films </Typography>
+                            { currentUser?.is_admin && <Button variant='soft' onClick={() => router.push('/films/create')}><AddIcon /></Button> }
                         </Box>
                         <Box className='flex flex-row gap-10 overflow-x-auto max-w-[70vw] max-h-[50vh] pl-100 justify-center items-center mx-auto bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
                         {films.map((film, idx) => (
@@ -111,7 +108,7 @@ export default function Films () {
                                         </Button>
                                     </Box>
 
-                                    {currentUser?.is_admin === true && (
+                                    {currentUser?.is_admin && (
                                     <>
                                         <Box>
                                             <Button variant='soft' onClick={() => handleDelete(film.id)} >

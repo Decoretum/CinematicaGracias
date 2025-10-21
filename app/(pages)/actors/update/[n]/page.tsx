@@ -168,7 +168,7 @@ export default function UpdateActor ({ params } : { params: Promise<{ n: number 
                 <Box className='flex flex-row'>
                     <Box className='mr-[2vw]'>
                         <Tooltip title='Back to Actor Page'>
-                            <Button variant='contained'>
+                            <Button variant='contained' onClick={() => router.push('/actors')}>
                                 <ArrowBackIcon />
                             </Button>
                         </Tooltip>
