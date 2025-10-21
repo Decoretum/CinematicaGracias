@@ -65,7 +65,7 @@ export default function SignUp () {
 
                     <Box className='flex flex-col'>
                         <Typography color='white'> Email </Typography>
-                        <Input placeholder='Username' onChange={(event) => setUserName(event.target.value)} />
+                        <Input placeholder='ex. local_name@domain.com' onChange={(event) => setUserName(event.target.value)} />
                     </Box>
 
                     <Box className='flex flex-col mt-[5vh]'>
