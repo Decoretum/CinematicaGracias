@@ -1,6 +1,6 @@
-import { Film, ParseDataResult } from "@/app/Types/entitytypes";
+import { Director, Film, ParseDataResult } from "@/app/Types/entitytypes";
 import { FilmCreate, FilmUpdate } from "@/app/Types/films/filmtypes";
-import { SupabaseClient } from "@supabase/supabase-js";
+import { PostgrestSingleResponse, SupabaseClient } from "@supabase/supabase-js";
 import filmActorOperation from '../filmactors/operation';
 import filmProducerOperation from '../filmproducers/operation';
 
@@ -91,14 +91,14 @@ export default function operations(client : SupabaseClient) {
         return hashmap;
     }
 
-    const getFilms = async () : Promise<any | null> => {
-        const films = client.from('film').select();
-        return films;
+    const getFilms = async () : Promise<Film[]> => {
+        const { data } = await client.from('film').select();
+        return data!;
     }
 
     const getFilm = async (id: number) : Promise<Film> => {
-        const film = await client.from('film').select().eq('id', id);
-        return film.data![0];
+        const { data } = await client.from('film').select().eq('id', id).single();
+        return data;
     }
 
     const createFilm = async (obj: FilmCreate) : Promise<ParseDataResult> => {

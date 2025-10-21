@@ -36,13 +36,12 @@ export default function Films () {
 
     async function getFilms(client : SupabaseClient) {
         let { getFilms } = filmOperation(client);
-        let filmData : Array<Film> = await getFilms().then((data) => {return data.data});
+        let filmData : Array<Film> = await getFilms();
         setFilms(filmData);
     }
 
     async function handleDelete(id: number) {
         let { deleteFilm } = filmOperation(client);
-        
         setDeleting(true);
         setDeletingId(id);
         let response = await deleteFilm(id);
@@ -72,18 +71,18 @@ export default function Films () {
                 
                 <Box className='ml-auto mr-auto mt-42'>
                     { 
-                    loading ? (
+                    !films ? (
                         <Box className='flex flex-col items-center justify-center md:ml-[5vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
                             <Typography sx = {{ 'color' : 'white' }}> Loading Data </Typography>
                             <CircularProgress className='mt-4' color='secondary' />
                         </Box>
                     ) :
-                    (films?.length === 0 && currentUser === null && loading === false) ? (
+                    (films.length === 0) ? (
                         <Box className='flex flex-col items-center justify-center md:ml-[5vw] md:w-[30vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
                         <Typography sx = {{ 'color' : 'white' }}> There are no films stored in the site as of the moment </Typography>
                     </Box>
                     ) :
-                    (films.length === 0 && currentUser?.is_admin === true && loading === false) ? (
+                    (films.length === 0 && currentUser?.is_admin === true) ? (
                     <Box className='flex flex-col items-center justify-center md:ml-[5vw] md:w-[30vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
                         <Typography sx = {{ 'color' : 'white' }}> There are no films stored in the site. Add a Film through the button below </Typography>
                         <Box className='mt-[3vh]'>
@@ -91,7 +90,7 @@ export default function Films () {
                         </Box>
                     </Box>
                     ) : 
-                    (films.length === 0 && currentUser?.is_admin === false && loading === false) ? (
+                    (films.length === 0 && currentUser?.is_admin === false) ? (
                     <Box className='flex flex-col items-center justify-center md:ml-[5vw] md:w-[30vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
                         <Typography sx = {{ 'color' : 'white' }}> There are no films stored in the site as of the moment </Typography>
                     </Box>
@@ -113,16 +112,22 @@ export default function Films () {
                                             <InfoIcon />
                                         </Button>
                                     </Box>
-                                    <Box>
-                                        <Button variant='soft' onClick={() => handleDelete(film.id)} >
-                                            { deleting === true && deletingId === film.id ? <CircularProgress size='30px' />  : <DeleteIcon />}
+
+                                    {currentUser?.is_admin === true && (
+                                    <>
+                                        <Box>
+                                            <Button variant='soft' onClick={() => handleDelete(film.id)} >
+                                                { deleting === true && deletingId === film.id ? <CircularProgress size='30px' />  : <DeleteIcon />}
+                                            </Button>
+                                        </Box>
+
+                                        <Box>
+                                        <Button variant='soft' onClick={() => router.push(`/films/update/${film.id}/`)} size='sm' color='success'>
+                                            <EditIcon fontSize="small" />
                                         </Button>
-                                    </Box>
-                                    <Box>
-                                    <Button variant='soft' onClick={() => router.push(`/films/update/${film.id}/`)} size='sm' color='success'>
-                                        <EditIcon fontSize="small" />
-                                    </Button>
-                                    </Box>
+                                        </Box>
+                                    </>
+                                    )}
                                 </Box>
                                 
                             </Box>

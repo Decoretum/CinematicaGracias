@@ -80,54 +80,40 @@ CREATE TABLE FilmActor (
 -- Here are the INSERT Statements for data population
 -- Directors
 INSERT INTO Director (id, first_name, last_name, birthday, sex, description) VALUES
-(1, 'Steven', 'Spielberg', '1946-12-18', 'M', 'Famous American filmmaker known for many blockbusters.');
-
-INSERT INTO Director (id, first_name, last_name, birthday, sex, description) VALUES
-(2, 'Sofia', 'Coppola', '1971-05-14', 'F', 'Renowned for her unique directing style and storytelling.');
-
-INSERT INTO Director (id, first_name, last_name, birthday, sex, description) VALUES
-(3, 'Christopher', 'Nolan', '1970-07-30', 'M', 'Known for mind-bending films and epic narratives.');
-
-INSERT INTO Director (id, first_name, last_name, birthday, sex, description) VALUES
-(4, 'Greta', 'Gerwig', '1983-08-04', 'F', 'Modern filmmaker with a focus on nuanced characters.');
-
-INSERT INTO Director (id, first_name, last_name, birthday, sex, description) VALUES
-(5, 'Quentin', 'Tarantino', '1963-03-27', 'M', 'Cult director known for stylized violence and storytelling.');
+(1, 'Steven', 'Spielberg', '1946-12-18', 'm', 'Famous American filmmaker who pioneered modern blockbusters with films like Jaws, E.T., and Jurassic Park.'),
+(2, 'Sofia', 'Coppola', '1971-05-14', 'f', 'Known for atmospheric storytelling, Sofia Coppola creates deeply personal and visually stunning narratives.'),
+(3, 'Christopher', 'Nolan', '1970-07-30', 'm', 'Renowned for complex narratives, Nolan crafts intelligent blockbusters like Inception and The Dark Knight.'),
+(4, 'Greta', 'Gerwig', '1983-08-04', 'f', 'Acclaimed for her feminist themes and distinct voice, Greta Gerwig brings depth to modern character-driven films.'),
+(5, 'Quentin', 'Tarantino', '1963-03-27', 'm', 'Known for stylized violence, nonlinear storytelling, and rich dialogue in cult classics like Pulp Fiction and Kill Bill.');
 
 
 -- Actor
 INSERT INTO Actor (id, first_name, last_name, socmed, birthday, sex, description) VALUES
-(1, 'Leonardo', 'DiCaprio', ARRAY['@leodicaprio'], '1974-11-11', 'M', 'Versatile and award-winning actor.');
-
-INSERT INTO Actor (id, first_name, last_name, socmed, birthday, sex, description) VALUES
-(2, 'Scarlett', 'Johansson', ARRAY['@scarlettj'], '1984-11-22', 'F', 'Famous for diverse roles and voice acting.');
-
-INSERT INTO Actor (id, first_name, last_name, socmed, birthday, sex, description) VALUES
-(3, 'Denzel', 'Washington', ARRAY['@denzelw'], '1954-12-28', 'M', 'Legendary actor with multiple awards.');
-
-INSERT INTO Actor (id, first_name, last_name, socmed, birthday, sex, description) VALUES
-(4, 'Natalie', 'Portman', ARRAY['@natalieportman'], '1981-06-09', 'F', 'Academy Award-winning actress.');
-
-INSERT INTO Actor (id, first_name, last_name, socmed, birthday, sex, description) VALUES
-(5, 'Tom', 'Hanks', ARRAY['@tomhanks'], '1956-07-09', 'M', 'Beloved actor known for dramatic and comedic roles.');
+(1, 'Leonardo', 'DiCaprio', ARRAY['@instagram||https://www.instagram.com/leonardodicaprio'], '1974-11-11', 'm', 'Oscar-winning actor known for roles in Titanic, Inception, and his climate change activism through social media.'),
+(2, 'Scarlett', 'Johansson', ARRAY['@instagram||https://www.instagram.com/scarlettjohanssonworld'], '1984-11-22', 'f', 'Famed for her versatility in action and drama, Scarlett shines in the MCU and indie cinema alike with passion.'),
+(3, 'Denzel', 'Washington', ARRAY['@instagram||https://www.instagram.com/denzelwashington.official'], '1954-12-28', 'm', 'Highly respected for powerful performances, Denzel has won multiple Oscars and inspires future generations of actors.'),
+(4, 'Natalie', 'Portman', ARRAY['@instagram||https://www.instagram.com/natalieportman'], '1981-06-09', 'f', 'Oscar-winning actress known for intelligent and emotionally rich performances in both indie and blockbuster films.'),
+(5, 'Tom', 'Hanks', ARRAY['@instagram||https://www.instagram.com/tomhanks'], '1956-07-09', 'm', 'Beloved for his warm screen presence, Tom Hanks has portrayed iconic roles in Forrest Gump, Cast Away, and Toy Story.');
 
 
 -- Film
 INSERT INTO Film (id, director_fk, name, genres, date_released, duration, frame_rate, content_rating, average_user_rating, description) VALUES
-(1, 1, 'Jurassic Park', ARRAY['Adventure', 'Sci-Fi'], '1993-06-11', 127, 24, 'PG-13', 9, 'Dinosaurs brought back to life with thrilling adventures.'),
-(2, 2, 'Lost in Translation', ARRAY['Drama', 'Romance'], '2003-09-12', 102, 24, 'R', 8, 'Two lost souls find connection in Tokyo.'),
-(3, 3, 'Inception', ARRAY['Sci-Fi', 'Thriller'], '2010-07-16', 148, 24, 'PG-13', 9, 'A mind-bending journey through dreams.'),
-(4, 4, 'Lady Bird', ARRAY['Drama', 'Comedy'], '2017-11-03', 94, 24, 'R', 8, 'Coming-of-age story with humor and heart.'),
-(5, 5, 'Pulp Fiction', ARRAY['Crime', 'Drama'], '1994-10-14', 154, 24, 'R', 9, 'Interwoven crime stories with iconic dialogue.');
+(1, 1, 'Jurassic Park', ARRAY['ADVENTURE', 'Sci-Fi'], '1993-06-11', 127, 24, 'PG-13', 0, 'Dinosaurs come to life in this thrilling adventure directed by Spielberg, featuring groundbreaking visual effects.'),
+(2, 2, 'Lost in Translation', ARRAY['DRAMA', 'ROMANCE'], '2003-09-12', 102, 24, 'R', 0, 'A quiet, emotional connection forms between two strangers in Tokyo, exploring loneliness and cultural dislocation.'),
+(3, 3, 'Inception', ARRAY['SCI-FI', 'THRILLER'], '2010-07-16', 148, 24, 'PG-13', 0, 'Nolan directs a mind-bending thriller about dream invasion and reality, featuring stunning visuals and complex plots.'),
+(4, 4, 'Lady Bird', ARRAY['DRAMA', 'COMEDY'], '2017-11-03', 94, 24, 'R', 0, 'A heartfelt coming-of-age story exploring a teenager’s relationship with her mother and her dreams for independence.'),
+(5, 5, 'Pulp Fiction', ARRAY['CRIME', 'DRAMA'], '1994-10-14', 154, 24, 'R', 0, 'A nonlinear crime film with dark humor, iconic characters, and unforgettable dialogue from cult director Tarantino.');
+
 
 
 -- producer
 INSERT INTO Producer (id, first_name, last_name, birthday, sex, description) VALUES
-(1, 'Kathleen', 'Kennedy', '1953-06-05', 'F', 'President of Lucasfilm and prominent producer.'),
-(2, 'James', 'Cameron', '1954-08-16', 'M', 'Director and producer known for epic blockbusters.'),
-(3, 'Jerry', 'Bruckheimer', '1943-09-21', 'M', 'Producer of high-budget action films.'),
-(4, 'Ava', 'DuVernay', '1972-08-24', 'F', 'Filmmaker focused on social issues.'),
-(5, 'David', 'Heyman', '1961-07-26', 'M', 'Known for producing the Harry Potter films.');
+(1, 'Kathleen', 'Kennedy', '1953-06-05', 'f', 'Award-winning producer and head of Lucasfilm, known for shaping Star Wars and Indiana Jones franchises.'),
+(2, 'James', 'Cameron', '1954-08-16', 'm', 'Visionary behind Titanic and Avatar, known for pushing the limits of filmmaking technology and storytelling.'),
+(3, 'Jerry', 'Bruckheimer', '1943-09-21', 'm', 'Blockbuster producer with hits like Pirates of the Caribbean and Top Gun, blending action and strong characters.'),
+(4, 'Ava', 'DuVernay', '1972-08-24', 'f', 'Director and producer of socially impactful films like Selma and When They See Us, breaking industry barriers.'),
+(5, 'David', 'Heyman', '1961-07-26', 'm', 'Produced the Harry Potter series and other acclaimed films, fostering imagination and emotional storytelling globally.');
+
 
 
 -- Review

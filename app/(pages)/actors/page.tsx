@@ -20,6 +20,8 @@ export default function Actors () {
     const [actors, setActors] = useState<Actor[]>([]);
     let { getActors, deleteActor } = actorOperation(client);
     const [loading, setLoading] = useState(true);
+    const [deleting, setDeleting] = useState(false);
+    const [deletingId, setDeletingId] = useState(0);
     const router = useRouter();
 
     async function getUser(client : SupabaseClient) {
@@ -41,7 +43,8 @@ export default function Actors () {
 
     async function handleDelete(id: number) {
         let res = await deleteActor(id);
-        console.log(res);
+        setDeleting(true);
+        setDeletingId(id);
         if (res.result === 'success') {
             let newArr = [];
             for (let i = 0; i <= actors.length - 1; i ++) {
@@ -71,13 +74,13 @@ export default function Actors () {
         
                 <Box className='ml-auto mr-auto mt-42'>
                     {
-                    loading ? (
+                    !actors ? (
                         <Box className='flex flex-col items-center justify-center md:ml-[5vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
                             <Typography sx = {{ 'color' : 'white' }}> Loading Data </Typography>
                             <CircularProgress className='mt-4' color='secondary' />
                         </Box>
                     ) :        
-                    (actors.length === 0 && currentUser === null) ? (
+                    (actors.length === 0) ? (
                         <Box className='flex flex-col items-center justify-center md:ml-[5vw] md:w-[30vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
                         <Typography sx = {{'color' : 'white'}}> There are no actors stored in the site as of the moment </Typography>
                     </Box>
@@ -107,16 +110,21 @@ export default function Actors () {
                                     <DisplayCard first_name={actor.first_name} last_name={actor.last_name} birthday={actor.birthday} />
                                 </Box>
                                 <Box className='flex flex-row gap-5'>
-                                    <Box>
-                                        <Button variant='soft' onClick={() => handleDelete(actor.id)} >
-                                            <DeleteIcon />
+                                {currentUser?.is_admin === true && (
+                                    <>
+                                        <Box>
+                                            <Button variant='soft' onClick={() => handleDelete(actor.id)} >
+                                                { deleting === true && deletingId === actor.id ? <CircularProgress size='30px' />  : <DeleteIcon />}
+                                            </Button>
+                                        </Box>
+
+                                        <Box>
+                                        <Button variant='soft' onClick={() => router.push(`/films/update/${actor.id}/`)} size='sm' color='success'>
+                                            <EditIcon fontSize="small" />
                                         </Button>
-                                    </Box>
-                                    <Box>
-                                    <Button variant='soft' onClick={() => router.push(`actors/update/${actor.id}/`)} size='sm' color='success'>
-                                        <EditIcon fontSize="small" />
-                                    </Button>
-                                    </Box>
+                                        </Box>
+                                    </>
+                                    )}
                                 </Box>
                             </Box>
                         ))}

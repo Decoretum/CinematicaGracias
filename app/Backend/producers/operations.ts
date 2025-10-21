@@ -84,9 +84,9 @@ export default function operations(client : SupabaseClient) {
         return producers;
     }
 
-    const getProducer = async (id : number) : Promise<Producer | null> => {
-        const producer = await client.from('producer').select().eq('id', id);
-        return producer.data![0];
+    const getProducer = async (id : number) : Promise<Producer> => {
+        const { data } = await client.from('producer').select().eq('id', id).single();
+        return data;
     }
 
     

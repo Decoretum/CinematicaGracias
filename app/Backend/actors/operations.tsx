@@ -107,9 +107,9 @@ export default function operations(client : SupabaseClient) {
         return actors;
     }
 
-    const getActor = async (id : number) : Promise<Actor | null> => {
-        const actor = await client.from('actor').select().eq('id', id);
-        return actor.data![0];
+    const getActor = async (id : number) : Promise<Actor> => {
+        const { data } = await client.from('actor').select().eq('id', id).single();
+        return data;
     }
 
     

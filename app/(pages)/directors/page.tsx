@@ -20,6 +20,8 @@ export default function Directors () {
     const [directors, setDirectors] = useState<Director[]>([]);
     let { getDirectors, deleteDirector } = directorOperation(client);
     const [loading, setLoading] = useState(true);
+    const [deleting, setDeleting] = useState(false);
+    const [deletingId, setDeletingId] = useState(0);
     const router = useRouter();
 
     async function getUser(client : SupabaseClient) {
@@ -47,6 +49,8 @@ export default function Directors () {
             for (let i = 0; i <= directors.length - 1; i ++) {
                 if (directors[i].id !== id) {
                     newArr.push(directors[i]);
+                    setDeleting(false);
+                    setDeletingId(0);        
                 }
             }
             setDirectors(newArr);
@@ -71,13 +75,13 @@ export default function Directors () {
         
                 <Box className='ml-auto mr-auto mt-42'>
                     {
-                    loading ? (
+                    !directors ? (
                         <Box className='flex flex-col items-center justify-center md:ml-[5vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
                             <Typography sx = {{ 'color' : 'white' }}> Loading Data </Typography>
                             <CircularProgress className='mt-4' color='secondary' />
                         </Box>
                     ) :        
-                    (directors.length === 0 && currentUser === null) ? (
+                    (directors?.length === 0) ? (
                         <Box className='flex flex-col items-center justify-center md:ml-[5vw] md:w-[30vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
                         <Typography sx = {{'color' : 'white'}}> There are no directors stored in the site as of the moment </Typography>
                     </Box>
@@ -106,16 +110,22 @@ export default function Directors () {
                                 <Box className='w-[13vw] max-w-[13vw] overflow-y-auto rounded-lg'>
                                     <DisplayCard first_name={director.first_name} last_name={director.last_name} birthday={director.birthday} />
                                 </Box>
-                                <Box className='flex flex-row gap-5 mt-[1vh] flex flex-row'>
-                                    <Button variant='soft' size='sm' onClick={() => handleDelete(director.id)} >
-                                        <DeleteIcon fontSize="small" />
-                                    </Button>
-                                    <Button variant='soft' size='sm' color='success'>
-                                        <InfoIcon fontSize="small"  />
-                                    </Button>
-                                    <Button variant='soft' onClick={() => router.push(`directors/update/${director.id}/`)} size='sm' color='success'>
+                                <Box className='flex flex-row gap-5'>
+                                {currentUser?.is_admin === true && (
+                                <>
+                                    <Box>
+                                        <Button variant='soft' onClick={() => handleDelete(director.id)} >
+                                            { deleting === true && deletingId === director.id ? <CircularProgress size='30px' />  : <DeleteIcon />}
+                                        </Button>
+                                    </Box>
+
+                                    <Box>
+                                    <Button variant='soft' onClick={() => router.push(`/films/update/${director.id}/`)} size='sm' color='success'>
                                         <EditIcon fontSize="small" />
                                     </Button>
+                                    </Box>
+                                </>
+                                )}
                                 </Box>
                             </Box>
                         ))}

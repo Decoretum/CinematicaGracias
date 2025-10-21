@@ -83,9 +83,9 @@ export default function operations(client : SupabaseClient) {
         return directors;
     }
 
-    const getDirector = async (id : number) : Promise<Director | null> => {
-        const director = await client.from('director').select().eq('id', id);
-        return director.data![0];
+    const getDirector = async (id : number) : Promise<Director> => {
+        const { data } = await client.from('director').select().eq('id', id).single();
+        return data;
     }
     
     const createDirector = async (obj: DirectorCreateUpdate) : Promise<ParseDataResult> => {

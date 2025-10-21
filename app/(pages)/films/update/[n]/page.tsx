@@ -110,7 +110,7 @@ export default function UpdateFilm ({ params } : { params: Promise<{n : number}>
     useEffect(() => {
         const main = async () => {
             const { n } = await params;
-            let film = await getFilm(n);
+            let film : Film = await getFilm(n);
             let directorQuery = await getDirectors();
             let actorQuery = await getActors();
             let producerQuery = await getProducers();
@@ -152,7 +152,7 @@ export default function UpdateFilm ({ params } : { params: Promise<{n : number}>
                 let queried = await getFilmProducer(film!.id, prod.id);
                 let checked = 0;
 
-                if (queried.data.length !== 0) checked = 1;
+                if (queried !== null) checked = 1;
                 else checked = 0;
                 pArr.push({id: prod.id, name: prod.first_name + " " + prod.last_name, checked: checked});
 
@@ -163,7 +163,7 @@ export default function UpdateFilm ({ params } : { params: Promise<{n : number}>
                 let queried = await getFilmActor(film!.id, actor.id);
                 let checked = 0;
 
-                if (queried.data.length !== 0) checked = 1;
+                if (queried !== null) checked = 1;
                 else checked = 0;
                 aArr.push({id: actor.id, name: actor.first_name + " " + actor.last_name, checked: checked});
             }
@@ -299,7 +299,7 @@ export default function UpdateFilm ({ params } : { params: Promise<{n : number}>
                 <Box className='flex flex-row'>
                     <Box className='mr-[2vw]'>
                         <Tooltip title='Back to Film Page'>
-                            <Button variant='contained'>
+                            <Button variant='contained' onClick={() => router.push('/films')}>
                                 <ArrowBackIcon />
                             </Button>
                         </Tooltip>

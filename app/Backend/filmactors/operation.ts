@@ -1,11 +1,17 @@
+import { FilmActor } from "@/app/Types/entitytypes";
 import { CreateUpdateFilmActor } from "@/app/Types/filmactors/filmactortypes";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 export default function operations(client : SupabaseClient) {
 
-    const getFilmActor = async (filmId: number, actorId: number) : Promise<any | null> => {
-        const filmactors = client.from('filmactor').select().eq('film_fk', filmId).eq('actor_fk', actorId);
-        return filmactors;
+    const getFilmActor = async (filmId: number, actorId: number) : Promise<FilmActor> => {
+        const { data } = await client.from('filmactor').select().eq('film_fk', filmId).eq('actor_fk', actorId).single();
+        return data;
+    }
+
+    const getFilmActors = async (filmId: number) : Promise<Array<FilmActor>> => {
+        const { data } = await client.from('filmactor').select().eq('film_fk', filmId);
+        return data!;
     }
     
     const createFilmActor = async (actor_fk: number, film_fk: number) => {
@@ -40,5 +46,5 @@ export default function operations(client : SupabaseClient) {
         return { response }
     }
 
-    return { getFilmActor, createFilmActor, updateFilmActor, deleteFilmActor }
+    return { getFilmActor, getFilmActors, createFilmActor, updateFilmActor, deleteFilmActor }
 }

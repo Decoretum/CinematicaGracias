@@ -17,6 +17,8 @@ import { useRouter } from "next/navigation";
 export default function Producers () {
     const [currentUser, setCurrentUser] = useState<Users | null>(null);
     const [producers, setProducers] = useState<Producer[]>([]);
+    const [deleting, setDeleting] = useState(false);
+    const[deletingId, setDeletingId] = useState(0);
     let { getProducers, deleteProducer } = producerOperation(client);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
@@ -41,12 +43,16 @@ export default function Producers () {
 
     async function handleDelete(id: number) {
         let res = await deleteProducer(id);
-        console.log(res);
+        setDeleting(true);
+        setDeletingId(id);
+
         if (res.result === 'success') {
             let newArr = [];
             for (let i = 0; i <= producers.length - 1; i ++) {
                 if (producers[i].id !== id) {
                     newArr.push(producers[i]);
+                    setDeleting(false);
+                    setDeletingId(0);
                 }
             }
             setProducers(newArr);
@@ -60,7 +66,6 @@ export default function Producers () {
         };
 
         mainFunction();
-        setLoading(false);
     }, [])
 
     return (
@@ -71,13 +76,13 @@ export default function Producers () {
         
                 <Box className='ml-auto mr-auto mt-42'>
                     {
-                    loading ? (
+                    !producers ? (
                         <Box className='flex flex-col items-center justify-center md:ml-[5vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
                             <Typography sx = {{ 'color' : 'white' }}> Loading Data </Typography>
                             <CircularProgress className='mt-4' color='secondary' />
                         </Box>
                     ) :        
-                    (producers.length === 0 && currentUser === null) ? (
+                    (producers.length === 0) ? (
                         <Box className='flex flex-col items-center justify-center md:ml-[5vw] md:w-[30vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
                         <Typography sx = {{'color' : 'white'}}> There are no producers stored in the site as of the moment </Typography>
                     </Box>
@@ -106,13 +111,22 @@ export default function Producers () {
                                 <Box>
                                     <DisplayCard first_name={producer.first_name} last_name={producer.last_name} birthday={producer.birthday} />
                                 </Box>
-                                <Box className='mt-[1vh] flex flex-row gap-5'>
-                                    <Button variant='soft' onClick={() => handleDelete(producer.id)} >
-                                        <DeleteIcon />
-                                    </Button>
-                                    <Button variant='soft' onClick={() => router.push(`producers/update/${producer.id}/`)} size='sm' color='success'>
+                                <Box className='flex flex-row gap-5 mt-[2vh]'>
+                                {currentUser?.is_admin === true && (
+                                <>
+                                    <Box>
+                                        <Button variant='soft' onClick={() => handleDelete(producer.id)} >
+                                            { deleting === true && deletingId === producer.id ? <CircularProgress size='30px' />  : <DeleteIcon />}
+                                        </Button>
+                                    </Box>
+
+                                    <Box>
+                                    <Button variant='soft' onClick={() => router.push(`/producers/update/${producer.id}/`)} size='sm' color='success'>
                                         <EditIcon fontSize="small" />
                                     </Button>
+                                    </Box>
+                                </>
+                                )}
                                 </Box>
                             </Box>
                         ))}

@@ -1,13 +1,19 @@
+import { FilmProducer, Producer } from "@/app/Types/entitytypes";
 import { CreateUpdateFilmProducer } from "@/app/Types/filmproducers/filmproducertypes";
-import { SupabaseClient } from "@supabase/supabase-js";
+import { PostgrestSingleResponse, SupabaseClient } from "@supabase/supabase-js";
 
 export default function operations(client : SupabaseClient) {
 
-    const getFilmProducer = async (filmId: number, producerId: number) : Promise<any | null> => {
-        const filmProducer = client.from('filmproducer').select().eq('film_fk', filmId).eq('producer_fk', producerId);
-        return filmProducer;
+    const getFilmProducer = async (filmId: number, producerId: number) : Promise<FilmProducer> => {
+        const { data } = await client.from('filmproducer').select().eq('film_fk', filmId).eq('producer_fk', producerId).single();
+        return data;
     }
     
+    const getFilmProducers = async (filmId: number) : Promise<FilmProducer[]> => {
+        const { data } = await client.from('filmproducer').select().eq('film_fk', filmId);
+        return data!;
+    }
+
     const createFilmProducer = async (producer_fk: number, film_fk: number) => {
 
         const { error } = await client
@@ -40,5 +46,5 @@ export default function operations(client : SupabaseClient) {
         return { response }
     }
 
-    return { getFilmProducer, createFilmProducer, updateFilmProducer, deleteFilmProducer }
+    return { getFilmProducer, getFilmProducers, createFilmProducer, updateFilmProducer, deleteFilmProducer }
 }
