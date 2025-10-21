@@ -1,20 +1,21 @@
 'use client'
 import Header from "@/app/Components/Header";
-import { Actor, Director, Film, FilmActor, FilmProducer, Producer, Users } from "@/app/Types/entitytypes";
+import { Actor, Director, Film, FilmActor, FilmProducer, Producer, Review, Users } from "@/app/Types/entitytypes";
 import { SupabaseClient, User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 import ReportGmailerrorredIcon from '@mui/icons-material/ReportGmailerrorred';
+import EditIcon from '@mui/icons-material/Edit';
 import producerOperation from "../../../../Backend/producers/operations";
 import userOperation from "../../../../Backend/users/operations";
 import filmOperation from "../../../../Backend/films/operations"
 import actorOperation from "../../../../Backend/actors/operations"
+import reviewOperation from "../../../../Backend/reviews/operations"
 import directorOperation from "../../../../Backend/directors/operations"
 import filmProducerOperation from "../../../../Backend/filmproducers/operation"
 import filmActorOperation from "../../../../Backend/filmactors/operation"
-
 import { client } from "@/app/Backend/createclient";
-import { Box } from "@mui/joy";
-import { CircularProgress, Snackbar, Typography } from "@mui/material";
+import { Box, Button, Textarea } from "@mui/joy";
+import { CircularProgress, FormControl, Modal, Snackbar, Typography } from "@mui/material";
 
 export default function Info ({ params } : { params : Promise<{ n : number }> }) {
     const [currentUser, setCurrentUser] = useState<Users | null>(null);
@@ -24,6 +25,14 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
     const [director, setDirector] = useState<Director>();
     const [producers, setProducers] = useState<Array<Producer>>();
     const [actors, setActors] = useState<Array<Actor>>();
+    const [reviews, setReviews] = useState<Array<Review>>()
+    const [reviewing, setReviewing] = useState(false);  
+    const [reviewrow, setReviewrow] = useState<Array<{ name: string, date: string, content: string, rating: number }>>([])
+    const [open, setOpen] = useState(false);
+    const [text, setText] = useState('');
+    const [rateshow, setRateshow] = useState(false);
+    const [rate, setRate] = useState(0);
+    const [userReviewed, setUserReviewed] = useState(false);
 
     async function getUser(client : SupabaseClient) {
         let { getCurrentUser } = userOperation(client);
@@ -41,6 +50,53 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
         }
         return arr;
     }
+
+    async function makeReview() {
+        setReviewing(true);
+        let dateToday = new Date().toLocaleDateString('en-CA');
+        let obj = { film_fk: film!.id, users_fk: currentUser!.id, content: text, rating: rate, date_created: dateToday };
+        let { createReview } = reviewOperation(client);
+        let response = await createReview(obj);
+        if (response!['result'] !== 'success') {
+            setMessage(response!['result']);
+            setAlert(true);
+            setReviewing(false);
+            return;
+        }
+
+        if (response) {
+            let row = {rating: response.metadata.data.rating, name: currentUser!.username, date: response.metadata.data.date, content: response.metadata.data.content};
+            let rowArr = reviewrow;
+            rowArr?.push(row);
+            setReviewrow(rowArr);
+    
+            setMessage('Review Added');
+            setRateshow(false);
+            setAlert(true);
+            setReviewing(false);
+            setOpen(false);    
+        }
+    }
+
+    async function formatReviews()  {
+        let { getReviews } = reviewOperation(client);
+        let { getUsername } = userOperation(client);
+        let reviews : Array<Review> = await getReviews();
+        let arr = [];
+        setReviews(reviews);
+
+        // Fetch Username and date created
+        for (let i = 0; i <= reviews.length - 1; i++) {
+            let review = reviews[i];
+            let userName = await getUsername(review.users_fk!);
+            if (review.users_fk === currentUser?.id) {
+                setUserReviewed(true);
+            }
+            arr.push({ rating: review.rating, content: review.content, name: userName, date: review.date_created });
+        }
+
+        setReviewrow(arr);
+}
 
     function formatText(text: Array<string>, isGenre?: boolean) : string {
         let formatted = '';
@@ -112,17 +168,18 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
 
             setActors(actors);
             setProducers(producers);
-            console.log(actors);
-            console.log(producers);
-            console.log(director);
 
+            // Fetch Reviews
+            formatReviews();
             
         }
         main();
     }, [])
 
+    const firstRow = [1, 2, 3, 4, 5];
+    const secondRow = [6, 7, 8, 9, 10];
 
-    if (!film || !producers || !actors || !director) {
+    if (!film || !producers || !actors || !director || !reviews) {
         return(
             <>
                 <Header currentUser={ undefined } />
@@ -190,8 +247,145 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
                             <Typography variant='body2'>{ formatText(extractText(actors)) } </Typography>
                         </Box>
                     </Box>
-
                 </Box>
+
+                <Box className='mt-[2vh] max-w-[40vw]'>
+                    {reviewrow.length === 0 ? (
+                        <Box className='flex flex-col mt-[3vh] gap-5'>
+                            <Box className='flex flex-row'>
+                                <Typography variant='h4'> Reviews </Typography>
+                            </Box>
+                            <Typography>There are no reviews for this film yet</Typography>
+                            {!currentUser?.is_admin && 
+                                <Typography>
+                                    <Button onClick={() => setOpen(true)} variant='soft'>
+                                        Add one
+                                    </Button>
+                                </Typography>
+                            }
+                        </Box>
+                    ) : (
+                        <Box className='flex flex-col mt-[3vh] gap-5 break-words max-w-[50vw]'>
+                            <Typography variant='h4'> Reviews </Typography>
+                            {reviewrow!.map((r) => (
+                            <Box className='flex flex-row gap-17'>
+                                <Box className='flex flex-col gap-2 max-w-[6vw]'>
+                                    <Typography variant='body2'>{r.name}  <EditIcon /> </Typography>
+                                    <Typography variant='body2'>{r.date}</Typography>
+                                    <Typography> {r.rating} ★ </Typography>
+                                </Box>
+
+                                <Box className='max-w-[30vw]'>
+                                    {r.content}
+                                </Box>
+                            </Box>
+                                
+                        ))}
+                        </Box>
+                    )}
+                </Box>
+
+                <Modal
+                    open={open}
+                    onClose={() => setOpen(false)}
+                    disableScrollLock={true}
+                    >
+                        <Box className='w-[40vw] overflow-y-auto max-h-[80vh] flex flex-col gap-4 p-6 absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-[#1e1e1e] text-white rounded-lg shadow-xl'>
+                            <Box className='flex flex-row gap-65'>
+                                <Box className='max-w-[12vw]'>
+                                    <Typography variant="h6" component="h2">
+                                        Write a Review
+                                    </Typography>
+                                </Box>
+                                <Box className='max-w-[5vw]'>
+                                    <Button onClick={() => setRateshow(true)}>
+                                        <Typography>
+                                            Rate
+                                        </Typography>
+                                    </Button>
+                                </Box>
+                            </Box>
+                            <Typography sx={{ mt: 2 }} variant='subtitle2'>
+                                The review should contain at least 200 characters
+                            </Typography>
+                            <Box className='mt-[2vh]'>
+                                <Textarea
+                                    placeholder='Type here...'
+                                    minRows={9}
+                                    maxRows={11}
+                                    onChange={(event) => setText(event.target.value)}
+                                    value ={text}
+                                    endDecorator={
+                                        <Box className='p-1 flex w-[100%] justify-end items-end'>
+                                            <Typography variant='subtitle2'>
+                                                {text.length} characters
+                                            </Typography>
+                                        </Box>
+                                    }
+                                />
+                            </Box>
+                            <Box>
+                                <Button loading={reviewing} 
+                                sx= {{
+                                    backgroundColor: '#10b981', 
+                                    color: 'black', 
+                                    '&:hover': {backgroundColor: '#047857'},
+                                    '&.Mui-disabled': {backgroundColor: '#047857'}
+                                }} 
+                                    color={reviewing ? 'warning' : 'primary'} onClick={() => setRateshow(true)}> 
+                                    Add Review 
+                                </Button>
+                            </Box>
+                        </Box>
+                </Modal>
+
+                <Modal
+                    open={rateshow}
+                    onClose={() => setRateshow(false)}
+                    disableScrollLock={true}
+                    >
+                        <Box className='w-[40vw] overflow-y-auto max-h-[80vh] flex flex-col gap-4 p-6 absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-[#1e1e1e] text-white rounded-lg shadow-xl'>
+                            <Box className='flex flex-row gap-80'>
+                                <Box className='max-w-[12vw]'>
+                                    <Typography variant="h6" component="h2">
+                                        Rate
+                                    </Typography>
+                                </Box>
+                                <Box className='max-w-[20vw]'>
+                                    <Button onClick={() => setRateshow(false)}>
+                                        <Typography>
+                                            Back to Review
+                                        </Typography>
+                                    </Button>
+                                </Box>
+                            </Box>
+                            <Box className='flex flex-col items-center justify-center'>
+                                <Box className='mt-[5vh] flex flex-row gap-5'>
+                                    {firstRow.map((r) => (
+                                        <Button disabled={rate === r ? true : false} onClick={() => setRate(r)}> {r} </Button>
+                                    ))}
+                                    
+                                </Box>
+                                <Box className='mt-[5vh] flex flex-row gap-5'>
+                                    {secondRow.map((r) => (
+                                        <Button disabled={rate === r ? true : false} onClick={() => setRate(r)}> {r} </Button>
+                                    ))}
+                                </Box>
+                            </Box>
+                            <Box className='mt-[5vh]'>
+                                <Button loading={reviewing} 
+                                sx= {{
+                                    backgroundColor: '#10b981', 
+                                    color: 'black', 
+                                    '&:hover': {backgroundColor: '#047857'},
+                                    '&.Mui-disabled': {backgroundColor: '#047857'}
+                                }} 
+                                    color={reviewing ? 'warning' : 'primary'} onClick={makeReview}> 
+                                    Submit Review 
+                                </Button>
+                            </Box>
+                        </Box>
+                </Modal>
 
             </Box>
 

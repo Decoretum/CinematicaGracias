@@ -21,11 +21,20 @@ export default function Home() {
           and ingenuinity for eternity.
         </Typography>
       </Box>
+
+      <Box className='flex justify-end mr-[2vw]'>
+        <Box className='md:ml-[5vw] md-ml-auto md:w-[30vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
+          <Typography variant='body1'> 
+            Classic and modern films are preserved for continuous learning and in order to champion humanity's love and passion for the arts and sciences.
+          </Typography>
+        </Box>
+      </Box>
+
     </Box>
 
     <Box className='mt-[3vh] flex w-screen items-center justify-center'>
       <Link href='/films'>
-        <Button variant='soft' color='neutral'> View Films </Button>
+        <Button variant='soft' color='neutral'> Explore </Button>
       </Link>
     </Box>
     </>

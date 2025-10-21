@@ -6,7 +6,6 @@ CREATE TABLE Users (
   sex CHAR(1) NOT NULL,
   birthday DATE NOT NULL, 
   username VARCHAR(255) NOT NULL,
-  password VARCHAR(255) NOT NULL,
   is_admin BOOLEAN NOT NULL
 );
 

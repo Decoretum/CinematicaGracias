@@ -136,6 +136,11 @@ export default function operations (client : SupabaseClient)
 
     }
 
+    const getUsername = async (id: string) : Promise<string> => {
+        const { data } = await client.from('users').select('username').eq('id', id).single();
+        return data!.username;
+    }
+
     const getCurrentUser = async () => {
         const { data: { user } } = await client.auth.getUser();
         let nonAuthUser = null;
@@ -190,5 +195,5 @@ export default function operations (client : SupabaseClient)
         return { error } 
     }
 
-    return { getCurrentUser, updateUser, parseUserData }
+    return { getCurrentUser, updateUser, parseUserData, getUsername }
 }

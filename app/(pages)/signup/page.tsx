@@ -152,17 +152,17 @@ export default function SignUp () {
                 <Box className='flex flex-row mt-[4vh] items-center gap-40'>
                     <Box className='flex flex-row items-center gap-2'>
                         <Typography>Have an existing Account?</Typography>
-                        <Button variant='text' color='success'> Login </Button>
+                        <Button variant='text' color='success' onClick={() => router.push('/login')}> Login </Button>
                     </Box>
-                    
-                    <Box>
+
+                    <Box className='max-w-[5vw] w-[5vw]'>
                         <Button 
                         variant='contained'
                         disabled = {loading}
                         startIcon={loading ? <CircularProgress size={20} /> : null}
                         onClick={createUser}
                         >
-                            {loading ? null : 'Create Account'}
+                            {loading ? null : 'Create'}
                         </Button>
                     </Box>     
                 </Box>               

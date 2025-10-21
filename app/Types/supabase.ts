@@ -300,7 +300,6 @@ export type Database = {
           id: string
           is_admin: boolean
           last_name: string
-          password: string
           sex: string
           username: string
         }
@@ -310,7 +309,6 @@ export type Database = {
           id: string
           is_admin: boolean
           last_name: string
-          password: string
           sex: string
           username: string
         }
@@ -320,7 +318,6 @@ export type Database = {
           id?: string
           is_admin?: boolean
           last_name?: string
-          password?: string
           sex?: string
           username?: string
         }

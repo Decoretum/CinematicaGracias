@@ -23,7 +23,7 @@ export default async function Signup (obj : SignUpEditUser)
     
     const { error } = await client
     .from('users')
-    .insert({ id: data?.user?.id, first_name: obj.first_name?.trim(), last_name: obj.last_name?.trim(), sex: obj.sex, birthday: obj.birthday, username: obj.username?.trim(), password: obj.password.trim(), is_admin: obj.is_admin })
+    .insert({ id: data?.user?.id, first_name: obj.first_name?.trim(), last_name: obj.last_name?.trim(), sex: obj.sex, birthday: obj.birthday, username: obj.username?.trim(), is_admin: obj.is_admin })
     
     hashmap['result'] = 'success';
     hashmap['metadata'] = { data, error };
