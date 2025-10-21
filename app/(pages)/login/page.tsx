@@ -31,7 +31,7 @@ export default function SignUp () {
     async function login() {
         setLoading(true);
         let response = await Login(userName, password);
-        if (response !== null) {
+        if (response.error !== null) {
             setMessage("Invalid Login");
             setAlert(true);
             setLoading(false);
@@ -39,7 +39,7 @@ export default function SignUp () {
         }
         
         else {
-            router.push('/signup/success');
+            router.push('/films');
             return;
         }
     }
@@ -64,7 +64,7 @@ export default function SignUp () {
                 <Box className='flex flex-col mt-[4vh]'>
 
                     <Box className='flex flex-col'>
-                        <Typography color='white'> Username </Typography>
+                        <Typography color='white'> Email </Typography>
                         <Input placeholder='Username' onChange={(event) => setUserName(event.target.value)} />
                     </Box>
 
