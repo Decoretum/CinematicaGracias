@@ -7,7 +7,7 @@ Cinematica Gracias is a [Next.js](https://nextjs.org) and Supabase project devel
 ## Creating an Account
 In this application, users can have two roles. One is an **admin**, while another one is a **collaborator**. A collaborator can view film, actor, director, and producer data within the application. They can also review and rate films. However, they cannot edit the data of these since they aren't authorized to do so.  On the other hand, Admin users have the capability to modify application data for Films, Directors, Actors, and more. However, they cannot rate or review films. An anonymous user has to signup to be a collaborator in order to post reviews for films.
 
-<img width="1280" height="688" alt="image" src="https://github.com/user-attachments/assets/785a113c-314a-4d58-a59d-2ffe81edac78" />
+<img width="1279" height="690" alt="image" src="https://github.com/user-attachments/assets/449d25b7-507b-4487-b421-4869c2b38bdb" />
 
 <br><br>
 
