@@ -7,7 +7,7 @@ Cinematica Gracias is a [Next.js](https://nextjs.org) and Supabase project devel
 ## Creating an Account
 In this application, users can have two roles. One is an **admin**, while another one is a **collaborator**. A collaborator can view film, actor, director, and producer data within the application. They can also review and rate films. However, they cannot edit the data of these since they aren't authorized to do so.  On the other hand, Admin users have the capability to modify application data for Films, Directors, Actors, and more. However, they cannot rate or review films. An anonymous user has to signup to be a collaborator in order to post reviews for films.
 
-<img width="1280" height="688" alt="image" src="https://github.com/user-attachments/assets/785a113c-314a-4d58-a59d-2ffe81edac78" />
+<img width="1279" height="690" alt="image" src="https://github.com/user-attachments/assets/449d25b7-507b-4487-b421-4869c2b38bdb" />
 
 <br><br>
 
@@ -91,17 +91,17 @@ Samples:
 <br>
 <img width="1280" height="689" alt="image" src="https://github.com/user-attachments/assets/f2594f62-cf47-4b54-b3b2-a0720e83ed67" />
 <br>
-<img width="1279" height="690" alt="image" src="https://github.com/user-attachments/assets/1e4e4078-33d3-4a17-b1a2-76a686710134" />
+<img width="1280" height="690" alt="image" src="https://github.com/user-attachments/assets/7ebce525-147f-4637-95b0-b2aa73ce5267" />
 <br>
-<img width="1279" height="690" alt="image" src="https://github.com/user-attachments/assets/fa71e7d8-7e71-4b8c-a85a-0c68dc22adb2" />
+<img width="1279" height="690" alt="image" src="https://github.com/user-attachments/assets/bbb5f1e5-7def-4677-bf6c-ba2a9dd60a53" />
 <br>
-<img width="1279" height="690" alt="image" src="https://github.com/user-attachments/assets/16e01955-10d9-4b02-ab72-f6b760a7802d" />
+<img width="1279" height="692" alt="image" src="https://github.com/user-attachments/assets/c1d3b382-a84b-4415-9389-e4cde7662e67" />
 <br>
 <img width="1280" height="690" alt="image" src="https://github.com/user-attachments/assets/a71cfd99-ddc1-4fee-9373-e5cc29ea76a7" />
 <br>
 <img width="1278" height="689" alt="image" src="https://github.com/user-attachments/assets/4b795224-ddfa-4298-8d98-ab20f7f60974" />
 <br>
-<img width="1280" height="689" alt="image" src="https://github.com/user-attachments/assets/cfe8dd49-f993-49a6-b086-787aa7d76c47" />
+<img width="1279" height="689" alt="image" src="https://github.com/user-attachments/assets/0ddf8036-8cf8-4c78-b1ba-d549a3ca6b62" />
 <br>
 <img width="1280" height="691" alt="Screen Shot 2025-10-22 at 6 44 55 AM" src="https://github.com/user-attachments/assets/494ebc9d-d18c-474f-9628-e139fd816b6c" />
 <br>
