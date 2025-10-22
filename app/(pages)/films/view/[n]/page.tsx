@@ -16,6 +16,7 @@ import filmActorOperation from "../../../../Backend/filmactors/operation"
 import { client } from "@/app/Backend/createclient";
 import { Box, Button, Textarea } from "@mui/joy";
 import { CircularProgress, FormControl, Modal, Snackbar, Typography } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 export default function Info ({ params } : { params : Promise<{ n : number }> }) {
     const [currentUser, setCurrentUser] = useState<Users | null>(null);
@@ -33,6 +34,7 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
     const [rateshow, setRateshow] = useState(false);
     const [rate, setRate] = useState(0);
     const [userReviewed, setUserReviewed] = useState(false);
+    const navigate = useRouter();
 
     async function getUser(client : SupabaseClient) {
         let { getCurrentUser } = userOperation(client);
@@ -255,11 +257,18 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
                                 <Typography variant='h4'> Reviews </Typography>
                             </Box>
                             <Typography>There are no reviews for this film yet</Typography>
-                            {!currentUser?.is_admin && 
+                            {!currentUser?.is_admin &&
                                 <Typography>
+                                    {currentUser !== null ? 
                                     <Button onClick={() => setOpen(true)} variant='soft'>
                                         Add one
+                                    </Button> : 
+                                    <Button onClick={() => navigate.push('/login')} variant='soft'>
+                                        Add one
                                     </Button>
+                                
+                                    
+                                }
                                 </Typography>
                             }
                         </Box>

@@ -127,7 +127,7 @@ export default function UpdateProducer ({ params } : { params: Promise<{ n: numb
                         </Tooltip>
                     </Box>
 
-                    <Typography color='white' variant='h5'> Edit Producer </Typography>
+                    <Typography color='white' variant='h5'> Update Producer </Typography>
                 </Box>
 
                 <Box className='flex flex-row mt-[5vh]'>
