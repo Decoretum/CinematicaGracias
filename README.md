@@ -112,26 +112,33 @@ Samples:
 Feature Implemented
 - User can signup using the signup page
 - contains data validation
-
+<br><br>
 
 #### Requirement: The admin, collaborator, or an anonymous user can view films and their reviews from collaborators<br>
 Feature Implemented
 - View pages for Films can be accessed 
 <br><br>
 
-Samples
 
+#### Requirement: The admin, collaborator, or an anonymous user can view producers, actors, and directors information pages <br>
+Feature implemented
+- View pages for Producers, Actors, and Directors can be accessed
+<br><br>
 
 
 #### Requirements:
 - The collaborator must be able to write a review for a film and rate it
 - The Admin must be able to delete reviews
 <br>
+
 Feature Implemented
-- Create functionality for Review entity
-- Accompanied with data validation
+- Create functionality for Review entity accompanied with data validation
+
+
 <br><br>
-<img width="1280" height="690" alt="image" src="https://github.com/user-attachments/assets/68c63823-6e44-47c3-a71a-910a8c687e99" /> <br>
+Samples
+<br><br>
+<img width="1280" height="690" alt="image" src="https://github.com/user-attachments/assets/68c63823-6e44-47c3-a71a-910a8c687e99" /> <br><br>
 <img width="1276" height="692" alt="image" src="https://github.com/user-attachments/assets/a3661bbe-c3ae-4966-b729-56305a82f9cb" />
 
 
