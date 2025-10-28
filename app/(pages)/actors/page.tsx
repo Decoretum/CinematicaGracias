@@ -11,6 +11,7 @@ import DisplayCard from "@/app/Components/HumanDisplayCard/DisplayCard";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
+import InfoIcon from '@mui/icons-material/Info';
 import { CircularProgress } from "@mui/material";
 import { useRouter } from "next/navigation";
 
@@ -103,22 +104,26 @@ export default function Actors () {
                                 <Box className='w-[13vw] max-w-[13vw] max-h-[50vh] max-h-[20vh] overflow-y-auto rounded-lg'>
                                     <DisplayCard first_name={actor.first_name} last_name={actor.last_name} birthday={actor.birthday} />
                                 </Box>
-                                <Box className='flex flex-row gap-5'>
-                                {currentUser?.is_admin === true && (
-                                    <>
-                                        <Box>
-                                            <Button variant='soft' onClick={() => handleDelete(actor.id)} >
-                                                { deleting === true && deletingId === actor.id ? <CircularProgress size='30px' />  : <DeleteIcon />}
-                                            </Button>
-                                        </Box>
+                                <Box className='flex flex-row gap-2'>
+                                    <Button variant='soft' onClick={() => router.push(`/actors/view/${actor.id}/`)} >
+                                        <InfoIcon />
+                                    </Button>
 
-                                        <Box>
-                                        <Button variant='soft' onClick={() => router.push(`/actors/update/${actor.id}/`)} size='sm' color='success'>
-                                            <EditIcon fontSize="small" />
-                                        </Button>
-                                        </Box>
-                                    </>
-                                    )}
+                                    {currentUser?.is_admin === true && (
+                                        <>
+                                            <Box>
+                                                <Button variant='soft' onClick={() => handleDelete(actor.id)} >
+                                                    { deleting === true && deletingId === actor.id ? <CircularProgress size='30px' />  : <DeleteIcon />}
+                                                </Button>
+                                            </Box>
+
+                                            <Box>
+                                            <Button variant='soft' onClick={() => router.push(`/actors/update/${actor.id}/`)} size='sm' color='success'>
+                                                <EditIcon fontSize="small" />
+                                            </Button>
+                                            </Box>
+                                        </>
+                                        )}
                                 </Box>
                             </Box>
                         ))}

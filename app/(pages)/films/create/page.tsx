@@ -200,7 +200,7 @@ export default function CreateFilm () {
                 <Box className='flex flex-row'>
                     <Box className='mr-[2vw]'>
                         <Tooltip title='Back to Film Page'>
-                            <Button variant='contained'>
+                            <Button variant='contained' onClick={() => router.push('/films')}>
                                 <ArrowBackIcon />
                             </Button>
                         </Tooltip>
@@ -269,9 +269,14 @@ export default function CreateFilm () {
                                         {filmGenres.map((genre, idx) => (
                                                 <FormControlLabel
                                                 control={
-                                                <Checkbox checked={genre.checked === 0 ? false : true} onChange={() => handleGenreChange(genre.id)} name={genre.name} />
+                                                <Checkbox 
+                                                sx = {{ backgroundColor: 'antiquewhite', 
+                                                    borderRadius: 1, width: 14, 
+                                                    height: 14, border: 'none' }} 
+                                                checked={genre.checked === 0 ? false : true} onChange={() => handleGenreChange(genre.id)} name={genre.name} />
                                                 }
-                                                label={genre.name}
+                                                sx = {{ gap: 2, marginTop: 2 }}
+                                                label={genre.name.charAt(0).toUpperCase() + genre.name.substring(1).toLowerCase()}
                                                 />
                                         ))}
                                         </FormGroup>
@@ -316,9 +321,14 @@ export default function CreateFilm () {
                                         {directors.map((director, idx) => (
                                                 <FormControlLabel
                                                 control={
-                                                <Checkbox checked={director.checked === 0 ? false : true} onChange={() => handleChange(director.id, 'director')} name={director.name} />
+                                                <Checkbox 
+                                                sx = {{ backgroundColor: 'antiquewhite', 
+                                                    borderRadius: 1, width: 14, 
+                                                    height: 14, border: 'none' }} 
+                                                checked={director.checked === 0 ? false : true} onChange={() => handleChange(director.id, 'director')} name={director.name} />
                                                 }
                                                 label={director.name}
+                                                sx = {{ gap: 2, marginTop: 2 }}
                                                 />
                                         ))}
                                         </FormGroup>
@@ -353,9 +363,14 @@ export default function CreateFilm () {
                                         {producers.map((producer, idx) => (
                                                 <FormControlLabel
                                                 control={
-                                                <Checkbox checked={producer.checked === 1 ? true : false} onChange={() => handleChange(producer.id, 'producer')} name={producer.name} />
+                                                <Checkbox 
+                                                sx = {{ backgroundColor: 'antiquewhite', 
+                                                    borderRadius: 1, width: 14, 
+                                                    height: 14, border: 'none' }} 
+                                                checked={producer.checked === 1 ? true : false} onChange={() => handleChange(producer.id, 'producer')} name={producer.name} />
                                                 }
                                                 label={producer.name}
+                                                sx = {{ gap: 2, marginTop: 2 }}
                                                 />
                                         ))}
                                         </FormGroup>
@@ -390,9 +405,14 @@ export default function CreateFilm () {
                                             {actors.map((actor, idx) => (
                                                 <FormControlLabel
                                                 control={
-                                                <Checkbox checked={actor.checked === 0 ? false : true} onChange={() => handleChange(actor.id, 'actor')} name={actor.name} />
+                                                <Checkbox 
+                                                sx = {{ backgroundColor: 'antiquewhite', 
+                                                    borderRadius: 1, width: 14, 
+                                                    height: 14, border: 'none' }} 
+                                                checked={actor.checked === 0 ? false : true} onChange={() => handleChange(actor.id, 'actor')} name={actor.name} />
                                                 }
                                                 label={actor.name}
+                                                sx = {{ gap: 2, marginTop: 2 }}
                                                 />
                                         ))}
                                         </FormGroup>

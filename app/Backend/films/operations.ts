@@ -91,8 +91,13 @@ export default function operations(client : SupabaseClient) {
         return hashmap;
     }
 
-    const getFilms = async () : Promise<Film[]> => {
-        const { data } = await client.from('film').select();
+    const getFilms = async (director_fk? : number) : Promise<Film[]> => {
+        if (director_fk === undefined) {
+            const { data } = await client.from('film').select();
+            return data!;    
+        }
+
+        const { data } = await client.from('film').select().eq('director_fk', director_fk);
         return data!;
     }
 

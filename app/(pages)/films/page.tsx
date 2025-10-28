@@ -101,9 +101,9 @@ export default function Films () {
                                 <Box>
                                     <FilmDisplayCard name={film.name} average_user_rating={film.average_user_rating} content_rating={film.content_rating} date_released={film.date_released} duration={film.duration}  />
                                 </Box>
-                                <Box className='flex flex-row gap-5'>
+                                <Box className='flex flex-row gap-2'>
                                     <Box>
-                                    <Button variant='soft' onClick={() => router.push(`/films/view/${film.id}/`)} >
+                                        <Button variant='soft' onClick={() => router.push(`/films/view/${film.id}/`)} >
                                             <InfoIcon />
                                         </Button>
                                     </Box>

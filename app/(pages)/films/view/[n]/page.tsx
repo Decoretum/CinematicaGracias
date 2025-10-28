@@ -15,8 +15,9 @@ import filmProducerOperation from "../../../../Backend/filmproducers/operation"
 import filmActorOperation from "../../../../Backend/filmactors/operation"
 import { client } from "@/app/Backend/createclient";
 import { Box, Button, Textarea } from "@mui/joy";
-import { CircularProgress, FormControl, Modal, Snackbar, Typography } from "@mui/material";
+import { CircularProgress, FormControl, Modal, Snackbar, Tooltip, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
+import ArrowBack from "@mui/icons-material/ArrowBack";
 
 export default function Info ({ params } : { params : Promise<{ n : number }> }) {
     const [currentUser, setCurrentUser] = useState<Users | null>(null);
@@ -115,7 +116,7 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
                 let word = text[i];
                 if (i === text.length - 1) formatted += `, and ${word}`;
                 else if (i === text.length - 2) formatted += word;
-                else formatted += `${word},`;
+                else formatted += `${word}, `;
             }
         }
 
@@ -200,21 +201,33 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
         <>
             <Header currentUser={ currentUser } />
             <Box className='flex flex-col gap-5 md:min-h-[100vh] md:max-w-[50vw] w-[50vw] mx-auto bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
-                <Box className='flex flex-row gap-65'>
+                <Box className='flex flex-row justify-between'>
                     <Typography variant='h3'>
                         { film.name }
                     </Typography>
-                    <Typography>
-                        { film.duration } minutes
-                    </Typography>
+                    <Box className='flex flex-col gap-4'>
+                        <Box>
+                            <Tooltip title='Back to Film Page'>
+                            <Button variant='outlined' onClick={() => navigate.push('/films')}>
+                                <ArrowBack />
+                            </Button>
+                            </Tooltip>
+                        </Box>
+
+                        <Box>
+                            <Typography>
+                                { film.duration } minutes
+                            </Typography>
+                        </Box>
+                    </Box>
                 </Box>
 
                 <Box><Typography variant='h6'>Average Rating: { film.average_user_rating } / 10 ★</Typography></Box>
-                <Box className='flex flex-row gap-80'>
+                <Box className='flex flex-row justify-between'>
                     <Typography>Released on { film.date_released }</Typography>
                     <Typography>Directed by {`${director.first_name} ${director.last_name}`} </Typography>
                 </Box>
-                <Box className='flex flex-row gap-89 max-w-[50vw] mt-[4vh]'>
+                <Box className='flex flex-row justify-between max-w-[50vw] mt-[4vh]'>
                     <Box className='max-w-[8vw]'>
                         <Typography>Maturity Rating: { film.content_rating }
                         <ReportGmailerrorredIcon className='ml-[0.5vw] mb-[1vh]' />
@@ -235,7 +248,7 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
                     </Box>
                 </Box>
 
-                <Box className='flex flex-row gap-20 mt-[4vh] justify-center'>
+                <Box className='flex flex-row mt-[4vh] gap-20 justify-center'>
                     <Box className='max-w-[20vw]'>
                         <Typography variant='h5'>Producers</Typography>
                         <Box className='mt-[2vh]'>

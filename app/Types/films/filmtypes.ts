@@ -30,3 +30,8 @@ export type FilmDisplay = {
     duration: number
 }
 export type FilmHashmap = Map<string, Array<object>>;
+// export type FilmsOfActor = {
+//     id: number,
+//     name: string,
+//     date_released: string,
+// }

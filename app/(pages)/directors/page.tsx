@@ -11,6 +11,7 @@ import DisplayCard from "@/app/Components/HumanDisplayCard/DisplayCard";
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
+import InfoIcon from '@mui/icons-material/Info';
 import { CircularProgress } from "@mui/material";
 import { useRouter } from "next/navigation";
 
@@ -101,22 +102,29 @@ export default function Directors () {
                                 <Box className='w-[13vw] max-w-[13vw] overflow-y-auto rounded-lg'>
                                     <DisplayCard first_name={director.first_name} last_name={director.last_name} birthday={director.birthday} />
                                 </Box>
-                                <Box className='flex flex-row gap-5'>
-                                {currentUser?.is_admin === true && (
-                                <>
+
+                                <Box className='flex flex-row gap-2'>
                                     <Box>
-                                        <Button variant='soft' onClick={() => handleDelete(director.id)} >
-                                            { deleting === true && deletingId === director.id ? <CircularProgress size='30px' />  : <DeleteIcon />}
+                                        <Button variant='soft' onClick={() => router.push(`/directors/view/${director.id}/`)} >
+                                            <InfoIcon />
                                         </Button>
                                     </Box>
 
-                                    <Box>
-                                    <Button variant='soft' onClick={() => router.push(`/directors/update/${director.id}/`)} size='sm' color='success'>
-                                        <EditIcon fontSize="small" />
-                                    </Button>
-                                    </Box>
-                                </>
-                                )}
+                                    {currentUser?.is_admin === true && (
+                                    <>
+                                        <Box>
+                                            <Button variant='soft' onClick={() => handleDelete(director.id)} >
+                                                { deleting === true && deletingId === director.id ? <CircularProgress size='30px' />  : <DeleteIcon />}
+                                            </Button>
+                                        </Box>
+
+                                        <Box>
+                                        <Button variant='soft' onClick={() => router.push(`/directors/update/${director.id}/`)} size='sm' color='success'>
+                                            <EditIcon fontSize="small" />
+                                        </Button>
+                                        </Box>
+                                    </>
+                                    )}
                                 </Box>
                             </Box>
                         ))}

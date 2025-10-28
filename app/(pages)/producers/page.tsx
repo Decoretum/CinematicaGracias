@@ -11,6 +11,7 @@ import DisplayCard from "@/app/Components/HumanDisplayCard/DisplayCard";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
+import InfoIcon from '@mui/icons-material/Info';
 
 import { CircularProgress } from "@mui/material";
 import { useRouter } from "next/navigation";
@@ -107,22 +108,27 @@ export default function Producers () {
                                 <Box>
                                     <DisplayCard first_name={producer.first_name} last_name={producer.last_name} birthday={producer.birthday} />
                                 </Box>
-                                <Box className='flex flex-row gap-5 mt-[2vh]'>
-                                {currentUser?.is_admin === true && (
-                                <>
+                                <Box className='flex flex-row gap-2 mt-[2vh]'>
                                     <Box>
-                                        <Button variant='soft' onClick={() => handleDelete(producer.id)} >
-                                            { deleting === true && deletingId === producer.id ? <CircularProgress size='30px' />  : <DeleteIcon />}
+                                        <Button variant='soft' onClick={() => router.push(`/producers/view/${producer.id}/`)} >
+                                            <InfoIcon />
                                         </Button>
                                     </Box>
+                                    {currentUser?.is_admin === true && (
+                                    <>
+                                        <Box>
+                                            <Button variant='soft' onClick={() => handleDelete(producer.id)} >
+                                                { deleting === true && deletingId === producer.id ? <CircularProgress size='30px' />  : <DeleteIcon />}
+                                            </Button>
+                                        </Box>
 
-                                    <Box>
-                                    <Button variant='soft' onClick={() => router.push(`/producers/update/${producer.id}/`)} size='sm' color='success'>
-                                        <EditIcon fontSize="small" />
-                                    </Button>
-                                    </Box>
-                                </>
-                                )}
+                                        <Box>
+                                        <Button variant='soft' onClick={() => router.push(`/producers/update/${producer.id}/`)} size='sm' color='success'>
+                                            <EditIcon fontSize="small" />
+                                        </Button>
+                                        </Box>
+                                    </>
+                                    )}
                                 </Box>
                             </Box>
                         ))}

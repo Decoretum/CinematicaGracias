@@ -9,9 +9,17 @@ export default function operations(client : SupabaseClient) {
         return data;
     }
     
-    const getFilmProducers = async (filmId: number) : Promise<FilmProducer[]> => {
-        const { data } = await client.from('filmproducer').select().eq('film_fk', filmId);
-        return data!;
+    const getFilmProducers = async (filmId?: number, producerId?: number) : Promise<Array<FilmProducer>> => {
+        if (filmId) {
+            const { data } = await client.from('filmproducer').select().eq('film_fk', filmId);
+            return data!;
+        }
+        else if (producerId) {
+            const { data } = await client.from('filmproducer').select().eq('producer_fk', producerId);
+            return data!;
+        }
+
+        return [];
     }
 
     const createFilmProducer = async (producer_fk: number, film_fk: number) => {
