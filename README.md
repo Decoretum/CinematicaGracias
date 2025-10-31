@@ -1,5 +1,7 @@
 ## Overview
-Cinematica Gracias is a [Next.js](https://nextjs.org) and Supabase project developed as an experimental concept for storing and archiving wonderful and impactful films for the future.  This was developed to store and archive data on films around the world aided with relevant data such as the directors, producers, actors, and the reviews of the users who log authenticate to this application. Compared to Netflix or IMDB, this application wasn't intended to serve as an official reference for professional critiques in judging the quality and worth of a film. In this application, people can rate and review films. 
+Cinematica Gracias is a [Next.js](https://nextjs.org) and Supabase project developed as an experimental concept for storing and archiving wonderful and impactful films for the future.  This was developed to store and archive data on films around the world aided with relevant data such as the directors, producers, actors, and the reviews of the users who log authenticate to this application. Compared to Netflix or IMDB, this application wasn't intended to serve as an official reference for professional critiques in judging the quality and worth of a film. In this application, people can rate and review films. <br><br>
+
+Note: Supabase CLI was not used, so no migrations were done in Supabase.
 
 <img width="1277" height="687" alt="image" src="https://github.com/user-attachments/assets/268a7e23-304c-4510-835e-38ba2e72b660" />
 
