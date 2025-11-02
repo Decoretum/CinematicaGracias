@@ -1,8 +1,8 @@
 import { SupabaseClient } from '@supabase/supabase-js';
-import { ParseDataResult } from '../../Types/entitytypes'
+import { ParseDataResult, Users } from '../../Types/entitytypes'
 import { SignUpEditUser } from '@/app/Types/users/usertypes';
 
-export default function operations (client : SupabaseClient)
+export default async function operations (client : SupabaseClient, authClient : SupabaseClient)
 {
     const parseUserData = async (obj: SignUpEditUser) : Promise<ParseDataResult> => {
 
@@ -32,9 +32,15 @@ export default function operations (client : SupabaseClient)
     
         // Username - length must be at least >= 4
         
-        let usernameCondition = obj.username.trim().length >= 4 || obj.username.replace(/\s+/g, '').length > 4;
-        if (!usernameCondition) {
+        let usernameLength = obj.username.trim().length >= 4 || obj.username.replace(/\s+/g, '').length > 4;
+        let duplicateUsername = (await getUser(obj.username.trim())) !== null;
+        if (!usernameLength) {
             hashmap['result'] = 'Username\'s length must contain at least 4 characters';
+            return hashmap;
+        } 
+
+        else if (duplicateUsername) {
+            hashmap['result'] = 'This username already exists';
             return hashmap;
         }
     
@@ -112,7 +118,16 @@ export default function operations (client : SupabaseClient)
         if (!validEmail) {
             hashmap['result'] = 'Invalid email'
             return hashmap;
-        }    
+        } 
+        
+        let { data: { users }, error } = await authClient.auth.admin.listUsers();
+        let emails = users.filter((u) => u.email === obj.email.trim());
+        let duplicateEmail = emails.length >= 1;
+
+        if (duplicateEmail) {
+            hashmap['result'] = 'An existing account uses this email';
+            return hashmap;
+        }
     
         // Birthday
         // Age of user must be >= 7
@@ -139,6 +154,12 @@ export default function operations (client : SupabaseClient)
     const getUsername = async (id: string) : Promise<string> => {
         const { data } = await client.from('users').select('username').eq('id', id).single();
         return data!.username;
+    }
+
+    const getUser = async (username: string) : Promise<Users> => {
+        const { data } = await client.from('users').select().eq('username', username).single();
+        return data;
+        
     }
 
     const getCurrentUser = async () => {
@@ -195,5 +216,5 @@ export default function operations (client : SupabaseClient)
         return { error } 
     }
 
-    return { getCurrentUser, updateUser, parseUserData, getUsername }
+    return { getCurrentUser, getUser, updateUser, parseUserData, getUsername }
 }

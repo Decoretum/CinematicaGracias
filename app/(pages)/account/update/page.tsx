@@ -2,7 +2,7 @@
 import { Box, FormControl, RadioGroup } from "@mui/joy";
 import { Button, Snackbar } from '@mui/material'
 import Typography from "@mui/material/Typography";
-import Header from "../../Components/Header";
+import Header from "../../../Components/Header";
 import Input from '@mui/joy/Input';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Tooltip from '@mui/material/Tooltip';
@@ -10,14 +10,10 @@ import Switch from '@mui/joy/Switch';
 import Radio from '@mui/joy/Radio';
 import DatePicker from "react-datepicker";
 import { useState } from "react";
-import signup from '../../Backend/users/signup'
-import Alert from '@mui/material/Alert';
+import signup from '../../../Backend/users/signup'
 import { useRouter } from 'next/navigation'
-
-
-import "react-datepicker/dist/react-datepicker.css";
-import Stack from "@mui/material/Stack";
 import { CircularProgress } from "@mui/material";
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function SignUp () {
     const [check, setCheck] = useState(false);
@@ -173,7 +169,6 @@ export default function SignUp () {
             autoHideDuration={6000}
             onClose={() => setAlert(false)}
             message={message}
-            className='text-center'
             />
             
         </>

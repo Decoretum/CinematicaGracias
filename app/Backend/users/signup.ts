@@ -2,11 +2,12 @@ import { SignUpEditUser } from '../../Types/users/usertypes'
 import { ParseDataResult } from '@/app/Types/entitytypes';
 import operations from './operations';
 import { client } from '../createclient';
+import { authClient } from '../createAuthClient'
 
 
 export default async function Signup (obj : SignUpEditUser)
 {
-    const { parseUserData } = await operations(client);
+    const { parseUserData } = await operations(client, authClient);
     let hashmap : ParseDataResult = await parseUserData(obj);
     if (hashmap['result'] !== 'success') return hashmap;
 

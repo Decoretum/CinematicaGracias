@@ -167,7 +167,16 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
                     <Typography variant='h3'>
                         Profile
                     </Typography>
-                    <Box className='flex flex-col gap-4'>
+                    <Box className='flex flex-row gap-10'>
+                        <Box>
+                            <Button variant='soft' onClick={() => navigate.push('/account/update')}>
+                                <Box className='flex flex-row items-center gap-2'>
+                                    <Box><EditIcon /></Box>
+                                    <Box>Edit Account Details</Box>
+                                </Box>
+                            </Button> 
+                        </Box>
+
                         <Box>
                             <Tooltip title='Back to Film Page'>
                             <Button variant='outlined' onClick={() => navigate.push('/films')}>
