@@ -134,7 +134,7 @@ Feature implemented
 <br>
 
 Feature Implemented
-- Create functionality for Review entity accompanied with data validation
+- Create functionality for authenticated users to create a Review entity accompanied with data validation
 
 
 <br><br>
