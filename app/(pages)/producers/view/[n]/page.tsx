@@ -8,7 +8,6 @@ import producerOperation from "../../../../Backend/producers/operations"
 import filmOperation from "../../../../Backend/films/operations"
 import filmProducerOperation from "../../../../Backend/filmproducers/operation"
 import { client } from "@/app/Backend/createclient";
-import { authClient } from "@/app/Backend/createAuthClient";
 import { Box, Link } from "@mui/joy";
 import { Button, CircularProgress, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
@@ -26,7 +25,7 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
     const navigate = useRouter();
 
     async function getUser() {
-        let { getCurrentUser } = await userOperation(client, authClient);
+        let { getCurrentUser } = await userOperation(client);
         let { nonAuthUser } = await getCurrentUser();
         let nonAUser : Users = nonAuthUser === null ? null : nonAuthUser[0];
         setCurrentUser(nonAUser);

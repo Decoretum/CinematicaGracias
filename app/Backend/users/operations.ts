@@ -1,8 +1,8 @@
-import { SupabaseClient } from '@supabase/supabase-js';
+import { GoTrueAdminApi, SupabaseClient, User } from '@supabase/supabase-js';
 import { ParseDataResult, Users } from '../../Types/entitytypes'
 import { SignUpEditUser } from '@/app/Types/users/usertypes';
 
-export default async function operations (client : SupabaseClient, authClient : SupabaseClient)
+export default async function operations (client : SupabaseClient)
 {
     const parseUserData = async (obj: SignUpEditUser) : Promise<ParseDataResult> => {
 
@@ -120,8 +120,9 @@ export default async function operations (client : SupabaseClient, authClient : 
             return hashmap;
         } 
         
-        let { data: { users }, error } = await authClient.auth.admin.listUsers();
-        let emails = users.filter((u) => u.email === obj.email.trim());
+        let res = await fetch('/api/users', { method: 'GET' });
+        const data: { users: Array<User> } = await res.json();
+        let emails = data.users.filter((u) => u.email === obj.email.trim());
         let duplicateEmail = emails.length >= 1;
 
         if (duplicateEmail) {

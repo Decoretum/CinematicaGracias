@@ -14,7 +14,6 @@ import directorOperation from "../../../../Backend/directors/operations"
 import filmProducerOperation from "../../../../Backend/filmproducers/operation"
 import filmActorOperation from "../../../../Backend/filmactors/operation"
 import { client } from "@/app/Backend/createclient";
-import { authClient } from "@/app/Backend/createAuthClient";
 import { Box, Button, Textarea } from "@mui/joy";
 import { CircularProgress, FormControl, Modal, Snackbar, Tooltip, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
@@ -39,7 +38,7 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
     const navigate = useRouter();
 
     async function getUser() {
-        let { getCurrentUser } = await userOperation(client, authClient);
+        let { getCurrentUser } = await userOperation(client);
         let { nonAuthUser } = await getCurrentUser();
         let nonAUser : Users = nonAuthUser === null ? null : nonAuthUser[0];
         setCurrentUser(nonAUser);
@@ -83,7 +82,7 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
 
     async function formatReviews()  {
         let { getReviews } = reviewOperation(client);
-        let { getUsername } = await userOperation(client, authClient);
+        let { getUsername } = await userOperation(client);
         let reviews : Array<Review> = await getReviews();
         let arr = [];
         setReviews(reviews);

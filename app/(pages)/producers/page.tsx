@@ -4,7 +4,6 @@ import userOperation from "../../Backend/users/operations";
 import producerOperation from "../../Backend/producers/operations";
 import { useEffect, useState } from "react";
 import { client }from "../../Backend/createclient";
-import { authClient } from "@/app/Backend/createAuthClient";
 import Header from '../../Components/Header'
 import { SupabaseClient, User } from "@supabase/supabase-js";
 import { Producer, Users } from "../../Types/entitytypes";
@@ -29,7 +28,7 @@ export default function Producers () {
     
 
     async function getUser() {
-        let { getCurrentUser } = await userOperation(client, authClient);
+        let { getCurrentUser } = await userOperation(client);
         let { user, nonAuthUser } = await getCurrentUser();
         let authUser : User | null = user;
         let nonAUser : Users | null = nonAuthUser === null ? null : nonAuthUser[0];

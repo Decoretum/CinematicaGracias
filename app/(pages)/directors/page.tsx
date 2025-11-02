@@ -4,7 +4,6 @@ import userOperation from "../../Backend/users/operations";
 import directorOperation from "../../Backend/directors/operations";
 import { useEffect, useState } from "react";
 import { client }from "../../Backend/createclient";
-import { authClient } from "@/app/Backend/createAuthClient";
 import Header from '../../Components/Header'
 import { SupabaseClient, User } from "@supabase/supabase-js";
 import { Director, Users } from "../../Types/entitytypes";
@@ -27,7 +26,7 @@ export default function Directors () {
     const router = useRouter();
 
     async function getUser() {
-        let { getCurrentUser } = await userOperation(client, authClient);
+        let { getCurrentUser } = await userOperation(client);
         let { nonAuthUser } = await getCurrentUser();
         let nonAUser : Users | null = nonAuthUser === null ? null : nonAuthUser[0];
         setCurrentUser(nonAUser);

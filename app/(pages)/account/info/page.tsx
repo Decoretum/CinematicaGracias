@@ -5,34 +5,24 @@ import { SupabaseClient, User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 import EditIcon from '@mui/icons-material/Edit';
 import userOperation from "../../../Backend/users/operations";
+import filmOperation from "../../../Backend/films/operations";
 import reviewOperation from "../../../Backend/reviews/operations"
 import { client } from "@/app/Backend/createclient";
-import { authClient } from "@/app/Backend/createAuthClient";
-import { Box, Button, Textarea } from "@mui/joy";
+import { Box, Button, Link, Textarea } from "@mui/joy";
 import { CircularProgress, Modal, Snackbar, Tooltip, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 
 export default function Info ({ params } : { params : Promise<{ n : number }> }) {
     const [currentUser, setCurrentUser] = useState<Users | null>(null);
-    const [film, setFilm] = useState<Film>();
     const [alert, setAlert] = useState(false);
     const [message, setMessage] = useState('');
-    const [director, setDirector] = useState<Director>();
-    const [producers, setProducers] = useState<Array<Producer>>();
-    const [actors, setActors] = useState<Array<Actor>>();
     const [reviews, setReviews] = useState<Array<Review>>()
-    const [reviewing, setReviewing] = useState(false);  
-    const [reviewrow, setReviewrow] = useState<Array<{ name: string, date: string, content: string, rating: number }>>([])
-    const [open, setOpen] = useState(false);
-    const [text, setText] = useState('');
-    const [rateshow, setRateshow] = useState(false);
-    const [rate, setRate] = useState(0);
-    const [userReviewed, setUserReviewed] = useState(false);
+    const [reviewrow, setReviewrow] = useState<Array<{ name: string, filmName: string, filmId: number, date: string, rating: number }> | null>(null)
     const navigate = useRouter();
 
     async function getUser() {
-        let { getCurrentUser } = await userOperation(client, authClient);
+        let { getCurrentUser } = await userOperation(client);
         let { nonAuthUser } = await getCurrentUser();
         let nonAUser : Users = nonAuthUser === null ? null : nonAuthUser[0];
         setCurrentUser(nonAUser);
@@ -48,36 +38,10 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
         return arr;
     }
 
-    async function makeReview() {
-        setReviewing(true);
-        let dateToday = new Date().toLocaleDateString('en-CA');
-        let obj = { film_fk: film!.id, users_fk: currentUser!.id, content: text, rating: rate, date_created: dateToday };
-        let { createReview } = reviewOperation(client);
-        let response = await createReview(obj);
-        if (response!['result'] !== 'success') {
-            setMessage(response!['result']);
-            setAlert(true);
-            setReviewing(false);
-            return;
-        }
-
-        if (response) {
-            let row = {rating: response.metadata.data.rating, name: currentUser!.username, date: response.metadata.data.date, content: response.metadata.data.content};
-            let rowArr = reviewrow;
-            rowArr?.push(row);
-            setReviewrow(rowArr);
-    
-            setMessage('Review Added');
-            setRateshow(false);
-            setAlert(true);
-            setReviewing(false);
-            setOpen(false);    
-        }
-    }
-
     async function formatReviews()  {
         let { getReviews } = reviewOperation(client);
-        let { getUsername } = await userOperation(client, authClient);
+        let { getUsername } = await userOperation(client);
+        let { getFilm } = await filmOperation(client);
         let reviews : Array<Review> = await getReviews();
         let arr = [];
         setReviews(reviews);
@@ -86,44 +50,13 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
         for (let i = 0; i <= reviews.length - 1; i++) {
             let review = reviews[i];
             let userName = await getUsername(review.users_fk!);
-            if (review.users_fk === currentUser?.id) {
-                setUserReviewed(true);
-            }
-            arr.push({ rating: review.rating, content: review.content, name: userName, date: review.date_created });
+            let film : Film = await getFilm(review.film_fk!);
+            arr.push({ rating: review.rating, content: review.content, name: userName, filmName: film.name, filmId: review.film_fk!, date: review.date_created });
         }
 
         setReviewrow(arr);
 }
 
-    function formatText(text: Array<string>, isGenre?: boolean) : string {
-        let formatted = '';
-        let justOne = text.length === 1;
-        let onlyTwo = text.length === 2;
-
-        if (isGenre) {
-            text = text.map((t) => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase());
-        }
-
-        if (onlyTwo) formatted += `${text[0]} and ${text[1]}`
-        else if (justOne) formatted = text[0];
-        else {
-            for (let i = 0; i <= text.length - 1; i++) {
-                let word = text[i];
-                if (i === text.length - 1) formatted += `, and ${word}`;
-                else if (i === text.length - 2) formatted += word;
-                else formatted += `${word}, `;
-            }
-        }
-
-        return formatted;
-    }
-
-    // async function getAssociated(filmId: number) : Promise<{ actors : Array<Actor>, producers : Array<Producer> }> {
-    //     let actArr  = [];
-    //     let prodArr = [];
-
-    //     return { x: null  }
-    // }
 
     useEffect(() => {
         const main = async () => {
@@ -132,16 +65,10 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
             getUser();
             
             // Get Reviews
-            let { getReviews } = reviewOperation(client);
-            let reviews : Array<Review> = await getReviews(n);
-            setReviews(reviews);
-            console.log(reviews);
+            formatReviews();
         }
         main();
     }, [])
-
-    const firstRow = [1, 2, 3, 4, 5];
-    const secondRow = [6, 7, 8, 9, 10];
 
     if (!currentUser || !reviews) {
         return(
@@ -212,45 +139,65 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
                 </Box>
 
                 <Box className='mt-[2vh] max-w-[40vw]'>
-                    {reviews.length === 0 ? (
-                        <Box className='flex flex-col mt-[3vh] gap-5'>
-                            <Box className='flex flex-row'>
-                                <Typography variant='h4'> Reviews </Typography>
-                            </Box>
-                            {!currentUser?.is_admin ?
-                                <Typography>
-                                    {currentUser !== null ? 
-                                    <Button onClick={() => setOpen(true)} variant='soft'>
-                                        Add one
-                                    </Button> : 
-                                    <Button onClick={() => navigate.push('/login')} variant='soft'>
-                                        Add one
-                                    </Button>
-                                }
-                                </Typography>
-                             : 
-                             <Typography> Only Collaborators can provide a review </Typography>
-                             }
-                        </Box>
-                    ) : (
-                        <Box className='flex flex-col mt-[3vh] gap-5 break-words max-w-[50vw]'>
-                            <Typography variant='h4'> Reviews ({ reviews.length }) </Typography>
-                            {reviewrow!.map((r) => (
-                            <Box className='flex flex-row gap-17'>
-                                <Box className='flex flex-col gap-2 max-w-[6vw]'>
-                                    <Typography variant='body2'>{r.name}  <EditIcon /> </Typography>
-                                    <Typography variant='body2'>{r.date}</Typography>
-                                    <Typography> {r.rating} ★ </Typography>
-                                </Box>
+                    <Typography variant='h4'> Reviews </Typography>
+                    {!currentUser?.is_admin ?
+                        <Typography>
+                            <Box>
+                                { reviews.length === 0 ? 
+                                <Box className='flex flex-row items-center gap-3 mt-[3vh]'>
+                                    <Box>
+                                        No reviews given
+                                    </Box>
 
-                                <Box className='max-w-[30vw]'>
-                                    {r.content}
+                                    <Box>
+                                        <Button onClick={() => navigate.push('/films')} variant='solid'>
+                                            Browse Films
+                                        </Button>
+                                    </Box>
+
                                 </Box>
+                                : 
+                                <Box className='flex flex-row mt-[3vh] gap-5 break-words max-w-[50vw]'>
+                                    { reviewrow === null ? 
+                                    <Box className='flex flex-row items-center gap-5'>
+                                        <Box>
+                                            <Typography variant='body2'>Retrieving Reviews</Typography>
+                                        </Box>
+                                        <Box>
+                                            <CircularProgress className='mt-4' color='secondary' />
+                                        </Box> 
+                                    </Box>
+                                    
+
+                                    : reviewrow!.map((r, idx) => (
+                                    <Box className='flex flex-col gap-17'>
+                                        <Box className='flex flex-row gap-8 items-center'>
+                                            <Box>
+                                                <Typography> {r.rating} ★ </Typography>
+                                            </Box>
+                                            <Box>
+                                                <Link
+                                                key = {idx}
+                                                component='address'
+                                                color='warning'
+                                                onClick={() => { navigate.push(`/films/view/${r.filmId}`) }}
+                                                >
+                                                    <Typography variant='body2'>{r.filmName}</Typography>
+                                                </Link>
+                                            </Box>
+                                            <Box>
+                                                <Typography variant='body2'>Last Reviewed on: {r.date}</Typography>
+                                            </Box>
+                                        </Box>
+                                    </Box>
+                                    )) }
+                                </Box>
+                                 }
                             </Box>
-                                
-                        ))}
-                        </Box>
-                    )}
+                        </Typography>
+                        : 
+                        <Typography> Only Collaborators can provide a review </Typography>
+                    }
                 </Box>
             </Box>
 
