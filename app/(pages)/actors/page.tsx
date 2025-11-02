@@ -74,13 +74,13 @@ export default function Actors () {
                 <Box className='ml-auto mr-auto mt-42'>
                     {
                     !actors ? (
-                        <Box className='flex flex-col items-center justify-center md:ml-[5vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
+                        <Box className='flex flex-col items-center justify-center md:ml-[5vw] bg-black/30 p-6 rounded-lg text-white backdrop-blur-sm'>
                             <Typography sx = {{ 'color' : 'white' }}> Loading Data </Typography>
                             <CircularProgress className='mt-4' color='secondary' />
                         </Box>
                     ) :        
                     (actors.length === 0 && currentUser?.is_admin === true) ? (
-                    <Box className='flex flex-col items-center justify-center md:ml-[5vw] md:w-[30vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
+                    <Box className='flex flex-col items-center justify-center md:ml-[5vw] md:w-[30vw] bg-black/30 p-6 rounded-lg text-white backdrop-blur-sm'>
                         <Typography sx = {{'color' : 'white'}}> There are no actors stored in the site. Add an actor through the button below </Typography>
                         <Box className='mt-[3vh]'>
                             <Button color='neutral' variant='soft'>Add</Button>
@@ -88,7 +88,7 @@ export default function Actors () {
                     </Box>
                     ) : 
                     (actors.length === 0 && currentUser?.is_admin === false) ? (
-                    <Box className='flex flex-col items-center justify-center md:ml-[5vw] md:w-[30vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
+                    <Box className='flex flex-col items-center justify-center md:ml-[5vw] md:w-[30vw] bg-black/30 p-6 rounded-lg text-white backdrop-blur-sm'>
                         <Typography sx = {{'color' : 'white'}}> There are no actors stored in the site as of the moment </Typography>
                     </Box>
                     )
@@ -98,7 +98,7 @@ export default function Actors () {
                             <Typography variant='plain' sx={{ color: 'whitesmoke' }} level='h1'> Actors </Typography>
                             { currentUser?.is_admin && <Button variant='soft'><AddIcon /></Button> }
                         </Box>
-                        <Box className='flex flex-row gap-10 max-w-[70vw] overflow-x-auto pl-100 max-h-[50vh] justify-center items-center mx-auto md:w-[50vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
+                        <Box className='flex flex-row gap-10 max-w-[70vw] overflow-x-auto pl-100 max-h-[50vh] justify-center items-center mx-auto md:w-[50vw] bg-black/30 p-6 rounded-lg text-white backdrop-blur-sm'>
                         {actors.map((actor, idx) => (
                             <Box className='flex flex-col gap-2 items-center justify-center'>
                                 <Box className='w-[13vw] max-w-[13vw] max-h-[50vh] max-h-[20vh] overflow-y-auto rounded-lg'>

@@ -59,7 +59,7 @@ export default function CreateProducer () {
     return(
         <>
             <Header currentUser={ undefined } />
-            <Box className='flex flex-col justify-center items-center mx-auto md:w-[50vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
+            <Box className='flex flex-col justify-center items-center mx-auto md:w-[50vw] bg-black/30 p-6 rounded-lg text-white backdrop-blur-sm'>
                 
                 <Box className='flex flex-row'>
                     <Box className='mr-[2vw]'>

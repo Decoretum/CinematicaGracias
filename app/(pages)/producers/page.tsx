@@ -77,13 +77,13 @@ export default function Producers () {
                 <Box className='ml-auto mr-auto mt-42'>
                     {
                     !producers ? (
-                        <Box className='flex flex-col items-center justify-center md:ml-[5vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
+                        <Box className='flex flex-col items-center justify-center md:ml-[5vw] bg-black/30 p-6 rounded-lg text-white backdrop-blur-sm'>
                             <Typography sx = {{ 'color' : 'white' }}> Loading Data </Typography>
                             <CircularProgress className='mt-4' color='secondary' />
                         </Box>
                     ) :        
                     (producers.length === 0 && currentUser?.is_admin === true) ? (
-                    <Box className='flex flex-col items-center justify-center md:ml-[5vw] md:w-[30vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
+                    <Box className='flex flex-col items-center justify-center md:ml-[5vw] md:w-[30vw] bg-black/30 p-6 rounded-lg text-white backdrop-blur-sm'>
                         <Typography sx = {{'color' : 'white'}}> There are no producers stored in the site. Add a producer through the button below </Typography>
                         <Box className='mt-[3vh]'>
                             <Button color='neutral' variant='soft'> Add Producer </Button>
@@ -91,7 +91,7 @@ export default function Producers () {
                     </Box>
                     ) : 
                     (producers.length === 0 && currentUser?.is_admin === false) ? (
-                    <Box className='flex flex-col items-center justify-center md:ml-[5vw] md:w-[30vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
+                    <Box className='flex flex-col items-center justify-center md:ml-[5vw] md:w-[30vw] bg-black/30 p-6 rounded-lg text-white backdrop-blur-sm'>
                         <Typography sx = {{'color' : 'white'}}> There are no producers stored in the site as of the moment </Typography>
                     </Box>
                     )
@@ -102,7 +102,7 @@ export default function Producers () {
                             { currentUser?.is_admin && <Button variant='soft' onClick={() => router.push('producers/create')}><AddIcon /></Button> }
 
                         </Box>
-                        <Box className='max-w-[60vw] max-h-[50vh] overflow-x-auto flex flex-row gap-10 pl-10 bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
+                        <Box className='max-w-[60vw] max-h-[50vh] overflow-x-auto flex flex-row gap-10 pl-10 bg-black/30 p-6 rounded-lg text-white backdrop-blur-sm'>
                         {producers.map((producer, idx) => (
                             <Box className='lex flex-col gap-2 items-center justify-center'>
                                 <Box>

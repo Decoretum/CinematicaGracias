@@ -103,7 +103,7 @@ export default function UpdateProducer ({ params } : { params: Promise<{ n: numb
             <>
                 <Header currentUser={ undefined } />
                 <Box className='flex h-screen items-center justify-center'>
-                    <Box className='flex flex-col justify-center items-center mx-auto h-[15vh] md:w-[50vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
+                    <Box className='flex flex-col justify-center items-center mx-auto h-[15vh] md:w-[50vw] bg-black/30 p-6 rounded-lg text-white backdrop-blur-sm'>
                         Loading Producer Data
                         <CircularProgress className='mt-4' color='secondary' /> 
                     </Box>
@@ -116,7 +116,7 @@ export default function UpdateProducer ({ params } : { params: Promise<{ n: numb
     return(
         <>
             <Header currentUser={ undefined } />
-            <Box className='flex flex-col justify-center items-center mx-auto md:w-[50vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
+            <Box className='flex flex-col justify-center items-center mx-auto md:w-[50vw] bg-black/30 p-6 rounded-lg text-white backdrop-blur-sm'>
                 
                 <Box className='flex flex-row'>
                     <Box className='mr-[2vw]'>

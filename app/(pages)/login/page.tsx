@@ -1,23 +1,17 @@
 'use client'
-import { Box, FormControl, RadioGroup } from "@mui/joy";
+import { Box } from "@mui/joy";
 import { Button, Snackbar } from '@mui/material'
 import Typography from "@mui/material/Typography";
 import Header from "../../Components/Header";
 import Input from '@mui/joy/Input';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Tooltip from '@mui/material/Tooltip';
-import Switch from '@mui/joy/Switch';
-import Radio from '@mui/joy/Radio';
-import DatePicker from "react-datepicker";
 import { useState } from "react";
-import signup from '../../Backend/users/signup'
-import Alert from '@mui/material/Alert';
 import { useRouter } from 'next/navigation'
 import { CircularProgress } from "@mui/material";
-import "react-datepicker/dist/react-datepicker.css";
 import Login from "@/app/Backend/users/login";
-import { LoginUser } from "@/app/Types/users/usertypes";
-import { AuthError } from "@supabase/supabase-js";
+import "react-datepicker/dist/react-datepicker.css";
+
 
 
 export default function SignUp () {
@@ -47,7 +41,7 @@ export default function SignUp () {
     return(
         <>
             <Header currentUser={ null } />
-            <Box className='flex flex-col justify-center items-center mx-auto md:w-[30vw] md:h-[80vh] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
+            <Box className='flex flex-col justify-center items-center mx-auto md:w-[30vw] md:h-[80vh] bg-black/30 p-6 rounded-lg text-white backdrop-blur-sm'>
                 
                 <Box className='flex flex-row'>
                     <Box className='mr-[2vw]'>
@@ -84,7 +78,21 @@ export default function SignUp () {
                     >
                         {loading ? null : 'Login'}
                     </Button>
-                </Box>                    
+                </Box>    
+
+                <Box className='flex flex-row items-center mt-[8vh] justify-between max-w-[25vw] w-[25vw]'>
+                    <Box>
+                        <Typography variant='body2'>
+                            No Account yet?
+                        </Typography>
+                    </Box>
+
+                    <Box>
+                        <Button variant='text' color='success' onClick= {() => router.push('/signup')}>
+                            Create an Account
+                        </Button>
+                    </Box>
+                </Box>                
             </Box>
             
             <Snackbar

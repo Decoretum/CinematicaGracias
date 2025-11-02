@@ -68,12 +68,12 @@ export default function SignUp () {
     return(
         <>
             <Header currentUser={ null } />
-            <Box className='flex flex-col justify-center items-center mx-auto md:w-[50vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
+            <Box className='flex flex-col justify-center items-center mx-auto md:w-[50vw] bg-black/30 p-6 rounded-lg text-white backdrop-blur-sm'>
                 
                 <Box className='flex flex-row'>
                     <Box className='mr-[2vw]'>
                         <Tooltip title='Back to Film Pages'>
-                            <Button variant='contained'>
+                            <Button variant='contained' onClick={() => router.push('/films')}>
                                 <ArrowBackIcon />
                             </Button>
                         </Tooltip>
@@ -148,7 +148,7 @@ export default function SignUp () {
                     </Box>
                 </Box>
 
-                <Box className='flex flex-row mt-[4vh] items-center gap-40'>
+                <Box className='flex flex-row mt-[4vh] justify-between w-[40vw] max-w-[40vw]'>
                     <Box className='flex flex-row items-center gap-2'>
                         <Typography>Have an existing Account?</Typography>
                         <Button variant='text' color='success' onClick={() => router.push('/login')}> Login </Button>

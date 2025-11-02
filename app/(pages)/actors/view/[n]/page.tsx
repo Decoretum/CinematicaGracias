@@ -116,7 +116,7 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
             <>
                 <Header currentUser={ undefined } />
                 <Box className='flex h-screen items-center justify-center'>
-                    <Box className='flex flex-col justify-center items-center mx-auto h-[15vh] md:w-[50vw] bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm rounded-lg'>
+                    <Box className='flex flex-col justify-center items-center mx-auto h-[15vh] md:w-[50vw] bg-black/30 p-6 rounded-lg text-white backdrop-blur-sm rounded-lg'>
                         Loading Data
                         <CircularProgress className='mt-4' color='secondary' /> 
                     </Box>
@@ -130,7 +130,7 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
     return (
         <>
             <Header currentUser={ currentUser } />
-            <Box className='flex flex-col gap-5 md:min-h-[100vh] md:max-w-[50vw] w-[50vw] mx-auto bg-black/50 p-6 rounded-lg text-white backdrop-blur-sm'>
+            <Box className='flex flex-col gap-5 md:min-h-[100vh] md:max-w-[50vw] w-[50vw] mx-auto bg-black/30 p-6 rounded-lg text-white backdrop-blur-sm'>
                 <Box className='flex flex-row justify-between'>
                     <Box className='max-w-[30vw]'>
                         <Typography variant='h3'>
