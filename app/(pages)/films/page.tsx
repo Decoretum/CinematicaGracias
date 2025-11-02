@@ -4,6 +4,7 @@ import userOperation from "../../Backend/users/operations";
 import filmOperation from "../../Backend/films/operations";
 import { useEffect, useState } from "react";
 import { client } from "../../Backend/createclient";
+import { authClient } from "../../Backend/createAuthClient";
 import Header from "../../Components/Header";
 import { Film, Users } from '../../Types/entitytypes'
 import { SupabaseClient, User } from '@supabase/supabase-js';
@@ -25,8 +26,8 @@ export default function Films () {
     const [deletingId, setDeletingId] = useState(0);
     const router = useRouter();
 
-    async function getUser(client : SupabaseClient) {
-        let { getCurrentUser } = userOperation(client);
+    async function getUser(client : SupabaseClient, authClient: SupabaseClient) {
+        let { getCurrentUser } = await userOperation(client, authClient);
         let { user, nonAuthUser } = await getCurrentUser();
         let authUser : User | null = user;
         let nonAUser : Users = nonAuthUser === null ? null : nonAuthUser[0];
@@ -54,7 +55,7 @@ export default function Films () {
 
     useEffect(() => {
         const mainFunction = async () => {
-            await getUser(client);
+            await getUser(client, authClient);
             await getFilms(client);
             setLoading(false);
         };

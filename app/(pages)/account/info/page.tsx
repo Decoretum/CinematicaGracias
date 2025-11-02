@@ -3,11 +3,11 @@ import Header from "@/app/Components/Header";
 import { Actor, Director, Film, FilmActor, FilmProducer, Producer, Review, Users } from "@/app/Types/entitytypes";
 import { SupabaseClient, User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
-import ReportGmailerrorredIcon from '@mui/icons-material/ReportGmailerrorred';
 import EditIcon from '@mui/icons-material/Edit';
 import userOperation from "../../../Backend/users/operations";
 import reviewOperation from "../../../Backend/reviews/operations"
 import { client } from "@/app/Backend/createclient";
+import { authClient } from "@/app/Backend/createAuthClient";
 import { Box, Button, Textarea } from "@mui/joy";
 import { CircularProgress, Modal, Snackbar, Tooltip, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
@@ -31,8 +31,8 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
     const [userReviewed, setUserReviewed] = useState(false);
     const navigate = useRouter();
 
-    async function getUser(client : SupabaseClient) {
-        let { getCurrentUser } = userOperation(client);
+    async function getUser() {
+        let { getCurrentUser } = await userOperation(client, authClient);
         let { nonAuthUser } = await getCurrentUser();
         let nonAUser : Users = nonAuthUser === null ? null : nonAuthUser[0];
         setCurrentUser(nonAUser);
@@ -77,7 +77,7 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
 
     async function formatReviews()  {
         let { getReviews } = reviewOperation(client);
-        let { getUsername } = userOperation(client);
+        let { getUsername } = await userOperation(client, authClient);
         let reviews : Array<Review> = await getReviews();
         let arr = [];
         setReviews(reviews);
@@ -129,7 +129,7 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
         const main = async () => {
             // Get Current User
             let { n } = await params;
-            getUser(client);
+            getUser();
             
             // Get Reviews
             let { getReviews } = reviewOperation(client);
