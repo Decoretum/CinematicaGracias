@@ -19,9 +19,18 @@ export default function operations(client : SupabaseClient) {
         return response;
     }
 
-    const getReviews = async () : Promise<Array<Review>> => {
-        const { data }= await client.from('review').select();
+    const getReviews = async (id?: number) : Promise<Array<Review>> => {
+        if (id !== undefined) {
+            const { data } = await client.from('review').select().eq('users_fk', id);
+            return data ?? [];
+        }
+        const { data } = await client.from('review').select();
         return data ?? [];
+    }
+
+    const getReview = async (id: number) : Promise<Review> => {
+        const { data } = await client.from('review').select().eq('id', id).single();
+        return data ?? null;
     }
     
     const createReview = async (obj: CreateUpdateReview) => {
@@ -67,5 +76,5 @@ export default function operations(client : SupabaseClient) {
         return { response }
     }
 
-    return { getReviews, createReview, updateReview, deleteReview }
+    return { getReviews, getReview, createReview, updateReview, deleteReview }
 }

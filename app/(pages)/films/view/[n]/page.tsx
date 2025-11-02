@@ -200,7 +200,7 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
     return (
         <>
             <Header currentUser={ currentUser } />
-            <Box className='flex flex-col gap-5 md:min-h-[100vh] md:max-w-[50vw] w-[50vw] mx-auto bg-black/30 p-6 rounded-lg text-white backdrop-blur-sm'>
+            <Box className='break-words flex flex-col gap-5 md:min-h-[100vh] md:max-w-[50vw] w-[50vw] mx-auto bg-black/30 p-6 rounded-lg text-white backdrop-blur-sm'>
                 <Box className='flex flex-row justify-between'>
                     <Typography variant='h3'>
                         { film.name }

@@ -97,7 +97,7 @@ export default function Films () {
                         </Box>
                         <Box className='flex flex-row gap-10 overflow-x-auto max-w-[70vw] max-h-[50vh] pl-100 justify-center items-center mx-auto bg-black/30 p-6 rounded-lg text-white backdrop-blur-sm'>
                         {films.map((film, idx) => (
-                            <Box className='flex flex-col gap-2 items-center justify-center'>
+                            <Box key={idx} className='flex flex-col gap-2 items-center justify-center'>
                                 <Box>
                                     <FilmDisplayCard name={film.name} average_user_rating={film.average_user_rating} content_rating={film.content_rating} date_released={film.date_released} duration={film.duration}  />
                                 </Box>
