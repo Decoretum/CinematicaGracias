@@ -91,7 +91,7 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
         for (let i = 0; i <= reviews.length - 1; i++) {
             let review = reviews[i];
             let userName = await getUsername(review.users_fk!);
-            if (review.users_fk === currentUser?.id) {
+            if (review.users_fk === currentUser?.id && review.film_fk === film!.id) {
                 setUserReviewed(true);
             }
             arr.push({ rating: review.rating, content: review.content, name: userName, date: review.date_created });
