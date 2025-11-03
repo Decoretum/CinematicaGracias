@@ -184,7 +184,7 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
     if (!film || !producers || !actors || !director || !reviews) {
         return(
             <>
-                <Header currentUser={ undefined } loading={ !film || !producers || !actors || !director || !reviews || !currentUser } />
+                <Header currentUser={ undefined } loading={ !film || !producers || !actors || !director || !reviews } />
                 <Box className='flex h-screen items-center justify-center'>
                     <Box className='flex flex-col justify-center items-center mx-auto h-[15vh] md:w-[50vw] bg-black/30 p-6 rounded-lg text-white backdrop-blur-sm rounded-lg'>
                         Loading Data

@@ -163,10 +163,12 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
                                 <React.Fragment>
                                     <Link
                                     key = {idx}
-                                    component='address'
-                                    onClick={() => { navigate.push(`/films/view/${f.id}`) }}
+                                    component='span'
+                                    onClick={() => { navigate.push(`/films/view/${f.id}`) }} 
+                                    color='warning'
+                                    style={{ color: '#FFB74D' }}
                                     >
-                                        { f.name } ({ new Date(f.date_released).getFullYear().toString() })
+                                       <i>{ f.name } ({ new Date(f.date_released).getFullYear().toString() })</i>
                                     </Link>
                                     { idx < films.length - 1 && ", " } 
                                 </React.Fragment>

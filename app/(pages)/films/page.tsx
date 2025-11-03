@@ -66,11 +66,11 @@ export default function Films () {
         <>  
             <Box className='flex flex-col'>
 
-                <Header currentUser={ currentUser } loading={ loading || !currentUser } />
+                <Header currentUser={ currentUser } loading={ loading } />
                 
                 <Box className='ml-auto mr-auto mt-42'>
                     { 
-                    !films || !currentUser ? (
+                    !films ? (
                         <Box className='flex flex-col items-center justify-center md:ml-[5vw] bg-black/30 p-6 rounded-lg text-white backdrop-blur-sm'>
                             <Typography sx = {{ 'color' : 'white' }}> Loading Data </Typography>
                             <CircularProgress className='mt-4' color='secondary' />

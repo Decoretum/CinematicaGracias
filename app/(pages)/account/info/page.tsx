@@ -74,7 +74,7 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
     if (!currentUser || !reviews) {
         return(
             <>
-                <Header currentUser={ undefined } loading={ !currentUser || !reviews } />
+                <Header currentUser={ undefined } loading={!reviews } />
                 <Box className='flex h-screen items-center justify-center'>
                     <Box className='flex flex-col justify-center items-center mx-auto h-[15vh] md:w-[50vw] bg-black/30 p-6 rounded-lg text-white backdrop-blur-sm rounded-lg'>
                         Loading Data
