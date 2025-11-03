@@ -148,7 +148,7 @@ export default function UpdateActor ({ params } : { params: Promise<{ n: number 
     if (pageLoading === true) {
         return(
             <>
-                <Header currentUser={ undefined } />
+                <Header currentUser={ undefined } loading={true} />
                 <Box className='flex h-screen items-center justify-center'>
                     <Box className='flex flex-col justify-center items-center mx-auto h-[15vh] md:w-[50vw] bg-black/30 p-6 rounded-lg text-white backdrop-blur-sm rounded-lg'>
                         Loading Actor Data
@@ -162,7 +162,7 @@ export default function UpdateActor ({ params } : { params: Promise<{ n: number 
 
     return (
         <>
-            <Header currentUser={ undefined } />
+            <Header currentUser={ undefined } loading={false} />
             <Box className='flex flex-col justify-center items-center mx-auto md:w-[50vw] bg-black/30 p-6 rounded-lg text-white backdrop-blur-sm'>
                 
                 <Box className='flex flex-row'>

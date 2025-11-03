@@ -40,7 +40,7 @@ export default function SignUp () {
 
     return(
         <>
-            <Header currentUser={ null } />
+            <Header currentUser={ null } loading={false} />
             <Box className='flex flex-col justify-center items-center mx-auto md:w-[30vw] md:h-[80vh] bg-black/30 p-6 rounded-lg text-white backdrop-blur-sm'>
                 
                 <Box className='flex flex-row'>

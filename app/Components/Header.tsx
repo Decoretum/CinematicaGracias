@@ -12,7 +12,8 @@ import MenuItem from '@mui/joy/MenuItem';
 
 
 type userData = {
-    currentUser : Users | null | undefined
+    currentUser : Users | null | undefined,
+    loading : boolean
 }
 
 export default function Header(props : userData) {
@@ -32,7 +33,7 @@ export default function Header(props : userData) {
 
             <Box className='relative mt-[2vh] mr-[2vw]'>
                 {
-                props.currentUser === undefined ? (
+                props.currentUser === undefined || props.loading === true ? (
                     <>
                     </>
                 ) :

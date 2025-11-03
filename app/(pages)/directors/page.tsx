@@ -67,11 +67,11 @@ export default function Directors () {
         <>  
             <Box className='flex flex-col'>
            
-            <Header currentUser={currentUser} />
+            <Header currentUser={currentUser} loading={directors === null || !currentUser} />
         
                 <Box className='ml-auto mr-auto mt-42'>
                     {
-                    !directors || loading ? (
+                    !directors || loading || !currentUser ? (
                         <Box className='flex flex-col items-center justify-center md:ml-[5vw] bg-black/30 p-6 rounded-lg text-white backdrop-blur-sm'>
                             <Typography sx = {{ 'color' : 'white' }}> Loading Data </Typography>
                             <CircularProgress className='mt-4' color='secondary' />
