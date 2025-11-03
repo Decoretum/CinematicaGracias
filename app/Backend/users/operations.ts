@@ -42,7 +42,6 @@ export default async function operations (client : SupabaseClient)
         } 
         
         else if (duplicate !== null) {
-            console.log(editObj)
             if (editObj === undefined) {
                 hashmap['result'] = usernameResponse;
                 return hashmap;
@@ -62,36 +61,41 @@ export default async function operations (client : SupabaseClient)
         // one uppercase and one lowercase letter
         // at least one number
         // at least one special character, Reference: https://www.ascii-code.com/
-    
-        let length = entity!.password.replace(/\s+/g, '').length >= 8;
-        if (!length) {
-            hashmap['result'] = 'The password must contain at least 8 characters';
-            return hashmap;
+        // If samePassword property is true, then no need to go through validation
+        
+        let editValidationPassword = (entity && 'samePassword' in entity) && (entity.samePassword === false);
+
+        if (editValidationPassword === true || (entity && 'samePassword' in entity === false)) {
+            let length = entity!.password.replace(/\s+/g, '').length >= 8;
+            if (!length) {
+                hashmap['result'] = 'The password must contain at least 8 characters';
+                return hashmap;
+            } 
+        
+            let lower = /[a-z]/.test(entity!.password);
+            if (!lower) {
+                hashmap['result'] = 'The password must contain at least 1 lower-case characater';
+                return hashmap;
+            }
+        
+            let upper = /[A-Z]/.test(entity!.password);
+            if (!upper) {
+                hashmap['result'] = 'The password must contain at least 1 upper-case character';
+                return hashmap;
+            }
+        
+            let numeric = /\d/.test(entity!.password);
+            if (!numeric) {
+                hashmap['result'] = 'The password must contain at least 1 numeric character';
+                return hashmap;
+            }
+        
+            if (!isSpecial(entity!.password)) {
+                hashmap['result'] = 'Your password must contain at least 1 special character'
+                return hashmap;
+            }
         } 
-    
-        let lower = /[a-z]/.test(entity!.password);
-        if (!lower) {
-            hashmap['result'] = 'The password must contain at least 1 lower-case characater';
-            return hashmap;
-        }
-    
-        let upper = /[A-Z]/.test(entity!.password);
-        if (!upper) {
-            hashmap['result'] = 'The password must contain at least 1 upper-case character';
-            return hashmap;
-        }
-    
-        let numeric = /\d/.test(entity!.password);
-        if (!numeric) {
-            hashmap['result'] = 'The password must contain at least 1 numeric character';
-            return hashmap;
-        }
-    
-        if (!isSpecial(entity!.password)) {
-            hashmap['result'] = 'Your password must contain at least 1 special character'
-            return hashmap;
-        }
-    
+
         // First Name
         // No Numbers and Symbols
         // length >= 3
@@ -219,25 +223,69 @@ export default async function operations (client : SupabaseClient)
         if (hm.size === 0) {
             hashmap['metadata'] = null;
             return hashmap;
-        }
-        
-        if (hm.has('email') && !hm.has('password')) {
-            const { data, error } = await client.auth.updateUser({
-                email: hm.get('email') as string
-            })
-        } else if (!hm.has('email') && hm.has('password')) {
-            const { data, error } = await client.auth.updateUser({
-                password: hm.get('password') as string
-            })
-        } else if (hm.has('email') && hm.has('password')) {
-            const { data, error } = await client.auth.updateUser({
-                email: hm.get('email') as string,
-                password: hm.get('password') as string 
-            })
-        }
+        } 
+        console.log(hm)
+        // User Table Data Validation
 
+        const email : string = hm.get('email') as string;
+        const password : string = hm.get('password') as string;
+
+        if (hm.has('email') && obj.samePassword === false) {
+            let response = await fetch('/api/users/update', { 
+                method: 'PUT',
+                body: JSON.stringify({
+                    userId: obj.id,
+                    email: obj.email,
+                    password: obj.password
+                })
+            });
+
+            let result = await response.json();
+            if (result['error'] !== null) hashmap['result'] = result['error']['message'];
+            else {
+                hashmap['result'] = 'success';
+                hashmap['metadata'] = 'change password';
+            }
+            return hashmap;
+        } 
+        else if (hm.has('email') && obj.samePassword === true) {
+            let response = await fetch('/api/users/update', { 
+                method: 'PUT',
+                body: JSON.stringify({
+                    userId: obj.id,
+                    email: obj.email,
+                    password: null
+                })
+            });
+
+            let result = await response.json();
+            if (result['error'] !== null) hashmap['result'] = result['error']['message'];
+            else hashmap['result'] = 'success';
+                
+            return hashmap;
+        } else if (!hm.has('email') && obj.samePassword === false) {
+            let response = await fetch('/api/users/update', { 
+                method: 'PUT',
+                body: JSON.stringify({
+                    userId: obj.id,
+                    email: null,
+                    password: obj.password
+                })
+            });
+
+            let result = await response.json();
+            if (result['error'] !== null) hashmap['result'] = result['error']['message'];
+            else {
+                hashmap['result'] = 'success';
+                hashmap['metadata'] = 'change password';
+            }
+
+            return hashmap;
+        } 
+
+        console.log('nonauth')
         // Update the non-auth Users Model
-        
+
         hm.delete('email');
         hm.delete('password');
         let updatedData : any = {};

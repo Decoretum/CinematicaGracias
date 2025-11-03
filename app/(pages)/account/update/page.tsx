@@ -1,5 +1,5 @@
 'use client'
-import { Box, FormControl, RadioGroup } from "@mui/joy";
+import { Box, Checkbox, FormControl, RadioGroup } from "@mui/joy";
 import { Button, Snackbar } from '@mui/material'
 import Typography from "@mui/material/Typography";
 import Header from "../../../Components/Header";
@@ -25,6 +25,7 @@ export default function SignUp () {
     const [sex, setSex] = useState('m');
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
+    const [samePassword, setSamePassword] = useState(false);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
@@ -32,7 +33,7 @@ export default function SignUp () {
     const [message, setMessage] = useState('');
     const [loading, setLoading] = useState(false);
     const [pageLoading, setPageLoading] = useState(true);
-    const [initialState, setInitialState] = useState<EditUser>({id: '', email: '', password: '', birthday: '', username: '', first_name: '', last_name: '', sex: ''});
+    const [initialState, setInitialState] = useState<EditUser>({id: '', email: '', password: '', samePassword: false, birthday: '', username: '', first_name: '', last_name: '', sex: ''});
     const router = useRouter();
 
     useEffect(() => {
@@ -53,7 +54,8 @@ export default function SignUp () {
             password: '',
             first_name: users.first_name,
             last_name: users.last_name,
-            sex: users.sex
+            sex: users.sex,
+            samePassword: false
         })
 
         // Setting the dynamic variables
@@ -65,10 +67,6 @@ export default function SignUp () {
         setLastName(users.last_name);
         setSex(users.sex);
         setEmail(user!.email!);
-
-        console.log(user)
-        console.log(nonAuthUser)
-        console.log(users)
         setPageLoading(false);
         }
         main();
@@ -88,14 +86,14 @@ export default function SignUp () {
             email : email,
             username : userName,
             password : password,
+            samePassword: samePassword,
             sex : sex,
-            birthday : finalDate,
+            birthday : finalDate
         }
 
         // Data Comparator Result
         // First element in array is new, second is original
 
-        console.log(initialState)
         let hm = new Map();
         hm.set('first_name', [firstName, initialState.first_name]);
         hm.set('last_name', [lastName, initialState.last_name]);
@@ -108,7 +106,7 @@ export default function SignUp () {
         setLoading(true);
         let compare = DataComparator(hm);
         let hashmap = await updateUser(id!, obj, compare);
-        console.log(hashmap)
+
         if (hashmap.result !== 'success') {
             setMessage(hashmap.result);
             setAlert(true);
@@ -117,6 +115,11 @@ export default function SignUp () {
         }
         
         else {
+            if (hashmap.metadata === 'change password') {
+                router.push('/login');
+                return;
+            }
+            
             router.push('/account/info');
             return;
         }
@@ -161,9 +164,17 @@ export default function SignUp () {
                         <Input placeholder='Username' value={userName} onChange={(event) => setUserName(event.target.value)} />
                     </Box>
 
-                    <Box className='flex flex-col ml-[4vw]'>
-                        <Typography color='white'> Password </Typography>
-                        <Input placeholder='New Password' value={password} type='password' onChange={(event) => setPassword(event.target.value)} />
+                    <Box className='flex flex-col ml-[3.8vw]'>
+                        <Box className='flex flex-row gap-2 items-center'>
+                            <Box>
+                                <Typography color='white'> Password </Typography>
+                            </Box>
+                            
+                            <Box>
+                                <Checkbox label='Same Password?' onClick={() => setSamePassword(!samePassword)} size='sm' sx={{ color:'tan' }} slotProps={{ label: { sx: { fontSize: '11.8px' } } }} />
+                            </Box>
+                        </Box>
+                        <Input placeholder={samePassword === true ? 'Retaining Old Password' : 'New Password' } disabled = { samePassword } value={password} type='password' onChange={(event) => setPassword(event.target.value)} />
                     </Box>
                 </Box>
 

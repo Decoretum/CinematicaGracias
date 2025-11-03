@@ -7,7 +7,9 @@ export type BaseOperationUser = Omit<Users, 'id'> & {
     password: string
 }
 export type SignUpUser = BaseOperationUser;
-export type EditUser = Omit<BaseOperationUser, 'is_admin'>;
+export type EditUser = Omit<BaseOperationUser, 'is_admin'> & {
+    samePassword: boolean
+}
 export type SignOutUser = {
     sessionId: string,
     userId: string

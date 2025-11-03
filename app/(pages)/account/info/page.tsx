@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 
 export default function Info ({ params } : { params : Promise<{ n : number }> }) {
-    const [currentUser, setCurrentUser] = useState<Users | null>(null);
+    const [currentUser, setCurrentUser] = useState<Users & { email: string } | null>(null);
     const [alert, setAlert] = useState(false);
     const [message, setMessage] = useState('');
     const [reviews, setReviews] = useState<Array<Review>>()
@@ -23,10 +23,11 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
 
     async function getUser() {
         let { getCurrentUser } = await userOperation(client);
-        let { nonAuthUser } = await getCurrentUser();
-        let nonAUser : Users = nonAuthUser === null ? null : nonAuthUser[0];
+        let { user, nonAuthUser } = await getCurrentUser();
+        let nonAUser : Users & { email: string } = nonAuthUser === null ? null : nonAuthUser[0];
+        nonAUser['email'] = user!.email!;
         setCurrentUser(nonAUser);
-        console.log(nonAUser);
+        console.log(user);
     }
 
     function extractText(entity: Array<Actor> | Array<Producer>) : Array<string> {
@@ -130,6 +131,10 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
                     </Box>
                 </Box>
 
+                <Box>
+                    <Typography>Email: { currentUser.email }</Typography>    
+                </Box>
+                
                 <Box>
                     <Typography>Sex: { currentUser.sex.toUpperCase() }</Typography>
                 </Box>
