@@ -18,6 +18,12 @@ You must provide the required data, and data validation is present to ensure the
 <img width="1280" height="689" alt="image" src="https://github.com/user-attachments/assets/5728eec0-6892-4ea0-b26a-5a2d8c060249" />
 <br><br>
 
+## Editing Account Information
+When editing, account information, the user will also experience the same data validation flow as creating an account. Once the editing of account information is successful, the user will be redirected back to his/her account information page. If the user changed the password of his/her account, the user will automatically be redirected to the login page. <br><br>
+<img width="1280" height="691" alt="image" src="https://github.com/user-attachments/assets/01746c09-7df9-49b3-8752-c4d44c706cfb" />
+
+
+
 You will then be redirected to the Films page which displays the films stored/archived. <br><br>
 
 <img width="1280" height="688" alt="image" src="https://github.com/user-attachments/assets/85b43993-2f7c-4652-94b8-9280377a7e26" />
@@ -97,9 +103,9 @@ Samples:
 <br><br>
 <img width="1279" height="690" alt="image" src="https://github.com/user-attachments/assets/bbb5f1e5-7def-4677-bf6c-ba2a9dd60a53" />
 <br><br>
-<img width="1279" height="692" alt="image" src="https://github.com/user-attachments/assets/c1d3b382-a84b-4415-9389-e4cde7662e67" />
+<img width="1279" height="692" alt="image" src="https://github.com/user-attachments/assets/7f51163f-8c84-4d10-a114-a7158d46b063" />
 <br><br>
-<img width="1280" height="690" alt="image" src="https://github.com/user-attachments/assets/a71cfd99-ddc1-4fee-9373-e5cc29ea76a7" />
+<img width="1278" height="692" alt="image" src="https://github.com/user-attachments/assets/655be940-5fc8-4264-a19d-5d164e2f8823" />
 <br><br>
 <img width="1278" height="689" alt="image" src="https://github.com/user-attachments/assets/4b795224-ddfa-4298-8d98-ab20f7f60974" />
 <br><br>
@@ -124,8 +130,11 @@ Feature Implemented
 <br><br>
 
 Samples <br><br>
-<img width="1280" height="691" alt="image" src="https://github.com/user-attachments/assets/e50bcc6e-8804-4cf7-9bb0-fced3b16701f" /><br><br>
-<img width="1280" height="691" alt="image" src="https://github.com/user-attachments/assets/5455a8e1-2634-4474-b5a7-2c2f7c7cfd05" />
+<img width="1280" height="690" alt="image" src="https://github.com/user-attachments/assets/3531977f-7e42-4a80-ba9a-6479648f98e1" />
+<br><br>
+<img width="1280" height="691" alt="image" src="https://github.com/user-attachments/assets/dc50fded-5bb8-4152-821f-b86adecdaa6b" /><br><br>
+
+
 
 
 
