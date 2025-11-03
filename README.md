@@ -88,33 +88,46 @@ Features Implemented
 Samples:
 
 <img width="1280" height="688" alt="image" src="https://github.com/user-attachments/assets/52c0f686-143f-45e1-a14f-fd8eefdd5319" />
-<br>
+<br><br>
 <img width="1279" height="689" alt="image" src="https://github.com/user-attachments/assets/1c4bf497-e2bb-4aee-9549-09150ade13c4" />
-<br>
+<br><br>
 <img width="1280" height="689" alt="image" src="https://github.com/user-attachments/assets/f2594f62-cf47-4b54-b3b2-a0720e83ed67" />
-<br>
+<br><br>
 <img width="1280" height="690" alt="image" src="https://github.com/user-attachments/assets/7ebce525-147f-4637-95b0-b2aa73ce5267" />
-<br>
+<br><br>
 <img width="1279" height="690" alt="image" src="https://github.com/user-attachments/assets/bbb5f1e5-7def-4677-bf6c-ba2a9dd60a53" />
-<br>
+<br><br>
 <img width="1279" height="692" alt="image" src="https://github.com/user-attachments/assets/c1d3b382-a84b-4415-9389-e4cde7662e67" />
-<br>
+<br><br>
 <img width="1280" height="690" alt="image" src="https://github.com/user-attachments/assets/a71cfd99-ddc1-4fee-9373-e5cc29ea76a7" />
-<br>
+<br><br>
 <img width="1278" height="689" alt="image" src="https://github.com/user-attachments/assets/4b795224-ddfa-4298-8d98-ab20f7f60974" />
-<br>
+<br><br>
 <img width="1279" height="689" alt="image" src="https://github.com/user-attachments/assets/0ddf8036-8cf8-4c78-b1ba-d549a3ca6b62" />
-<br>
+<br><br>
 <img width="1280" height="691" alt="Screen Shot 2025-10-22 at 6 44 55 AM" src="https://github.com/user-attachments/assets/494ebc9d-d18c-474f-9628-e139fd816b6c" />
-<br>
+<br><br>
 <img width="1278" height="691" alt="image" src="https://github.com/user-attachments/assets/f47127cb-27e4-42e8-8c4a-73beffa119c0" />
-<br>
+<br><br>
 
 #### Requirement: A user should be able to create an account<br>
 Feature Implemented
 - User can signup using the signup page
 - contains data validation
 <br><br>
+
+### Requirement: A user should be able to view and edit his/her account information<br>
+Feature Implemented
+- User can navigate to the view account info page
+- User can navigate to the edit account info page
+  - User can edit account info page with data validation
+<br><br>
+
+Samples <br><br>
+<img width="1280" height="691" alt="image" src="https://github.com/user-attachments/assets/e50bcc6e-8804-4cf7-9bb0-fced3b16701f" /><br><br>
+<img width="1280" height="691" alt="image" src="https://github.com/user-attachments/assets/5455a8e1-2634-4474-b5a7-2c2f7c7cfd05" />
+
+
 
 #### Requirement: The admin, collaborator, or an anonymous user can view films and their reviews from collaborators<br>
 Feature Implemented
@@ -144,11 +157,10 @@ Samples
 <img width="1276" height="692" alt="image" src="https://github.com/user-attachments/assets/a3661bbe-c3ae-4966-b729-56305a82f9cb" />
 
 
-##### Requirements that aren't mapped with a feature (as of writing in 10/22/2025)
+##### Requirements that aren't mapped with a feature (as of writing in 11/04/2025)
 - The collaborator must be able to edit and delete his/her review
 - The average user rating of a film must change based on the rating provided by the user
   - It can be through a PostgreSQL view implementation for average rating calculation
-- The user must be able to edit his/her account details
 - The admin must be able to add images for a Film, Producer, Actor, and Director entity
 <br><br>
 
