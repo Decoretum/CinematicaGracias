@@ -80,7 +80,7 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
         }
     }
 
-    async function formatReviews()  {
+    async function formatReviews(query: Film)  {
         let { getReviews } = reviewOperation(client);
         let { getUsername } = await userOperation(client);
         let reviews : Array<Review> = await getReviews();
@@ -92,10 +92,10 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
             let review = reviews[i];
             let userName = await getUsername(review.users_fk!);
             // review.users_fk === currentUser?.id &&
-            if (review.film_fk === film!.id) {
+            if (review.film_fk === query.id) {
                 setUserReviewed(true);
+                arr.push({ rating: review.rating, content: review.content, name: userName, date: review.date_created });
             }
-            arr.push({ rating: review.rating, content: review.content, name: userName, date: review.date_created });
         }
 
         setReviewrow(arr);
@@ -173,7 +173,7 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
             setProducers(producers);
 
             // Fetch Reviews
-            formatReviews();
+            if (query !== undefined) formatReviews(query);
             
         }
         main();

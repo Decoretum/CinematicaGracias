@@ -27,7 +27,6 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
         let nonAUser : Users & { email: string } = nonAuthUser === null ? null : nonAuthUser[0];
         nonAUser['email'] = user!.email!;
         setCurrentUser(nonAUser);
-        console.log(user);
     }
 
     function extractText(entity: Array<Actor> | Array<Producer>) : Array<string> {

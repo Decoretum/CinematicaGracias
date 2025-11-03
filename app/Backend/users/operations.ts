@@ -224,7 +224,7 @@ export default async function operations (client : SupabaseClient)
             hashmap['metadata'] = null;
             return hashmap;
         } 
-        console.log(hm)
+
         // User Table Data Validation
 
         const email : string = hm.get('email') as string;
@@ -283,7 +283,6 @@ export default async function operations (client : SupabaseClient)
             return hashmap;
         } 
 
-        console.log('nonauth')
         // Update the non-auth Users Model
 
         hm.delete('email');
