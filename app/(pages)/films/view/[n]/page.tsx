@@ -29,7 +29,7 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
     const [actors, setActors] = useState<Array<Actor>>();
     const [reviews, setReviews] = useState<Array<Review>>()
     const [reviewing, setReviewing] = useState(false);  
-    const [reviewrow, setReviewrow] = useState<Array<{ name: string, date: string, content: string, rating: number }>>([])
+    const [reviewrow, setReviewrow] = useState<Array<{ name: string, date: string, content: string, rating: number, userReviewed: boolean }>>([])
     const [open, setOpen] = useState(false);
     const [text, setText] = useState('');
     const [rateshow, setRateshow] = useState(false);
@@ -67,7 +67,7 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
         }
 
         if (response) {
-            let row = {rating: response.metadata.data.rating, name: currentUser!.username, date: response.metadata.data.date, content: response.metadata.data.content};
+            let row = {rating: response.metadata.data.rating, name: currentUser!.username, date: response.metadata.data.date, content: response.metadata.data.content, userReviewed: false};
             let rowArr = reviewrow;
             rowArr?.push(row);
             setReviewrow(rowArr);
@@ -91,10 +91,12 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
         for (let i = 0; i <= reviews.length - 1; i++) {
             let review = reviews[i];
             let userName = await getUsername(review.users_fk!);
-            // review.users_fk === currentUser?.id &&
+            let userReviewed = false;
             if (review.film_fk === query.id) {
-                setUserReviewed(true);
-                arr.push({ rating: review.rating, content: review.content, name: userName, date: review.date_created });
+                if (currentUser !== null && currentUser.id === review.users_fk) {
+                    userReviewed = true;                    
+                }
+                arr.push({ userReviewed: userReviewed, rating: review.rating, content: review.content, name: userName, date: review.date_created });
             }
         }
 
@@ -292,7 +294,7 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
                             {reviewrow!.map((r) => (
                             <Box className='flex flex-row gap-17'>
                                 <Box className='flex flex-col gap-2 max-w-[6vw]'>
-                                    <Typography variant='body2'>{r.name}  <EditIcon /> </Typography>
+                                    { r.userReviewed === true ? <Typography variant='body2'>{r.name}  <EditIcon /> </Typography> : <Typography variant='body2'>{r.name}</Typography> }
                                     <Typography variant='body2'>{r.date}</Typography>
                                     <Typography> {r.rating} ★ </Typography>
                                 </Box>
