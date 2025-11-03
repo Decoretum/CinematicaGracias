@@ -3,7 +3,9 @@ Cinematica Gracias is a [Next.js](https://nextjs.org) and Supabase project devel
 
 Note: Supabase CLI was not used, so no migrations were done in Supabase.
 
-<img width="1277" height="687" alt="image" src="https://github.com/user-attachments/assets/268a7e23-304c-4510-835e-38ba2e72b660" />
+<img width="1280" height="690" alt="image" src="https://github.com/user-attachments/assets/aeaa524c-901b-4f0a-b8ff-2732d09b1048" /> <br><br>
+<img width="1278" height="690" alt="image" src="https://github.com/user-attachments/assets/13616b8e-9288-4186-81b8-98f4ef1e7aee" />
+
 
 
 ## Creating an Account
