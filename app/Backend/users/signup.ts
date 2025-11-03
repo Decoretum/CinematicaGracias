@@ -1,10 +1,10 @@
-import { SignUpEditUser } from '../../Types/users/usertypes'
+import { SignUpUser } from '../../Types/users/usertypes'
 import { ParseDataResult } from '@/app/Types/entitytypes';
 import operations from './operations';
 import { client } from '../createclient';
 
 
-export default async function Signup (obj : SignUpEditUser)
+export default async function Signup (obj : SignUpUser)
 {
     const { parseUserData } = await operations(client);
     let hashmap : ParseDataResult = await parseUserData(obj);

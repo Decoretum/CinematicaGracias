@@ -1,11 +1,13 @@
 import { AuthError } from '@supabase/supabase-js';
 import { Users } from '../entitytypes'
 
-export type SignUpEditUser = Omit<Users, 'id' | 'birthday'> & {
+export type BaseOperationUser = Omit<Users, 'id'> & {
+    id?: string,
     email: string,
-    password: string,
-    birthday: string
-};
+    password: string
+}
+export type SignUpUser = BaseOperationUser;
+export type EditUser = Omit<BaseOperationUser, 'is_admin'>;
 export type SignOutUser = {
     sessionId: string,
     userId: string

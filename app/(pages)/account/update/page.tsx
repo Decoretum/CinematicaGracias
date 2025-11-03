@@ -6,18 +6,22 @@ import Header from "../../../Components/Header";
 import Input from '@mui/joy/Input';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Tooltip from '@mui/material/Tooltip';
-import Switch from '@mui/joy/Switch';
 import Radio from '@mui/joy/Radio';
 import DatePicker from "react-datepicker";
-import { useState } from "react";
 import signup from '../../../Backend/users/signup'
+import userOperation from '../../../Backend/users/operations'
+import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation'
 import { CircularProgress } from "@mui/material";
 import "react-datepicker/dist/react-datepicker.css";
+import { client } from "@/app/Backend/createclient";
+import { Users } from "@/app/Types/entitytypes";
+import { EditUser } from "@/app/Types/users/usertypes";
+import DataComparator from "@/app/Helpers/DataComparator";
 
 export default function SignUp () {
-    const [check, setCheck] = useState(false);
-    const [date, setDate] = useState<Date | null>(new Date());
+    const [id, setId] = useState<string>('');
+    const [date, setDate] = useState<Date | null>(null);
     const [sex, setSex] = useState('m');
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
@@ -27,27 +31,84 @@ export default function SignUp () {
     const [alert, setAlert] = useState(false);
     const [message, setMessage] = useState('');
     const [loading, setLoading] = useState(false);
+    const [pageLoading, setPageLoading] = useState(true);
+    const [initialState, setInitialState] = useState<EditUser>({id: '', email: '', password: '', birthday: '', username: '', first_name: '', last_name: '', sex: ''});
     const router = useRouter();
 
+    useEffect(() => {
+        const main = async () => {
+
+        // Get Non Auth and Auth User
+        let { getCurrentUser } = await userOperation(client);
+        let { user, nonAuthUser } = await getCurrentUser();
+        let users : Users = nonAuthUser![0];
+
+        // Setting Initial State
+
+        setInitialState({
+            id: users.id,
+            username: users.username,
+            birthday: users.birthday,
+            email: user!.email!,
+            password: '',
+            first_name: users.first_name,
+            last_name: users.last_name,
+            sex: users.sex
+        })
+
+        // Setting the dynamic variables
+        
+        setId(users.id);
+        setUserName(users.username);
+        setDate(new Date(users.birthday));
+        setFirstName(users.first_name);
+        setLastName(users.last_name);
+        setSex(users.sex);
+        setEmail(user!.email!);
+
+        console.log(user)
+        console.log(nonAuthUser)
+        console.log(users)
+        setPageLoading(false);
+        }
+        main();
+    }, [])
+    
     function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
         setSex(event.target.value);
     }
 
-    async function createUser() {
-        let finalDate = date!.toLocaleDateString('en-CA');
-            const obj = {
+    async function updateUser() {
+        let { updateUser } = await userOperation(client);
+        let finalDate : string = date!.toLocaleDateString('en-CA');
+        const obj = {
+            id: id,
             first_name : firstName,
             last_name : lastName,
             email : email,
             username : userName,
             password : password,
             sex : sex,
-            birthday : finalDate as string,
-            is_admin : check ? true : false
+            birthday : finalDate,
         }
 
+        // Data Comparator Result
+        // First element in array is new, second is original
+
+        console.log(initialState)
+        let hm = new Map();
+        hm.set('first_name', [firstName, initialState.first_name]);
+        hm.set('last_name', [lastName, initialState.last_name]);
+        hm.set('username', [userName, initialState.username]);
+        hm.set('email', [email, initialState.email]);
+        hm.set('password', [password, initialState.password]);
+        hm.set('sex', [sex, initialState.sex]);
+        hm.set('birthday', [finalDate, initialState.birthday]);
+
         setLoading(true);
-        let hashmap = await signup(obj);
+        let compare = DataComparator(hm);
+        let hashmap = await updateUser(id!, obj, compare);
+        console.log(hashmap)
         if (hashmap.result !== 'success') {
             setMessage(hashmap.result);
             setAlert(true);
@@ -56,10 +117,25 @@ export default function SignUp () {
         }
         
         else {
-            router.push('/signup/success');
+            router.push('/account/info');
             return;
         }
     }
+
+    if (pageLoading) {
+        return(
+            <>
+                <Header currentUser={ undefined } />
+                <Box className='flex h-screen items-center justify-center'>
+                    <Box className='flex flex-col justify-center items-center mx-auto h-[15vh] md:w-[50vw] bg-black/30 p-6 rounded-lg text-white backdrop-blur-sm rounded-lg'>
+                        Loading Data
+                        <CircularProgress className='mt-4' color='secondary' /> 
+                    </Box>
+                </Box>
+            </>
+        )
+    }
+
 
     return(
         <>
@@ -68,38 +144,38 @@ export default function SignUp () {
                 
                 <Box className='flex flex-row'>
                     <Box className='mr-[2vw]'>
-                        <Tooltip title='Back to Film Pages'>
-                            <Button variant='contained' onClick={() => router.push('/films')}>
+                        <Tooltip title='Back to Account Info'>
+                            <Button variant='contained' onClick={() => router.push('/account/info')}>
                                 <ArrowBackIcon />
                             </Button>
                         </Tooltip>
                     </Box>
 
-                    <Typography color='white' variant='h5'> Create your Account </Typography>
+                    <Typography color='white' variant='h5'> Update Account Info </Typography>
                 </Box>
 
                 <Box className='flex flex-row mt-[4vh]'>
 
                     <Box className='flex flex-col'>
                         <Typography color='white'> Username </Typography>
-                        <Input placeholder='Username' onChange={(event) => setUserName(event.target.value)} />
+                        <Input placeholder='Username' value={userName} onChange={(event) => setUserName(event.target.value)} />
                     </Box>
 
                     <Box className='flex flex-col ml-[4vw]'>
                         <Typography color='white'> Password </Typography>
-                        <Input placeholder='Password' type='password' onChange={(event) => setPassword(event.target.value)} />
+                        <Input placeholder='New Password' value={password} type='password' onChange={(event) => setPassword(event.target.value)} />
                     </Box>
                 </Box>
 
                 <Box className='flex flex-row mt-[5vh]'>
                     <Box className='flex flex-col'>
                         <Typography color='white'> First Name </Typography>
-                        <Input placeholder='Given Name' onChange={(event) => setFirstName(event.target.value)} />
+                        <Input placeholder='Given Name' value={firstName} onChange={(event) => setFirstName(event.target.value)} />
                     </Box>
 
                     <Box className='flex flex-col ml-[4vw]'>
                         <Typography color='white'> Last Name </Typography>
-                        <Input placeholder='Surname' onChange={(event) => setLastName(event.target.value)} />
+                        <Input placeholder='Surname' value={lastName} onChange={(event) => setLastName(event.target.value)} />
                     </Box>
                 </Box>
 
@@ -107,7 +183,7 @@ export default function SignUp () {
                     <Box className='flex flex-col'>
                         <Box>
                             <Typography color='white'> Email </Typography>
-                            <Input placeholder='Email' onChange={(event) => setEmail(event.target.value)} />
+                            <Input placeholder='Email' value={email} onChange={(event) => setEmail(event.target.value)} />
                         </Box>
                     </Box>
 
@@ -129,35 +205,23 @@ export default function SignUp () {
                     <Box>
                         <Typography color='white'>Sex at Birth</Typography>
                         <FormControl>
-                            <RadioGroup onChange={handleChange} defaultValue="m" name="radio-buttons-group">
+                            <RadioGroup onChange={handleChange} value={sex} name="radio-buttons-group">
                                 <Radio slotProps={{ label: { sx: { color: 'white' } } }} value="m" className='color-white' label="Male" variant="outlined" />
                                 <Radio slotProps={{ label: { sx: { color: 'white' } } }} value="f" label="Female" variant="outlined" />
                             </RadioGroup>
                         </FormControl>
                     </Box>
-
-                    <Box> 
-                        <Typography color='white'> Are you Creating an Admin Account? </Typography>
-                            <Box className='flex mt-4 justify-center'>
-                                <Switch className='mt-8' checked={check} onChange={(event) => setCheck(event.target.checked)} />
-                            </Box>
-                    </Box>
                 </Box>
 
-                <Box className='flex flex-row mt-[4vh] justify-between w-[40vw] max-w-[40vw]'>
-                    <Box className='flex flex-row items-center gap-2'>
-                        <Typography>Have an existing Account?</Typography>
-                        <Button variant='text' color='success' onClick={() => router.push('/login')}> Login </Button>
-                    </Box>
-
-                    <Box className='max-w-[5vw] w-[5vw]'>
+                <Box className='flex mt-[4vh] justify-between w-[40vw] max-w-[40vw]'>
+                    <Box className='ml-auto max-w-[5vw] w-[5vw]'>
                         <Button 
                         variant='contained'
                         disabled = {loading}
                         startIcon={loading ? <CircularProgress size={20} /> : null}
-                        onClick={createUser}
+                        onClick={updateUser}
                         >
-                            {loading ? null : 'Create'}
+                            {loading ? null : 'Update'}
                         </Button>
                     </Box>     
                 </Box>               

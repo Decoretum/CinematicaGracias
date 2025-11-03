@@ -1,14 +1,14 @@
 import { GoTrueAdminApi, SupabaseClient, User } from '@supabase/supabase-js';
 import { ParseDataResult, Users } from '../../Types/entitytypes'
-import { SignUpEditUser } from '@/app/Types/users/usertypes';
+import { EditUser, SignUpUser } from '@/app/Types/users/usertypes';
 
 export default async function operations (client : SupabaseClient)
 {
-    const parseUserData = async (obj: SignUpEditUser) : Promise<ParseDataResult> => {
+    const parseUserData = async (obj?: SignUpUser, editObj?: EditUser) : Promise<ParseDataResult> => {
 
         // Data Validation
 
-        let hashmap : any = {};
+        let hashmap : any = {'result' : '', metadata : ''};
 
         const isSpecial = (password : string) => {
             let specialCount = 0;
@@ -23,25 +23,38 @@ export default async function operations (client : SupabaseClient)
             if (specialCount >= 1) return true;
             return false; 
         }
-    
+
         const nameValidator = (name : string, int : number) => {
             let formattedName = name.replace(/\s+/g, '');
             return name.replace(/\s+/g, '').length >= int && /\d/.test(formattedName) === false && isSpecial(formattedName) === false;
         }
-    
-    
+
+        let entity : SignUpUser | EditUser | undefined = obj !== undefined ? obj : editObj;
+
         // Username - length must be at least >= 4
         
-        let usernameLength = obj.username.trim().length >= 4 || obj.username.replace(/\s+/g, '').length > 4;
-        let duplicateUsername = (await getUser(obj.username.trim())) !== null;
+        let usernameLength = entity!.username.trim().length >= 4 || entity!.username.replace(/\s+/g, '').length > 4;
+        let duplicate = await getUser(entity!.username.trim().toLowerCase());
+        let usernameResponse = 'This username already exists';
         if (!usernameLength) {
             hashmap['result'] = 'Username\'s length must contain at least 4 characters';
             return hashmap;
         } 
-
-        else if (duplicateUsername) {
-            hashmap['result'] = 'This username already exists';
-            return hashmap;
+        
+        else if (duplicate !== null) {
+            console.log(editObj)
+            if (editObj === undefined) {
+                hashmap['result'] = usernameResponse;
+                return hashmap;
+            } else {
+                // Find users with different ids but same username
+                let users = await getUsers(entity!.username!.trim().toLowerCase())
+                let usersFiltered = users.filter((u) => u.id !== entity?.id && u.username.trim().toLowerCase() === entity?.username.trim().toLowerCase());
+                if (usersFiltered.length >= 1) {
+                    hashmap['result'] = usernameResponse;
+                    return hashmap;
+                }
+            }
         }
     
         // Password
@@ -50,31 +63,31 @@ export default async function operations (client : SupabaseClient)
         // at least one number
         // at least one special character, Reference: https://www.ascii-code.com/
     
-        let length = obj.password.replace(/\s+/g, '').length >= 8;
+        let length = entity!.password.replace(/\s+/g, '').length >= 8;
         if (!length) {
             hashmap['result'] = 'The password must contain at least 8 characters';
             return hashmap;
         } 
     
-        let lower = /[a-z]/.test(obj.password);
+        let lower = /[a-z]/.test(entity!.password);
         if (!lower) {
             hashmap['result'] = 'The password must contain at least 1 lower-case characater';
             return hashmap;
         }
     
-        let upper = /[A-Z]/.test(obj.password);
+        let upper = /[A-Z]/.test(entity!.password);
         if (!upper) {
             hashmap['result'] = 'The password must contain at least 1 upper-case character';
             return hashmap;
         }
     
-        let numeric = /\d/.test(obj.password);
+        let numeric = /\d/.test(entity!.password);
         if (!numeric) {
             hashmap['result'] = 'The password must contain at least 1 numeric character';
             return hashmap;
         }
     
-        if (!isSpecial(obj.password)) {
+        if (!isSpecial(entity!.password)) {
             hashmap['result'] = 'Your password must contain at least 1 special character'
             return hashmap;
         }
@@ -83,7 +96,7 @@ export default async function operations (client : SupabaseClient)
         // No Numbers and Symbols
         // length >= 3
     
-        let validFirstName = nameValidator(obj.first_name, 3);
+        let validFirstName = nameValidator(entity!.first_name, 3);
         if (!validFirstName) {
             hashmap['result'] = 'First Name must have at least 3 characters and cannot have numbers or symbols';
             return hashmap;
@@ -92,7 +105,7 @@ export default async function operations (client : SupabaseClient)
         // Last Name
         // Same condition as First Name
     
-        let validLastName = nameValidator(obj.last_name, 2);
+        let validLastName = nameValidator(entity!.last_name, 2);
         if (!validLastName) {
             hashmap['result'] = 'Last Name must have at least 2 characters and cannot have numbers or symbols';
             return hashmap;
@@ -102,10 +115,10 @@ export default async function operations (client : SupabaseClient)
         // a character before and after @
         // a . after domain
         
-        let charsBefore = obj.email.substring(0, obj.email.indexOf('@'));
-        let charsAfter = obj.email.substring(obj.email.indexOf('@') + 1, obj.email.indexOf('.'));
-        let charsAfterDot = obj.email.substring(obj.email.indexOf('.') + 1, obj.email.length);
-        let dotChar = obj.email.includes('.');
+        let charsBefore = entity!.email.substring(0, entity!.email.indexOf('@'));
+        let charsAfter = entity!.email.substring(entity!.email.indexOf('@') + 1, entity!.email.indexOf('.'));
+        let charsAfterDot = entity!.email.substring(entity!.email.indexOf('.') + 1, entity!.email.length);
+        let dotChar = entity!.email.includes('.');
     
         let separatorCount = (email : string) => {
             let count = 0;
@@ -114,7 +127,7 @@ export default async function operations (client : SupabaseClient)
             }
             return count;
         }
-        let validEmail = charsBefore.length >= 1 && separatorCount(obj.email) === 1 && charsAfter.length >= 1 && dotChar === true && charsAfterDot.length >= 1;
+        let validEmail = charsBefore.length >= 1 && separatorCount(entity!.email) === 1 && charsAfter.length >= 1 && dotChar === true && charsAfterDot.length >= 1;
         if (!validEmail) {
             hashmap['result'] = 'Invalid email'
             return hashmap;
@@ -122,19 +135,29 @@ export default async function operations (client : SupabaseClient)
         
         let res = await fetch('/api/users', { method: 'GET' });
         const data: { users: Array<User> } = await res.json();
-        let emails = data.users.filter((u) => u.email === obj.email.trim());
+        let emails = data.users.filter((u) => u.email === entity!.email.trim());
         let duplicateEmail = emails.length >= 1;
+        let response = 'An existing account uses this email';
 
         if (duplicateEmail) {
-            hashmap['result'] = 'An existing account uses this email';
-            return hashmap;
+            if (editObj === undefined) {
+                hashmap['result'] = response;
+                return hashmap;
+            } else {
+                // Count users with same email but different id
+                let existing = data.users.filter((u) => u.email === entity?.email.trim() && u.id !== entity!.id);
+                if (existing.length >= 1) {
+                    hashmap['result'] = 'An existing account uses this email';
+                    return hashmap;
+                }
+            }
         }
     
         // Birthday
         // Age of user must be >= 7
         // Based on Month and Day values, age value will be reduced by 1
     
-        let birthday = new Date(obj.birthday);
+        let birthday = new Date(entity!.birthday);
         let current = new Date();
         
         let age = current.getFullYear() - birthday.getFullYear();
@@ -148,7 +171,10 @@ export default async function operations (client : SupabaseClient)
         }
 
         hashmap['result'] = 'success';
+        
+
         return hashmap;
+
 
     }
 
@@ -158,9 +184,17 @@ export default async function operations (client : SupabaseClient)
     }
 
     const getUser = async (username: string) : Promise<Users> => {
-        const { data } = await client.from('users').select().eq('username', username).single();
+        const { data } = await client.from('users').select().ilike('username', username.trim().toLowerCase()).single();
         return data;
-        
+    }
+
+    const getUsers = async (username?: string) : Promise<Array<Users>> => {
+        if (username !== undefined) {
+            const { data } = await client.from('users').select().ilike('username', username.trim().toLowerCase());
+            return data || [];
+            }
+        const { data } = await client.from('users').select();
+        return data || [];
     }
 
     const getCurrentUser = async () => {
@@ -174,12 +208,12 @@ export default async function operations (client : SupabaseClient)
         return { user, nonAuthUser };
     }
 
-    const updateUser = async (userId : string, obj:SignUpEditUser, hm : Map<string, Object>) => {
+    const updateUser = async (userId : string, obj:EditUser, hm : Map<string, Object>) => {
         
         // Iterate Over hashmap
         // Key = field to be updated, Value = new value for the field
 
-        let hashmap : ParseDataResult = await parseUserData(obj);
+        let hashmap : ParseDataResult = await parseUserData(undefined, obj);
         if (hashmap['result'] !== 'success') return hashmap;
 
         if (hm.size === 0) {
@@ -204,6 +238,8 @@ export default async function operations (client : SupabaseClient)
 
         // Update the non-auth Users Model
         
+        hm.delete('email');
+        hm.delete('password');
         let updatedData : any = {};
         for (const [key, value] of hm) {
             updatedData[key] = value;
@@ -214,8 +250,10 @@ export default async function operations (client : SupabaseClient)
         .update(updatedData)
         .eq('id', userId);
         
-        return { error } 
+        hashmap['result'] = 'success';
+        hashmap['metadata'] = { error };
+        return hashmap; 
     }
 
-    return { getCurrentUser, getUser, updateUser, parseUserData, getUsername }
+    return { getCurrentUser, getUser, getUsers, updateUser, parseUserData, getUsername }
 }

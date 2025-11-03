@@ -135,7 +135,6 @@ export default function operations(client : SupabaseClient) {
         if (result['result'] !== 'success') return result;
 
         let response : ParseDataResult = {result: '', metadata: {}};
-        response['result'] = 'success';
 
         if (hm.size === 0) {
             response['metadata'] = null;
@@ -153,6 +152,7 @@ export default function operations(client : SupabaseClient) {
         .update(updatedData)
         .eq('id', actorId)
 
+        response['result'] = 'success';
         response['metadata'] = { error }
         return response
     }

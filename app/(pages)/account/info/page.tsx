@@ -141,7 +141,6 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
                 <Box className='mt-[2vh] max-w-[40vw]'>
                     <Typography variant='h4'> Reviews </Typography>
                     {!currentUser?.is_admin ?
-                        <Typography>
                             <Box>
                                 { reviews.length === 0 ? 
                                 <Box className='flex flex-row items-center gap-3 mt-[3vh]'>
@@ -171,13 +170,12 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
 
                                     : reviewrow!.map((r, idx) => (
                                     <Box className='flex flex-col gap-17'>
-                                        <Box className='flex flex-row gap-8 items-center'>
+                                        <Box key={idx} className='flex flex-row gap-8 items-center'>
                                             <Box>
                                                 <Typography> {r.rating} ★ </Typography>
                                             </Box>
                                             <Box>
                                                 <Link
-                                                key = {idx}
                                                 component='address'
                                                 color='warning'
                                                 onClick={() => { navigate.push(`/films/view/${r.filmId}`) }}
@@ -194,7 +192,6 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
                                 </Box>
                                  }
                             </Box>
-                        </Typography>
                         : 
                         <Typography> Only Collaborators can provide a review </Typography>
                     }
