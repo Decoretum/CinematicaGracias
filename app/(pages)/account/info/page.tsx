@@ -17,7 +17,6 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
     const [currentUser, setCurrentUser] = useState<Users & { email: string } | null>(null);
     const [alert, setAlert] = useState(false);
     const [message, setMessage] = useState('');
-    const [reviews, setReviews] = useState<Array<Review>>()
     const [reviewrow, setReviewrow] = useState<Array<{ name: string, filmName: string, filmId: number, date: string, rating: number }> | null>(null)
     const navigate = useRouter();
 
@@ -44,14 +43,16 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
         let { getFilm } = await filmOperation(client);
         let reviews : Array<Review> = await getReviews();
         let arr = [];
-        setReviews(reviews);
 
         // Fetch Username and date created
         for (let i = 0; i <= reviews.length - 1; i++) {
             let review = reviews[i];
-            let userName = await getUsername(review.users_fk!);
-            let film : Film = await getFilm(review.film_fk!);
-            arr.push({ rating: review.rating, content: review.content, name: userName, filmName: film.name, filmId: review.film_fk!, date: review.date_created });
+
+            if (review.users_fk === currentUser?.id) {
+                let userName = await getUsername(review.users_fk!);
+                let film : Film = await getFilm(review.film_fk!);
+                arr.push({ rating: review.rating, content: review.content, name: userName, filmName: film.name, filmId: review.film_fk!, date: review.date_created });
+            }
         }
 
         setReviewrow(arr);
@@ -62,7 +63,7 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
         const main = async () => {
             // Get Current User
             let { n } = await params;
-            getUser();
+            await getUser();
             
             // Get Reviews
             formatReviews();
@@ -70,10 +71,10 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
         main();
     }, [])
 
-    if (!currentUser || !reviews) {
+    if (!currentUser || !reviewrow) {
         return(
             <>
-                <Header currentUser={ undefined } loading={!reviews } />
+                <Header currentUser={ undefined } loading={!reviewrow } />
                 <Box className='flex h-screen items-center justify-center'>
                     <Box className='flex flex-col justify-center items-center mx-auto h-[15vh] md:w-[50vw] bg-black/30 p-6 rounded-lg text-white backdrop-blur-sm rounded-lg'>
                         Loading Data
@@ -146,7 +147,7 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
                     <Typography variant='h4'> Reviews </Typography>
                     {!currentUser?.is_admin ?
                             <Box>
-                                { reviews.length === 0 ? 
+                                { reviewrow?.length === 0 ? 
                                 <Box className='flex flex-row items-center gap-3 mt-[3vh]'>
                                     <Box>
                                         No reviews given
@@ -170,8 +171,6 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
                                             <CircularProgress className='mt-4' color='secondary' />
                                         </Box> 
                                     </Box>
-                                    
-
                                     : reviewrow!.map((r, idx) => (
                                     <Box className='flex flex-col gap-17'>
                                         <Box key={idx} className='flex flex-row gap-8 items-center'>
