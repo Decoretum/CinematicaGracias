@@ -2,7 +2,7 @@
 import Header from "@/app/Components/Header";
 import { Actor, Director, Film, FilmActor, FilmProducer, Producer, Review, Users } from "@/app/Types/entitytypes";
 import { SupabaseClient, User } from "@supabase/supabase-js";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import EditIcon from '@mui/icons-material/Edit';
 import userOperation from "../../../Backend/users/operations";
 import filmOperation from "../../../Backend/films/operations";
@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 
 export default function Info ({ params } : { params : Promise<{ n : number }> }) {
+    const [retrieving, setRetrieving] = useState(true);
     const [currentUser, setCurrentUser] = useState<Users & { email: string } | null>(null);
     const [alert, setAlert] = useState(false);
     const [message, setMessage] = useState('');
@@ -26,16 +27,9 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
         let nonAUser : Users & { email: string } = nonAuthUser === null ? null : nonAuthUser[0];
         nonAUser['email'] = user!.email!;
         setCurrentUser(nonAUser);
+        return;
     }
 
-    function extractText(entity: Array<Actor> | Array<Producer>) : Array<string> {
-        let arr = [];
-        for (let i = 0; i <= entity.length - 1; i++) {
-            let human = entity[i];
-            arr.push(`${human.first_name} ${human.last_name}`);
-        }
-        return arr;
-    }
 
     async function formatReviews()  {
         let { getReviews } = reviewOperation(client);
@@ -47,6 +41,8 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
         // Fetch Username and date created
         for (let i = 0; i <= reviews.length - 1; i++) {
             let review = reviews[i];
+            console.log(review.users_fk)
+            console.log(currentUser?.id)
 
             if (review.users_fk === currentUser?.id) {
                 let userName = await getUsername(review.users_fk!);
@@ -56,22 +52,18 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
         }
 
         setReviewrow(arr);
+        setRetrieving(false);
 }
 
-
     useEffect(() => {
-        const main = async () => {
-            // Get Current User
-            let { n } = await params;
-            await getUser();
-            
-            // Get Reviews
-            formatReviews();
-        }
-        main();
+        getUser();
     }, [])
 
-    if (!currentUser || !reviewrow) {
+    useEffect(() => {
+        formatReviews();
+    }, [currentUser, retrieving])
+
+    if (!currentUser || (!reviewrow && retrieving === true)) {
         return(
             <>
                 <Header currentUser={ undefined } loading={!reviewrow } />
@@ -147,7 +139,7 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
                     <Typography variant='h4'> Reviews </Typography>
                     {!currentUser?.is_admin ?
                             <Box>
-                                { reviewrow?.length === 0 ? 
+                                { reviewrow!.length === 0 ? 
                                 <Box className='flex flex-row items-center gap-3 mt-[3vh]'>
                                     <Box>
                                         No reviews given
@@ -162,7 +154,7 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
                                 </Box>
                                 : 
                                 <Box className='flex flex-row mt-[3vh] gap-5 break-words max-w-[50vw]'>
-                                    { reviewrow === null ? 
+                                    { !reviewrow ? 
                                     <Box className='flex flex-row items-center gap-5'>
                                         <Box>
                                             <Typography variant='body2'>Retrieving Reviews</Typography>
