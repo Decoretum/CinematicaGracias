@@ -1,22 +1,19 @@
 'use client'
 import Header from "@/app/Components/Header";
-import { Actor, Director, Film, FilmActor, FilmProducer, Producer, Review, Users } from "@/app/Types/entitytypes";
-import { SupabaseClient, User } from "@supabase/supabase-js";
-import { useEffect, useMemo, useState } from "react";
+import { Film, Review, Users } from "@/app/Types/entitytypes";
+import { useEffect, useState } from "react";
 import EditIcon from '@mui/icons-material/Edit';
 import userOperation from "../../../Backend/users/operations";
 import filmOperation from "../../../Backend/films/operations";
 import reviewOperation from "../../../Backend/reviews/operations"
 import { client } from "@/app/Backend/createclient";
-import { Box, Button, Link, Textarea } from "@mui/joy";
-import { CircularProgress, Modal, Snackbar, Tooltip, Typography } from "@mui/material";
+import { Box, Button, Link } from "@mui/joy";
+import { CircularProgress, Tooltip, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 
 export default function Info ({ params } : { params : { n : number } }) {
     const [currentUser, setCurrentUser] = useState<Users & { email: string } | null>(null);
-    const [alert, setAlert] = useState(false);
-    const [message, setMessage] = useState('');
     const [reviewrow, setReviewrow] = useState<Array<{ name: string, filmName: string, filmId: number, date: string, rating: number }> | null>(null)
     const navigate = useRouter();
 
@@ -190,15 +187,6 @@ export default function Info ({ params } : { params : { n : number } }) {
                     }
                 </Box>
             </Box>
-
-
-            <Snackbar
-            open={alert}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-            autoHideDuration={6000}
-            onClose={() => setAlert(false)}
-            message={message}
-            />
         </>
     )
 }
