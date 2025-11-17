@@ -12,7 +12,7 @@ import { CircularProgress, Tooltip, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 
-export default function Info ({ params } : { params : { n : number } }) {
+export default function Info () {
     const [currentUser, setCurrentUser] = useState<Users & { email: string } | null>(null);
     const [reviewrow, setReviewrow] = useState<Array<{ name: string, filmName: string, filmId: number, date: string, rating: number }> | null>(null)
     const navigate = useRouter();
@@ -76,7 +76,7 @@ export default function Info ({ params } : { params : { n : number } }) {
 
     return (
         <>
-            <Header currentUser={ currentUser } loading={false} />
+            <Header currentUser={ currentUser } loading={ false } />
             <Box className='flex flex-col gap-6 md:min-h-[100vh] break-words md:max-w-[50vw] mx-auto bg-black/30 p-6 rounded-lg text-white backdrop-blur-sm'>
                 <Box className='flex flex-row justify-between'>
                     <Typography variant='h3'>
