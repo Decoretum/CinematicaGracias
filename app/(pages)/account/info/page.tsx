@@ -13,8 +13,7 @@ import { CircularProgress, Modal, Snackbar, Tooltip, Typography } from "@mui/mat
 import { useRouter } from "next/navigation";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 
-export default function Info ({ params } : { params : Promise<{ n : number }> }) {
-    const [retrieving, setRetrieving] = useState(true);
+export default function Info ({ params } : { params : { n : number } }) {
     const [currentUser, setCurrentUser] = useState<Users & { email: string } | null>(null);
     const [alert, setAlert] = useState(false);
     const [message, setMessage] = useState('');
@@ -33,7 +32,6 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
 
     async function formatReviews()  {
         let { getReviews } = reviewOperation(client);
-        let { getUsername } = await userOperation(client);
         let { getFilm } = await filmOperation(client);
         let reviews : Array<Review> = await getReviews();
         let arr = [];
@@ -45,14 +43,13 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
             console.log(currentUser?.id)
 
             if (review.users_fk === currentUser?.id) {
-                let userName = await getUsername(review.users_fk!);
+                let userName = currentUser.username;
                 let film : Film = await getFilm(review.film_fk!);
                 arr.push({ rating: review.rating, content: review.content, name: userName, filmName: film.name, filmId: review.film_fk!, date: review.date_created });
             }
         }
 
         setReviewrow(arr);
-        setRetrieving(false);
 }
 
     useEffect(() => {
@@ -60,13 +57,14 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
     }, [])
 
     useEffect(() => {
+        if (currentUser)
         formatReviews();
-    }, [currentUser, retrieving])
+    }, [currentUser])
 
-    if (!currentUser || (!reviewrow && retrieving === true)) {
-        return(
+    if (!currentUser) {
+        return (
             <>
-                <Header currentUser={ undefined } loading={!reviewrow } />
+                <Header currentUser={ undefined } loading={ !reviewrow } />
                 <Box className='flex h-screen items-center justify-center'>
                     <Box className='flex flex-col justify-center items-center mx-auto h-[15vh] md:w-[50vw] bg-black/30 p-6 rounded-lg text-white backdrop-blur-sm rounded-lg'>
                         Loading Data
@@ -139,7 +137,7 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
                     <Typography variant='h4'> Reviews </Typography>
                     {!currentUser?.is_admin ?
                             <Box>
-                                { reviewrow!.length === 0 ? 
+                                { reviewrow && reviewrow!.length === 0 ? 
                                 <Box className='flex flex-row items-center gap-3 mt-[3vh]'>
                                     <Box>
                                         No reviews given
@@ -160,7 +158,7 @@ export default function Info ({ params } : { params : Promise<{ n : number }> })
                                             <Typography variant='body2'>Retrieving Reviews</Typography>
                                         </Box>
                                         <Box>
-                                            <CircularProgress className='mt-4' color='secondary' />
+                                            <CircularProgress className='mt-4' color='secondary' size='25px' />
                                         </Box> 
                                     </Box>
                                     : reviewrow!.map((r, idx) => (
